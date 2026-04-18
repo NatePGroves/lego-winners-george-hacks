@@ -1,0 +1,2204 @@
+{
+  "type": "FeatureCollection",
+  "name": "Convenience_Stores_Minimal",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "WINEANDBUTTERr LLC",
+        "address": "1023 EAST CAPITOL ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99171037,
+          38.88952663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FIYAMETA L.L.C.",
+        "address": "104 KENNEDY ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01209203,
+          38.95639308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FANA INC.",
+        "address": "1064 BLADENSBURG RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98109167,
+          38.9039767
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lost Sock Roasters",
+        "address": "1100 4TH ST"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.000825,
+          38.9038822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RAMI 2",
+        "address": "1115 U ST"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02775344,
+          38.9172065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BODEGA MARKET, LLC.",
+        "address": "1136 FLORIDA AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99035441,
+          38.90303925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JSSI-PINE LLC.",
+        "address": "1201 MOUNT OLIVET RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98481102,
+          38.90978168
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S & H 4 INC.",
+        "address": "1221 MASSACHUSETTS AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02904213,
+          38.90500016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AMKO INTERNATIONAL, INC.",
+        "address": "1231 11TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02668384,
+          38.90676492
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "INTERNATIONAL WHOLESALERS",
+        "address": "1238 W ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98829835,
+          38.91942911
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ELLE YAME LLC",
+        "address": "1245 5TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01868191,
+          38.90710516
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BEST VALUE LLC.",
+        "address": "1265 1267 4TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99937245,
+          38.90824218
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DREAMING OUT LOUD, INC.",
+        "address": "1303 GOOD HOPE RD"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98684818320001,
+          38.8668233469
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BIG VALLEY INC.",
+        "address": "1308 5TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99809253,
+          38.90901748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UNKNOWN STORE",
+        "address": "1309 5TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99765027,
+          38.90871669
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ABDI US",
+        "address": "1348 MARION BARRY AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98551898,
+          38.86705173
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "PARK MART",
+        "address": "1370 PARK RD NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03173718,
+          38.9304694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HUDA",
+        "address": "1396 FLORIDA AVE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98536888,
+          38.9011123
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FRIENDLY DAVID'S MARKET, INC.",
+        "address": "1399 HALF ST SW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01083323,
+          38.87312863
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ALKHANBESHI GLOBAL",
+        "address": "1412 14TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03221987,
+          38.909337
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RIHANA INC",
+        "address": "1412 PENNSYLVANIA AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98456779,
+          38.88026222
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NG Liquor Enterprises",
+        "address": "1414 14TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03222381,
+          38.90938726
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GROCERY BELEN",
+        "address": "1460 PARK RD NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03460584,
+          38.93076226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MOON RUN",
+        "address": "1500 MASSACHUSETTS AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03550892,
+          38.90650274
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BERHANU AND NEGA, LLC",
+        "address": "1500 OGDEN ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03494396,
+          38.93539792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Capitol Convenience LLC.",
+        "address": "1503 NORTH CAPITOL ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0087262,
+          38.90984723
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AKSE",
+        "address": "1515 WISCONSIN AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.06424025,
+          38.90969195
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ABYO LLC",
+        "address": "1517 MARION BARRY AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98270428,
+          38.86614159
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "TOBACCO KING DC",
+        "address": "1543 7TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02167445,
+          38.91082989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "KP MARKETING",
+        "address": "1600 TAYLOR ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98220189,
+          38.94098207
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NANA BABA INC.",
+        "address": "1611 RHODE ISLAND AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98129001,
+          38.92621455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JABBO'S COMPACT MARKET INC.",
+        "address": "1613 MONTELLO AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9866213,
+          38.90735929
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ABT LIQUOR L.L.C.",
+        "address": "1618 8TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02321524,
+          38.91166518
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Eckington UK LLC",
+        "address": "1625 ECKINGTON PL NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00399957,
+          38.91199724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Notsoguilty",
+        "address": "1625 ECKINGTON PL NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00399957,
+          38.91199724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sodo",
+        "address": "1629 COLUMBIA RD"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03784927,
+          38.92610461
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UNKNOWN STORE",
+        "address": "1727 NORTH CAPITOL ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00872791,
+          38.91347009
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "COLOMBIA RD MARKET",
+        "address": "1733 COLUMBIA RD NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.04020346,
+          38.92461373
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NAOM",
+        "address": "1812 HAMLIN ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97839423,
+          38.92845685
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FOUR BROTHERS LLC.",
+        "address": "1824 COLUMBIA RD NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.04304373,
+          38.92196563
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SIENNA LLC.",
+        "address": "1828 1ST ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01240397,
+          38.91513371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saemyodi LLC.",
+        "address": "1828 1ST ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01240397,
+          38.91513371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HANNIM",
+        "address": "1845 7TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02171371,
+          38.91518115
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BET CORPORATION",
+        "address": "1846 13TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02987566,
+          38.91542239
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FREEDOM MARKET INC",
+        "address": "1901 NEW HAMPSHIRE AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03737746,
+          38.91573681
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GLEN'S SHAW L.L.C.",
+        "address": "1924 8TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02321325,
+          38.91653968
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "U FIRST MART,",
+        "address": "1942 1ST ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01241545,
+          38.91685797
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NiQu LLC",
+        "address": "2000 17TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03878129,
+          38.91715003
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RAMI RAW",
+        "address": "2001 13TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02930006,
+          38.91713926
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ng Tg",
+        "address": "2001 BENNING RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97538611,
+          38.89845561
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aurora Enterprises",
+        "address": "2006 RHODE ISLAND AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97580073,
+          38.92951329
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "EXPRESS CONVENIENCE STORE LLC.",
+        "address": "2031 BENNING RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97443718,
+          38.89831539
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bair Investment",
+        "address": "2101 ALABAMA AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97506281,
+          38.85046159
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Splash Enterprises",
+        "address": "213 UPSHUR ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.014338077,
+          38.942454434599995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kalorama Market",
+        "address": "2160 CALIFORNIA ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.04866864,
+          38.91597378
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DC MARKET INCORPORATED",
+        "address": "2200 16TH ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98244902,
+          38.86345927
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DK Dean",
+        "address": "2200 FLAGLER PL NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01378914,
+          38.91930303
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "24 7 BEST CONVENIENCE Inc.",
+        "address": "2201 MINNESOTA AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97461337,
+          38.87131878
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BETTESFA INCORPORATED",
+        "address": "2216 MARTIN LUTHER KING J AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98983826,
+          38.86425442
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CANALES INC.",
+        "address": "225 7TH ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99646843,
+          38.88641312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MARKET POULTRY LLC.",
+        "address": "225 7TH ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99646843,
+          38.88641312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gmichael",
+        "address": "2283 SAVANNAH ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97132106,
+          38.84758575
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Abaye",
+        "address": "2310 RHODE ISLAND AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97311178,
+          38.9308423
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Addis Feleke",
+        "address": "233 UPSHUR ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01522326,
+          38.94235485
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "YODIT",
+        "address": "2339 PENNSYLVANIA AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.97186915,
+          38.87364319
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SMART SHOP L.L.C.",
+        "address": "2411 37TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.07288648,
+          38.92148206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Root Retail",
+        "address": "250 11TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99179591,
+          38.89344284
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AMKO INTERNATIONAL 1",
+        "address": "2616 CONNECTICUT AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.05227614,
+          38.92413521
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "PST GROCERY INC",
+        "address": "2617 P ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.05533788,
+          38.90952751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LEON 1",
+        "address": "2624 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02294289,
+          38.92490038
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MANHATTAN MARKET,",
+        "address": "2647 CONNECTICUT AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.05199842,
+          38.92488467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LALA",
+        "address": "2701 14TH ST"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03205305,
+          38.92502379
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UPTOWN MART LLC",
+        "address": "2701 14TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03205305,
+          38.92502379
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SALUMERIA 2703 LLC.",
+        "address": "2703 12TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99015694,
+          38.92461963
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BT&G INC.",
+        "address": "2723 7TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99592575,
+          38.92541106
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "WONDER MART CONVENIENCE",
+        "address": "2743 MARTIN LUTHER KING J AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9964129,
+          38.84693331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BMT ENTERPRISE",
+        "address": "2815 7TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9958684,
+          38.92612334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "727 INC.",
+        "address": "2820 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02314886,
+          38.92670856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Anania Market",
+        "address": "2921 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02274749,
+          38.9280143
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "2924 Minnesota Ventures Inc.",
+        "address": "2924 MINNESOTA AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.96536591,
+          38.87636299
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "T&U",
+        "address": "3008 Q ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0596779,
+          38.91035468
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BAHRUESPRESSO",
+        "address": "3011 MARTIN LUTHER KING J AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99834089,
+          38.84444552
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RKMM",
+        "address": "3021 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02292985,
+          38.92882898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MT Pleasant St",
+        "address": "3146 MOUNT PLEASANT ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0381381,
+          38.93009472
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MYUNGJOON, INC",
+        "address": "3170 MOUNT PLEASANT ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03828746,
+          38.93054356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DDS/RSA RANDOLP-SHEPPARD VENDING FACILITIES PROGRAM (RSVFP)",
+        "address": "320 21ST ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.04737789,
+          38.89480937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BETU",
+        "address": "321 T ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00099498,
+          38.91530216
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "TISYOOO 1",
+        "address": "328 KENTUCKY AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.98570926,
+          38.88469065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Eleventh House, LLC",
+        "address": "3301 11TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.027847,
+          38.9309
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MEG&AN LLC",
+        "address": "3306 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02380993,
+          38.93128176
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GEZALA",
+        "address": "3308 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02382206,
+          38.93131617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FLORES L",
+        "address": "3412 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02405216,
+          38.93239703
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MULTIFARIOUS PUBLICA UXR,",
+        "address": "3501 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02358999,
+          38.93300257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RAM SERVICES INC",
+        "address": "3509 WHEELER RD SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9939661,
+          38.8391882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SHGER L.L.C.",
+        "address": "3509 WHEELER RD SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9939661,
+          38.8391882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Shishi US LLC",
+        "address": "3653 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02398083,
+          38.93599397
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BEST FOOD MARKET",
+        "address": "3728 MINNESOTA AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.95248659,
+          38.89110904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BROOKLAND TG",
+        "address": "3736 10TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99390204,
+          38.93646518
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DMV DC MINI MART LLC",
+        "address": "3923 SOUTH CAPITOL ST SW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00857595,
+          38.83199479
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GAULT MARKET INC",
+        "address": "4003 GAULT PL NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.94586316,
+          38.89890858
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SKIP'S LIQUORS",
+        "address": "405 61ST ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.91337977,
+          38.89489833
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DMV CONVENIENCE INC",
+        "address": "4053 MINNESOTA AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.94752061,
+          38.8961634
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AKI & MULLER CORPORATION",
+        "address": "4133 WHEELER RD SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99021453,
+          38.83355613
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Wheeler Liquor & Grocery",
+        "address": "4137 WHEELER RD SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99003603,
+          38.83341297
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NEIGHBOURHOOD OF SMRET MARKET LLC",
+        "address": "415 RHODE ISLAND AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99989034,
+          38.91964202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MENKEM LLC.",
+        "address": "4202 BENNING RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.9423133,
+          38.89311405
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UNKNOWN STORE",
+        "address": "421 EAST CAPITOL SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99972774,
+          38.88954773
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bamboo Hut Cafe LLC.",
+        "address": "4239 9TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0249224,
+          38.94272928
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SUBURBAN LIQUORS 1 Inc.",
+        "address": "4347 HUNT PL NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.93938899,
+          38.90031448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "TEXAS CONVENIENCE STORE INC",
+        "address": "4350 TEXAS AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.94216847,
+          38.88336457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JLAA INC.",
+        "address": "4401 NANNIE HELEN BURROUG AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.93893074,
+          38.90030776
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DYD Trading",
+        "address": "4401 SOUTH CAPITOL ST SW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00763088,
+          38.82588624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "EVE LLC.",
+        "address": "4418 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02653079,
+          38.94474401
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "LAMONT MARKET ASSOCIATES INC.",
+        "address": "450 LAMONT ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01991292,
+          38.93113764
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AKI MULLER & EYOB",
+        "address": "4682 4684 MARTIN LUTHER KING J AVE SW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0106495,
+          38.82112067
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DEANWOOD TG",
+        "address": "4748 SHERIFF RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.93407963,
+          38.90307871
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DGN INC",
+        "address": "4801 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02664291,
+          38.94841952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "M & V DC MEAT AND GROCERY",
+        "address": "4807 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02671173,
+          38.9485939
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ATNI",
+        "address": "4817 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02672891,
+          38.94888072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "WAGSHAL'S MARKET L.L.C.",
+        "address": "4845 MASSACHUSETTS AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0957568,
+          38.94571376
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "FIKRE MARKET, INC.",
+        "address": "4920 CENTRAL AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.93192263,
+          38.89062502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NR 2 CONVENIENCE LLC",
+        "address": "4944 SOUTH DAKOTA AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99290354,
+          38.9491566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DAE AH LLC",
+        "address": "501 4TH ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00082488,
+          38.8830826
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MHAT & DM LLC",
+        "address": "5010 NEW HAMPSHIRE AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01229849,
+          38.95140836
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UNKNOWN STORE",
+        "address": "5018 ROCK CREEK CHURCH RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00829419,
+          38.95154122
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "PRICES GROCERY",
+        "address": "5018 ROCK CREEK CHURCH RD NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00829419,
+          38.95154122
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DMV CONVENIENCE MART",
+        "address": "5026 BENNING RD SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.93079215,
+          38.87784662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "S&H 6 INC",
+        "address": "51 M ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00726885,
+          38.90545477
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "OLD CITY MAO LLC",
+        "address": "522 1/2 K ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99866164,
+          38.90276561
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AIDA 202",
+        "address": "5302 GEORGIA AVE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02792558,
+          38.95426721
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JOHN LLC",
+        "address": "5319 EAST CAPITOL ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.92530643,
+          38.88941161
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HIWOT MARKET",
+        "address": "5331 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02757297,
+          38.95476872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UK 3rd",
+        "address": "538 3RD ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00220952,
+          38.89719546
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MOCHI, INC.",
+        "address": "539 8TH ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99471407,
+          38.89717158
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "yd progress",
+        "address": "5415 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02769677,
+          38.9556751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DAMOTE INC.",
+        "address": "5421 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02771206,
+          38.95582409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RNH CONVENIENCE LLC.",
+        "address": "5425 5TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01949059,
+          38.95608147
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "HERNANDEZ FAMILY INC.",
+        "address": "5505 14TH ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03319064,
+          38.95685526
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CENTRAL CONVENIENCE",
+        "address": "5575 CENTRAL AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.91925276,
+          38.8856049
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CENTRAL SPICE",
+        "address": "5579 CENTRAL AVE SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.91903875,
+          38.88558448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BROAD BRANCH MARKET",
+        "address": "5608 BROAD BRANCH RD NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.06866547,
+          38.9655973
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SEWA INTERNATIONAL INC.",
+        "address": "5774 2ND ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.00480732,
+          38.9591649
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RAMOS MARKET INC",
+        "address": "607 KENNEDY ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02131559,
+          38.95659679
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AYUB INC.",
+        "address": "615 DIVISION AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.92552537,
+          38.89786439
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BROOK GEORGIA ENTERPRISES LLC.",
+        "address": "6205 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02725269,
+          38.96528375
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "NORA, OSCAR INC.",
+        "address": "6404 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02779598,
+          38.96776377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "EABLAD LLC.",
+        "address": "6419 GEORGIA AVE NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02705218,
+          38.9681158
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DSAY CORPORATION",
+        "address": "700 F ST NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99598153,
+          38.89754106
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UNKNOWN STORE",
+        "address": "700 KENNEDY ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02249458,
+          38.95617651
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "L STREET MARKET, INC",
+        "address": "700 L ST SE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99595314,
+          38.87768848
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DC SUSHI,",
+        "address": "705 KENNEDY ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02261076,
+          38.95653114
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CASK AND BARREL",
+        "address": "725 8TH ST"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99532799,
+          38.8803865
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Newday Tobacco And Grocery LLC",
+        "address": "802 H ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02321144,
+          38.89963525
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UNKNOWN STORE",
+        "address": "823 UPSHUR ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02428776,
+          38.94213351
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "KENYNUR INC.",
+        "address": "831 KENNEDY ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02534475,
+          38.95649728
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ABUKEY",
+        "address": "902 KENNEDY ST NW"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02612256,
+          38.95610099
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JS",
+        "address": "936 RHODE ISLAND AVE NE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99271556,
+          38.92260905
+        ]
+      }
+    }
+  ]
+}
