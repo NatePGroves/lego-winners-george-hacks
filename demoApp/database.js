@@ -26,8 +26,18 @@ const storeSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Product Schema
+const productSchema = new Schema({
+  name: { type: String, required: true },
+  storeId: { type: Schema.Types.ObjectId, ref: "Store", required: true },
+  allergens: [String],
+  price: Number,
+  createdAt: { type: Date, default: Date.now },
+});
+
 const User = mongoose.model("User", userSchema);
 const Store = mongoose.model("Store", storeSchema);
+const Product = mongoose.model("Product", productSchema);
 
 const connectDB = async () => {
   try {
@@ -45,4 +55,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = { connectDB, User, Store };
+module.exports = { connectDB, User, Store, Product };
