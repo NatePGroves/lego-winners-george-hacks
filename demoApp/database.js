@@ -6,7 +6,7 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  age: { type: Number, required: true },
+  age: Number,
   allergies: [String],
   createdAt: { type: Date, default: Date.now },
 });
@@ -24,6 +24,15 @@ const storeSchema = new Schema({
   longitude: { type: Number, required: true },
   userAdded: { type: Boolean, default: false },
   claimed: { type: Boolean, default: false },
+  hours: {
+    monday: { open: String, close: String },
+    tuesday: { open: String, close: String },
+    wednesday: { open: String, close: String },
+    thursday: { open: String, close: String },
+    friday: { open: String, close: String },
+    saturday: { open: String, close: String },
+    sunday: { open: String, close: String }
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

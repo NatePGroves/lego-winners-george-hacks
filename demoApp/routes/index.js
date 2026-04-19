@@ -120,11 +120,11 @@ router.get("/api/stores", (req, res) => {
 });
 
 router.post("/api/signup", (req, res) => {
-  const { name, email, password, age } = req.body;
-  
+  const { name, email, password } = req.body;
+
   bcrypt.hash(password, 10)
     .then((hashedPassword) => {
-      const user = new User({ name, email, password: hashedPassword, age, allergies: [] });
+      const user = new User({ name, email, password: hashedPassword, allergies: [] });
       return user.save();
     })
     .then((savedUser) => {
@@ -257,17 +257,17 @@ router.delete("/api/products/:productId", (req, res) => {
 });
 
 router.post("/api/store-signup", (req, res) => {
-  const { storeName, email, password, phone, latitude, longitude, claimStoreId } = req.body;
-  
+  const { storeName, email, password, phone, latitude, longitude, hours, claimStoreId } = req.body;
+
   bcrypt.hash(password, 10)
     .then((hashedPassword) => {
       let storePromise;
-      
+
       if (claimStoreId) {
         // Claim existing store
         storePromise = Store.findByIdAndUpdate(
           claimStoreId,
-          { claimed: true },
+          { claimed: true, hours },
           { new: true }
         );
       } else {
@@ -278,11 +278,12 @@ router.post("/api/store-signup", (req, res) => {
           latitude,
           longitude,
           userAdded: true,
-          claimed: true
+          claimed: true,
+          hours
         });
         storePromise = newStore.save();
       }
-      
+
       return storePromise.then(store => {
         const storeOwner = new StoreOwner({
           email,
