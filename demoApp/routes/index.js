@@ -285,8 +285,8 @@ router.get("/api/stores/:storeId", (req, res) => {
 });
 
 router.post("/api/products/add", (req, res) => {
-  const { storeId, name, price, allergens } = req.body;
-  const product = new Product({ name, storeId, price, allergens });
+  const { storeId, name, price, allergens, features } = req.body;
+  const product = new Product({ name, storeId, price, allergens, features });
   
   product.save()
     .then((savedProduct) => {
@@ -423,6 +423,8 @@ router.get("/api/store-owner/:storeOwnerId/products", (req, res) => {
 });
 
 router.get("/api/community-insights/:storeOwnerId", (req, res) => {
+  const miles = Math.min(10, Math.max(1, parseFloat(req.query.miles) || 1));
+
   function haversineDistance(lat1, lon1, lat2, lon2) {
     const R = 3958.8;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -439,7 +441,7 @@ router.get("/api/community-insights/:storeOwnerId", (req, res) => {
         if (!store || store.latitude == null) return res.status(404).json({ error: "Store location not set" });
         return User.find({ latitude: { $ne: null }, longitude: { $ne: null } }).then(users => {
           const nearby = users.filter(u =>
-            haversineDistance(store.latitude, store.longitude, u.latitude, u.longitude) <= 1
+            haversineDistance(store.latitude, store.longitude, u.latitude, u.longitude) <= miles
           );
 
           const counts = {};
@@ -453,7 +455,7 @@ router.get("/api/community-insights/:storeOwnerId", (req, res) => {
             .map(([restriction, count]) => ({ restriction, count }))
             .sort((a, b) => b.count - a.count);
 
-          res.json({ totalNearby: nearby.length, breakdown });
+          res.json({ totalNearby: nearby.length, breakdown, miles });
         });
       });
     })
@@ -461,6 +463,8 @@ router.get("/api/community-insights/:storeOwnerId", (req, res) => {
 });
 
 router.get("/api/recommended-suppliers/:storeOwnerId", (req, res) => {
+  const miles = Math.min(10, Math.max(1, parseFloat(req.query.miles) || 1));
+
   // Maps customer restriction labels to supplier dietary tag labels
   const restrictionToTags = {
     "Gluten":             ["Gluten-Free"],
@@ -502,7 +506,7 @@ router.get("/api/recommended-suppliers/:storeOwnerId", (req, res) => {
           Supplier.find({ dietaryTags: { $exists: true, $not: { $size: 0 } } })
         ]).then(([users, suppliers]) => {
           const nearby = users.filter(u =>
-            haversineDistance(store.latitude, store.longitude, u.latitude, u.longitude) <= 1
+            haversineDistance(store.latitude, store.longitude, u.latitude, u.longitude) <= miles
           );
 
           // Count local restrictions

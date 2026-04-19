@@ -53,11 +53,59 @@
   `;
   document.head.appendChild(style);
 
+  // Identify each dropdown by a known link in its menu
+  function findDropdownByLink(href) {
+    var dropdowns = document.querySelectorAll('.dropdown');
+    for (var i = 0; i < dropdowns.length; i++) {
+      if (dropdowns[i].querySelector('a[href="' + href + '"]')) return dropdowns[i];
+    }
+    return null;
+  }
+
+  var customerDropdown = findDropdownByLink('/signin');
+  var storeDropdown    = findDropdownByLink('/store-signin');
+  var supplierDropdown = findDropdownByLink('/supplier-signin');
+
+  // Hide the two dropdowns that don't belong to the logged-in account type
+  function hideOtherDropdowns(activeDropdown) {
+    [customerDropdown, storeDropdown, supplierDropdown].forEach(function (d) {
+      if (d && d !== activeDropdown) d.style.display = 'none';
+    });
+  }
+
+  // Replace sign-in + register links in a dropdown's Account section with
+  // a dashboard link and a sign-out link
+  function replaceAccountLinks(dropdown, signinHref, registerHref, dashHref, clearKey) {
+    var menu = dropdown.querySelector('.dropdown-menu');
+    if (!menu) return;
+
+    var signinLink   = menu.querySelector('a[href="' + signinHref + '"]');
+    var registerLink = menu.querySelector('a[href="' + registerHref + '"]');
+    if (signinLink)   signinLink.remove();
+    if (registerLink) registerLink.remove();
+
+    var dashLink = document.createElement('a');
+    dashLink.href = dashHref;
+    dashLink.textContent = 'My Dashboard';
+
+    var logoutLink = document.createElement('a');
+    logoutLink.href = '#';
+    logoutLink.textContent = 'Sign Out';
+    logoutLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      localStorage.removeItem(clearKey);
+      window.location.href = '/';
+    });
+
+    menu.appendChild(dashLink);
+    menu.appendChild(logoutLink);
+  }
+
   function injectPill(displayName, role, clearKey, profileUrl) {
-    const nav = document.querySelector('.site-nav');
+    var nav = document.querySelector('.site-nav');
     if (!nav) return;
 
-    const pill = document.createElement('div');
+    var pill = document.createElement('div');
     pill.className = 'nav-user-pill';
     pill.innerHTML =
       '\uD83D\uDC64 <a class="nav-user-name" href="' + profileUrl + '">' + displayName + '</a>' +
@@ -73,16 +121,30 @@
   }
 
   if (userId) {
+    hideOtherDropdowns(customerDropdown);
+    if (customerDropdown) {
+      replaceAccountLinks(customerDropdown, '/signin', '/signup', '/profile', 'userId');
+    }
     fetch('/api/user/' + userId)
       .then(function (r) { return r.json(); })
       .then(function (data) { injectPill(data.name || 'Customer', 'Customer', 'userId', '/profile'); })
       .catch(function () { injectPill('Customer', 'Customer', 'userId', '/profile'); });
+
   } else if (storeOwnerId) {
+    hideOtherDropdowns(storeDropdown);
+    if (storeDropdown) {
+      replaceAccountLinks(storeDropdown, '/store-signin', '/store-signup', '/store-dashboard', 'storeOwnerId');
+    }
     fetch('/api/store-owner/' + storeOwnerId)
       .then(function (r) { return r.json(); })
       .then(function (data) { injectPill(data.storeName || 'Store', 'Store', 'storeOwnerId', '/store-dashboard'); })
       .catch(function () { injectPill('Store', 'Store', 'storeOwnerId', '/store-dashboard'); });
+
   } else if (supplierId) {
+    hideOtherDropdowns(supplierDropdown);
+    if (supplierDropdown) {
+      replaceAccountLinks(supplierDropdown, '/supplier-signin', '/supplier-signup', '/supplier-dashboard', 'supplierId');
+    }
     fetch('/api/supplier/' + supplierId)
       .then(function (r) { return r.json(); })
       .then(function (data) { injectPill(data.companyName || 'Supplier', 'Supplier', 'supplierId', '/supplier-dashboard'); })

@@ -44,6 +44,7 @@ const productSchema = new Schema({
   name: { type: String, required: true },
   storeId: { type: Schema.Types.ObjectId, ref: "Store", required: true },
   allergens: [String],
+  features: [String],
   price: Number,
   createdAt: { type: Date, default: Date.now },
 });

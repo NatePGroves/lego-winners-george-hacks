@@ -278,6 +278,22 @@
         font-weight: 600;
       }
 
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+      }
+
+      .feature-tag {
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
       .delete-btn {
         background: #ff6b6b;
         color: white;
@@ -502,6 +518,11 @@
           <div class="section-title">
             <span>Community Dietary Insights</span>
           </div>
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+            <label for="insightsRadius" style="font-size: 14px; font-weight: 600; color: var(--dusk-blue); white-space: nowrap;">Radius: <span id="insightsRadiusLabel">1</span> mi</label>
+            <input type="range" id="insightsRadius" min="1" max="10" step="1" value="1"
+              style="flex: 1; accent-color: var(--turf-green); cursor: pointer;" />
+          </div>
           <p class="insights-meta" id="insightsMeta">Loading nearby customer data...</p>
           <div id="insightsChart"></div>
         </div>
@@ -536,7 +557,7 @@
       let storeData = null;
 
       function addProduct() {
-        const storeId = storeData._id;
+        const storeId = storeData.storeId;
         window.location.href = `/add-product?storeId=${storeId}`;
       }
 
@@ -570,7 +591,8 @@
       }
 
       function loadInsights() {
-        fetch(`/api/community-insights/${storeOwnerId}`)
+        const miles = document.getElementById("insightsRadius").value;
+        fetch(`/api/community-insights/${storeOwnerId}?miles=${miles}`)
           .then(r => r.json())
           .then(data => {
             const meta = document.getElementById("insightsMeta");
@@ -582,12 +604,12 @@
             }
 
             if (data.totalNearby === 0 || data.breakdown.length === 0) {
-              meta.textContent = data.totalNearby + " customers with location data found within 1 mile. No dietary restrictions recorded yet.";
+              meta.textContent = data.totalNearby + " customers with location data found within " + miles + " mile" + (miles > 1 ? "s" : "") + ". No dietary restrictions recorded yet.";
               chart.innerHTML = '<p class="no-insights">As customers in your area sign up and set their dietary preferences, their aggregated restrictions will appear here.</p>';
               return;
             }
 
-            meta.textContent = data.totalNearby + " customer" + (data.totalNearby !== 1 ? "s" : "") + " with dietary data found within 1 mile of your store.";
+            meta.textContent = data.totalNearby + " customer" + (data.totalNearby !== 1 ? "s" : "") + " with dietary data found within " + miles + " mile" + (miles > 1 ? "s" : "") + " of your store.";
 
             const max = data.breakdown[0].count;
             chart.innerHTML = data.breakdown.map(item => `
@@ -604,6 +626,12 @@
             document.getElementById("insightsMeta").textContent = "Could not load community insights.";
           });
       }
+
+      document.getElementById("insightsRadius").addEventListener("input", function () {
+        document.getElementById("insightsRadiusLabel").textContent = this.value;
+        loadInsights();
+        loadRecommendedSuppliers();
+      });
 
       function loadProducts() {
         fetch(`/api/store-owner/${storeOwnerId}/products`)
@@ -625,7 +653,12 @@
                   ${p.price ? `<p>Price: $${p.price.toFixed(2)}</p>` : ''}
                   ${p.allergens && p.allergens.length > 0 ? `
                     <div class="allergens">
-                      ${p.allergens.map(a => `<span class="allergen-tag">${a}</span>`).join('')}
+                      ${p.allergens.map(a => `<span class="allergen-tag">⚠ ${a}</span>`).join('')}
+                    </div>
+                  ` : ''}
+                  ${p.features && p.features.length > 0 ? `
+                    <div class="features">
+                      ${p.features.map(f => `<span class="feature-tag">✓ ${f}</span>`).join('')}
                     </div>
                   ` : ''}
                 </div>
@@ -636,7 +669,8 @@
       }
 
       function loadRecommendedSuppliers() {
-        fetch(`/api/recommended-suppliers/${storeOwnerId}`)
+        const miles = document.getElementById("insightsRadius").value;
+        fetch(`/api/recommended-suppliers/${storeOwnerId}?miles=${miles}`)
           .then(r => r.json())
           .then(data => {
             const meta = document.getElementById("suppliersMeta");
