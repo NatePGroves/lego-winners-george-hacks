@@ -103,7 +103,7 @@
         <a href="/map">Map</a>
       </div>
       
-      <h1>Sign In</h1>
+      <h1>Customer Sign In</h1>
       
       <form id="signinForm">
         <div>
@@ -143,6 +143,7 @@
             const responseDiv = document.getElementById("response");
             if (data.userId) {
               localStorage.setItem("userId", data.userId);
+              localStorage.removeItem("storeOwnerId");
               responseDiv.className = "success";
               responseDiv.textContent = "Sign in successful! Redirecting...";
               setTimeout(() => {
@@ -152,6 +153,7 @@
               responseDiv.className = "error";
               responseDiv.textContent = data.message || "Sign in failed";
             }
+            responseDiv.style.display = "block";
           });
       });
     </script>

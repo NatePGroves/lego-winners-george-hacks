@@ -374,6 +374,7 @@
               responseDiv.textContent = "✓ Account created! Redirecting to dashboard...";
               setTimeout(() => {
                 localStorage.setItem("storeOwnerId", data.storeOwnerId);
+                localStorage.removeItem("userId");
                 window.location.href = `/store-dashboard`;
               }, 1500);
             } else {

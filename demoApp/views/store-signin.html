@@ -143,6 +143,7 @@
             const responseDiv = document.getElementById("response");
             if (data.storeOwnerId) {
               localStorage.setItem("storeOwnerId", data.storeOwnerId);
+              localStorage.removeItem("userId");
               responseDiv.className = "success";
               responseDiv.textContent = "Sign in successful! Redirecting...";
               setTimeout(() => {

@@ -183,7 +183,15 @@
 
     <script>
       const storeOwnerId = localStorage.getItem("storeOwnerId");
-      if (!storeOwnerId) window.location.href = "/store-signin";
+      const userId = localStorage.getItem("userId");
+      
+      if (!storeOwnerId) {
+        if (userId) {
+          window.location.href = "/profile";
+        } else {
+          window.location.href = "/store-signin";
+        }
+      }
       
       let storeData = null;
       
