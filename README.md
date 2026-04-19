@@ -5,6 +5,7 @@ A platform connecting customers, corner stores, and suppliers to increase access
 ## Project Overview
 
 This application provides a marketplace for healthy food products across local convenience stores. It enables:
+
 - **Customers** to discover nearby stores with healthy options and filter by dietary preferences
 - **Store Owners** to list their stores, manage inventory, and connect with suppliers
 - **Suppliers** to distribute products to multiple stores
@@ -14,6 +15,7 @@ This application provides a marketplace for healthy food products across local c
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - MongoDB (local or Atlas connection)
 - Python 3.7+ (for data extraction scripts)
@@ -22,12 +24,14 @@ This application provides a marketplace for healthy food products across local c
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd lego-winners-george-hacks
    ```
 
 2. **Install backend dependencies**
+
    ```bash
    cd demoApp
    npm install
@@ -35,6 +39,7 @@ This application provides a marketplace for healthy food products across local c
 
 3. **Set up environment variables**
    Create a `.env` file in the `demoApp` directory:
+
    ```
    MONGODB_URI=your_mongodb_connection_string
    PORT=3000
@@ -49,12 +54,14 @@ This application provides a marketplace for healthy food products across local c
 ### Running the Application
 
 **Development mode** (with auto-reload):
+
 ```bash
 cd demoApp
 npm run dev
 ```
 
 **Production mode**:
+
 ```bash
 cd demoApp
 npm start
@@ -68,21 +75,21 @@ The server will start on `http://localhost:3000`
 
 ### User Roles & Capabilities
 
-| Role | Capabilities |
-|------|--------------|
-| **Customer** | Browse stores on map, filter by dietary preferences, view store details, set preferences |
-| **Store Owner** | Sign up store, add/manage products, view dashboard, receive recommendations |
-| **Supplier** | Manage product distribution network, view partnership overview, manage tags |
-
+| Role            | Capabilities                                                                             |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| **Customer**    | Browse stores on map, filter by dietary preferences, view store details, set preferences |
+| **Store Owner** | Sign up store, add/manage products, view dashboard, receive recommendations              |
+| **Supplier**    | Manage product distribution network, view partnership overview, manage tags              |
 
 ### Core Features
--  **Interactive Map** - Browse stores by location with GeoJSON integration
--  **Dietary Filtering** - Filter products by dietary restrictions and preferences
--  **Product Management** - Stores and suppliers can manage inventory
--  **Multi-role Authentication** - Separate login flows for customers, stores, and suppliers
--  **Store Network** - Distribution and partnership management
--  **Dashboard** - Role-specific dashboards for data insights
--  **Secure Authentication** - Password hashing with bcrypt
+
+- **Interactive Map** - Browse stores by location with GeoJSON integration
+- **Dietary Filtering** - Filter products by dietary restrictions and preferences
+- **Product Management** - Stores and suppliers can manage inventory
+- **Multi-role Authentication** - Separate login flows for customers, stores, and suppliers
+- **Store Network** - Distribution and partnership management
+- **Dashboard** - Role-specific dashboards for data insights
+- **Secure Authentication** - Password hashing with bcrypt
 
 ---
 
@@ -123,8 +130,8 @@ lego-winners-george-hacks/
 
 ---
 
-
 #### Customer Routes
+
 - `GET /` - Landing page
 - `GET /signup` - Customer signup
 - `GET /signin` - Customer signin
@@ -133,6 +140,7 @@ lego-winners-george-hacks/
 - `GET /map` - Interactive store map
 
 #### Store Owner Routes
+
 - `GET /store-signup` - Store registration
 - `GET /store-signin` - Store login
 - `GET /store-dashboard` - Store management dashboard
@@ -141,12 +149,14 @@ lego-winners-george-hacks/
 - `GET /recommend-store` - Get store recommendations
 
 #### Supplier Routes
+
 - `GET /supplier-signup` - Supplier registration
 - `GET /supplier-signin` - Supplier login
 - `GET /supplier-dashboard` - Supplier dashboard
 - `GET /supplier-tags` - Manage product tags
 
 #### Educational Pages
+
 - `GET /how-it-works` - Customer guide
 - `GET /dietary-filtering` - Dietary info
 - `GET /why-list-your-store` - Store recruitment page
@@ -159,6 +169,7 @@ lego-winners-george-hacks/
 ## Database Models
 
 The application uses MongoDB with Mongoose and includes the following models:
+
 - **User** - Customer accounts
 - **Store** - Store information
 - **Product** - Product listings
@@ -180,9 +191,25 @@ The application uses MongoDB with Mongoose and includes the following models:
 
 ---
 
-## Team Information
+## License
 
-See the project team document: [Team Members](https://docs.google.com/document/d/1SQ82GBFSVv88tm664elGZqNh_WBoHCss_Rz776pxXyE/edit?usp=sharing)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<!-- ---
+
+ ## Team Information
+
+See the project team document: [Team Members](https://docs.google.com/document/d/1SQ82GBFSVv88tm664elGZqNh_WBoHCss_Rz776pxXyE/edit?usp=sharing) -->
+
+---
+
+## Recent Updates
+
+- **UI Polish**: Improved forms and dashboards for customer signup, store registration, and product management
+- **Store Dashboard**: Enhanced functionality with better inventory and recommendation management
+- **Supplier Dashboard**: Improved partner management and product distribution features
+- **Map UX**: Optimized store browsing experience on the interactive map
+- **Removed Admin Functions**: Simplified user roles to focus on Customer, Store Owner, and Supplier roles
 
 ---
 
@@ -190,11 +217,11 @@ See the project team document: [Team Members](https://docs.google.com/document/d
 
 Primary brand colors:
 
-| Color | Hex | Purpose |
-|-------|-----|----------|
-| **Primary** | #297045 | Main brand green - buttons, headings |
-| **Secondary** | #465775 | Blue - accents, secondary elements |
-| **Background** | #eef6ef | Soft green - page backgrounds |
-| **Surface** | #ffffff | White - card and container backgrounds |
-| **Accent** | #d2f898 | Light green - highlights, focus states |
-| **CTA** | #cc5f00 | Orange - calls-to-action, important buttons |
+| Color          | Hex     | Purpose                                     |
+| -------------- | ------- | ------------------------------------------- |
+| **Primary**    | #297045 | Main brand green - buttons, headings        |
+| **Secondary**  | #465775 | Blue - accents, secondary elements          |
+| **Background** | #eef6ef | Soft green - page backgrounds               |
+| **Surface**    | #ffffff | White - card and container backgrounds      |
+| **Accent**     | #d2f898 | Light green - highlights, focus states      |
+| **CTA**        | #cc5f00 | Orange - calls-to-action, important buttons |
