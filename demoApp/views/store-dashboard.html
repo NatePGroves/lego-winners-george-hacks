@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Store Dashboard - Healthy Food Access</title>
+    <title>Store Dashboard - CornerLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -439,7 +439,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">🥗 CornerLink</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -534,12 +534,60 @@
           <p class="insights-meta" id="suppliersMeta">Finding suppliers that match your community's needs...</p>
           <div id="suppliersList"></div>
         </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span>Account Settings</span>
+            <button id="editProfileBtn" style="font-size:13px;padding:6px 14px;background:var(--lime-cream);color:var(--dusk-blue);border:none;border-radius:6px;cursor:pointer;font-weight:600;">Edit</button>
+          </div>
+
+          <!-- View mode -->
+          <div id="accountView">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div style="background:var(--lime-cream);border-radius:10px;padding:16px;border-left:4px solid var(--turf-green);">
+                <div style="font-size:12px;font-weight:600;color:var(--dusk-blue);opacity:0.7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Store Name</div>
+                <div style="font-size:16px;font-weight:bold;color:var(--dusk-blue);" id="accountStoreName">-</div>
+              </div>
+              <div style="background:var(--lime-cream);border-radius:10px;padding:16px;border-left:4px solid var(--turf-green);">
+                <div style="font-size:12px;font-weight:600;color:var(--dusk-blue);opacity:0.7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Email</div>
+                <div style="font-size:16px;font-weight:bold;color:var(--dusk-blue);" id="accountEmail">-</div>
+              </div>
+              <div style="background:var(--lime-cream);border-radius:10px;padding:16px;border-left:4px solid var(--turf-green);">
+                <div style="font-size:12px;font-weight:600;color:var(--dusk-blue);opacity:0.7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Phone</div>
+                <div style="font-size:16px;font-weight:bold;color:var(--dusk-blue);" id="accountPhone">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit mode -->
+          <div id="accountEdit" style="display:none;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+              <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Store Name</label>
+                <input id="editStoreName" type="text" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+              </div>
+              <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Email</label>
+                <input id="editEmail" type="email" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+              </div>
+              <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Phone</label>
+                <input id="editPhone" type="tel" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+              </div>
+            </div>
+            <div id="accountEditMsg" style="display:none;font-size:13px;margin-bottom:12px;"></div>
+            <div style="display:flex;gap:10px;">
+              <button id="saveAccountBtn" style="flex:1;padding:12px;background:var(--turf-green);color:white;border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;">Save Changes</button>
+              <button id="cancelAccountBtn" style="flex:1;padding:12px;background:var(--thistle);color:var(--dusk-blue);border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Footer -->
     <footer class="site-footer">
-      Healthy Food Access · Built for DC communities
+      CornerLink · Built for DC communities
     </footer>
 
     <script>
@@ -557,6 +605,7 @@
       let storeData = null;
 
       function addProduct() {
+        if (!storeData) return;
         const storeId = storeData.storeId;
         window.location.href = `/add-product?storeId=${storeId}`;
       }
@@ -571,6 +620,8 @@
           });
       }
 
+      let ownerData = null;
+
       function loadStore() {
         fetch(`/api/store-owner/${storeOwnerId}`)
           .then((res) => res.json())
@@ -581,14 +632,67 @@
             }
 
             storeData = data.store;
+            ownerData = data;
             document.getElementById("storeName").textContent = data.storeName;
             document.getElementById("storeEmail").textContent = data.email;
+            document.getElementById("accountStoreName").textContent = data.storeName;
+            document.getElementById("accountEmail").textContent = data.email;
+            document.getElementById("accountPhone").textContent = data.phone || "Not set";
 
             loadProducts();
             loadInsights();
             loadRecommendedSuppliers();
           });
       }
+
+      document.getElementById("editProfileBtn").addEventListener("click", () => {
+        document.getElementById("accountView").style.display = "none";
+        document.getElementById("accountEdit").style.display = "block";
+        document.getElementById("editProfileBtn").style.display = "none";
+        document.getElementById("editStoreName").value = ownerData.storeName || "";
+        document.getElementById("editEmail").value = ownerData.email || "";
+        document.getElementById("editPhone").value = ownerData.phone || "";
+      });
+
+      document.getElementById("cancelAccountBtn").addEventListener("click", () => {
+        document.getElementById("accountView").style.display = "block";
+        document.getElementById("accountEdit").style.display = "none";
+        document.getElementById("editProfileBtn").style.display = "";
+        document.getElementById("accountEditMsg").style.display = "none";
+      });
+
+      document.getElementById("saveAccountBtn").addEventListener("click", () => {
+        const body = {
+          storeName: document.getElementById("editStoreName").value.trim(),
+          email: document.getElementById("editEmail").value.trim(),
+          phone: document.getElementById("editPhone").value.trim(),
+        };
+        if (!body.storeName || !body.email) {
+          const msg = document.getElementById("accountEditMsg");
+          msg.textContent = "Store name and email are required.";
+          msg.style.cssText = "display:block;color:#c0392b;";
+          return;
+        }
+        fetch(`/api/store-owner/${storeOwnerId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.error || data.message === "Email already in use") {
+              const msg = document.getElementById("accountEditMsg");
+              msg.textContent = data.message || data.error;
+              msg.style.cssText = "display:block;color:#c0392b;";
+              return;
+            }
+            document.getElementById("accountView").style.display = "block";
+            document.getElementById("accountEdit").style.display = "none";
+            document.getElementById("editProfileBtn").style.display = "";
+            document.getElementById("accountEditMsg").style.display = "none";
+            loadStore();
+          });
+      });
 
       function loadInsights() {
         const miles = document.getElementById("insightsRadius").value;
@@ -642,7 +746,7 @@
             document.getElementById("productsList").style.display = "block";
 
             if (products.length === 0) {
-              document.getElementById("productsList").innerHTML = '<p style="text-align: center; color: #999;">No products yet. Click + Add Product to get started!</p>';
+              document.getElementById("productsList").innerHTML = `<div style="text-align: center; padding: 24px 0;"><p style="color: #999; margin-bottom: 16px;">No products yet.</p><a href="#" class="add-btn" onclick="addProduct(); return false;">+ Add Your First Product</a></div>`;
               return;
             }
 

@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Add Product - Healthy Food Access</title>
+    <title>Add Product - CornerLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -331,6 +331,20 @@
       .suggested-tag:hover:not(.added) { background: var(--turf-green); color: white; }
       .suggested-tag.added { background: var(--turf-green); color: white; cursor: default; }
 
+      .quick-pick {
+        padding: 5px 12px;
+        background: white;
+        border: 2px solid var(--turf-green);
+        color: var(--turf-green);
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .quick-pick:hover:not(.added) { background: var(--turf-green); color: white; }
+      .quick-pick.added { background: var(--turf-green); color: white; cursor: default; opacity: 0.7; }
+
       .scanner-modal {
         display: none;
         position: fixed;
@@ -419,21 +433,22 @@
       .manual-barcode-row button:hover { background: var(--turf-green-dark); }
       .scanner-close {
         padding: 10px 20px;
-        background: #e0e0e0;
+        background: #e74c3c;
+        color: white;
         border: none;
         border-radius: 8px;
         cursor: pointer;
         font-size: 14px;
         font-weight: 600;
       }
-      .scanner-close:hover { background: #ccc; }
+      .scanner-close:hover { background: #c0392b; }
     </style>
   </head>
   <body>
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">🥗 CornerLink</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -515,8 +530,21 @@
             </div>
             <div>
             <label>Dietary Features</label>
+            <p style="font-size:13px; color:#666; margin: -4px 0 10px;">What this product IS suitable for — positive claims like certifications or dietary suitability (e.g., a product labeled "Vegan" or "Gluten-Free").</p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;" id="featureQuickPicks">
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Vegan')">+ Vegan</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Vegetarian')">+ Vegetarian</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Gluten-Free')">+ Gluten-Free</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Dairy-Free')">+ Dairy-Free</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Organic')">+ Organic</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Non-GMO')">+ Non-GMO</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Kosher')">+ Kosher</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Halal')">+ Halal</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Keto')">+ Keto</button>
+              <button type="button" class="quick-pick" onclick="quickAddFeature(this,'Nut-Free')">+ Nut-Free</button>
+            </div>
             <div class="allergen-input">
-              <input type="text" id="featureInput" placeholder="e.g., Vegan, Gluten-Free, Organic..." />
+              <input type="text" id="featureInput" placeholder="Or type a custom feature..." />
               <button type="button" id="addFeatureBtn">Add</button>
             </div>
             <div class="allergen-tags" id="featureTags"></div>
@@ -556,7 +584,7 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      Healthy Food Access · Built for DC communities
+      CornerLink · Built for DC communities
     </footer>
 
     <script>
@@ -623,6 +651,14 @@
         "Organic", "Non-GMO", "Kosher", "Halal", "Keto", "Nut-Free", "Soy-Free",
         "Sugar-Free", "Low-Sodium", "High-Protein", "Whole Grain",
       ];
+
+      function quickAddFeature(btn, feature) {
+        if (features.includes(feature)) return;
+        features.push(feature);
+        renderFeatures();
+        btn.classList.add('added');
+        btn.textContent = '✓ ' + feature.replace('+ ', '');
+      }
 
       document.getElementById("addFeatureBtn").addEventListener("click", () => {
         const input = document.getElementById("featureInput").value.trim();

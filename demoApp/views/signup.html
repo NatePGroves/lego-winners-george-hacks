@@ -2,12 +2,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Sign Up - Healthy Food Access</title>
+    <title>Sign Up - CornerLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #eef6ef;
+        background: #f8f8f8;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -141,7 +141,7 @@
       }
 
       .form-container h1 {
-        color: #297045;
+        color: var(--dusk-blue);
         font-size: 28px;
         margin-bottom: 8px;
         margin-top: 0;
@@ -237,45 +237,40 @@
         text-decoration: underline;
       }
 
-      .address-row {
-        display: flex;
-        gap: 8px;
-      }
-
-      .address-row input {
-        flex: 1;
-      }
-
-      .geocode-btn {
-        width: auto !important;
-        padding: 12px 16px !important;
-        font-size: 13px !important;
-        margin-top: 0 !important;
-        background: var(--dusk-blue) !important;
-        flex-shrink: 0;
-      }
-
-      .geocode-btn:hover {
-        background: #2e3d52 !important;
-      }
-
-      .address-confirm {
-        font-size: 13px;
-        color: var(--turf-green);
-        margin-top: 4px;
+      .addr-dropdown {
         display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid var(--turf-green);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 20;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       }
 
-      .address-confirm.error {
-        color: #c0392b;
+      .addr-suggestion {
+        padding: 10px 12px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--dusk-blue);
+        border-bottom: 1px solid var(--thistle);
+        transition: background 0.15s;
       }
+
+      .addr-suggestion:last-child { border-bottom: none; }
+      .addr-suggestion:hover { background: var(--lime-cream); }
     </style>
   </head>
   <body>
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">Healthy Food Access</a>
+      <a href="/" class="header-brand">CornerLink</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -345,11 +340,10 @@
 
           <div>
             <label for="addressInput">Home Address</label>
-            <div class="address-row">
-              <input type="text" id="addressInput" placeholder="e.g. 1600 Pennsylvania Ave NW, DC" />
-              <button type="button" class="geocode-btn" id="geocodeBtn">Verify</button>
+            <div id="addressWrapper" style="position: relative;">
+              <input type="text" id="addressInput" placeholder="Start typing your DC address..." autocomplete="off" />
+              <div id="addressSuggestions" class="addr-dropdown"></div>
             </div>
-            <div class="address-confirm" id="addressConfirm"></div>
           </div>
 
           <button type="submit">Sign Up</button>
@@ -365,42 +359,48 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      Healthy Food Access · Built for DC communities
+      CornerLink · Built for DC communities
     </footer>
 
     <script>
       let resolvedLat = null;
       let resolvedLng = null;
       let resolvedAddress = null;
+      let addrDebounce = null;
 
-      document.getElementById("geocodeBtn").addEventListener("click", () => {
-        const query = document.getElementById("addressInput").value.trim();
-        const confirm = document.getElementById("addressConfirm");
-        if (!query) return;
+      const addressInput = document.getElementById("addressInput");
+      const addressSuggestions = document.getElementById("addressSuggestions");
 
-        confirm.textContent = "Verifying...";
-        confirm.className = "address-confirm";
-        confirm.style.display = "block";
+      addressInput.addEventListener("input", () => {
+        clearTimeout(addrDebounce);
+        resolvedLat = null; resolvedLng = null; resolvedAddress = null;
+        const query = addressInput.value.trim();
+        if (query.length < 3) { addressSuggestions.style.display = "none"; return; }
+        addrDebounce = setTimeout(() => {
+          fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ", Washington DC")}&format=json&limit=5&countrycodes=us`)
+            .then(r => r.json())
+            .then(data => {
+              if (!data.length) { addressSuggestions.style.display = "none"; return; }
+              addressSuggestions.innerHTML = data.map(r =>
+                `<div class="addr-suggestion" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${r.display_name}">${r.display_name}</div>`
+              ).join('');
+              addressSuggestions.style.display = "block";
+              addressSuggestions.querySelectorAll(".addr-suggestion").forEach(item => {
+                item.addEventListener("click", () => {
+                  resolvedLat = parseFloat(item.dataset.lat);
+                  resolvedLng = parseFloat(item.dataset.lon);
+                  resolvedAddress = item.dataset.name;
+                  addressInput.value = resolvedAddress;
+                  addressSuggestions.style.display = "none";
+                });
+              });
+            })
+            .catch(() => { addressSuggestions.style.display = "none"; });
+        }, 350);
+      });
 
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us&viewbox=-77.119759,38.995548,-76.909393,38.791645&bounded=1`)
-          .then(r => r.json())
-          .then(data => {
-            if (data.length > 0) {
-              resolvedLat = parseFloat(data[0].lat);
-              resolvedLng = parseFloat(data[0].lon);
-              resolvedAddress = data[0].display_name;
-              confirm.textContent = "Found: " + resolvedAddress;
-              confirm.className = "address-confirm";
-            } else {
-              resolvedLat = null; resolvedLng = null; resolvedAddress = null;
-              confirm.textContent = "Address not found. Try a more specific DC address.";
-              confirm.className = "address-confirm error";
-            }
-          })
-          .catch(() => {
-            confirm.textContent = "Could not verify address. You can still sign up.";
-            confirm.className = "address-confirm error";
-          });
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#addressWrapper")) addressSuggestions.style.display = "none";
       });
 
       document.getElementById("signupForm").addEventListener("submit", (e) => {
@@ -415,7 +415,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name, email, password,
-            address: resolvedAddress || document.getElementById("addressInput").value || null,
+            address: resolvedAddress || addressInput.value || null,
             latitude: resolvedLat,
             longitude: resolvedLng,
           }),
@@ -427,6 +427,7 @@
               responseDiv.className = "success";
               responseDiv.textContent = "Sign up successful! Redirecting...";
               setTimeout(() => {
+                localStorage.setItem("userId", data.userId);
                 window.location.href = `/preferences/${data.userId}`;
               }, 1500);
             } else {

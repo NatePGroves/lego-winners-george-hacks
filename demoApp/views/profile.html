@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>My Profile - Healthy Food Access</title>
+    <title>My Profile - CornerLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -253,7 +253,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">🥗 CornerLink</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -309,18 +309,53 @@
         <div id="profileContent" style="display: none;">
 
           <div class="profile-section">
-            <div class="section-title">Personal Information</div>
-            <div class="info-row">
-              <span class="info-label">Name:</span>
-              <span class="info-value" id="nameValue"></span>
+            <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+              Personal Information
+              <button id="editProfileBtn" style="font-size:13px;padding:6px 14px;background:var(--lime-cream);color:var(--dusk-blue);border:none;border-radius:6px;cursor:pointer;font-weight:600;">Edit</button>
             </div>
-            <div class="info-row">
-              <span class="info-label">Email:</span>
-              <span class="info-value" id="emailValue"></span>
+
+            <!-- View mode -->
+            <div id="profileView">
+              <div class="info-row">
+                <span class="info-label">Name:</span>
+                <span class="info-value" id="nameValue"></span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value" id="emailValue"></span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Address:</span>
+                <span class="info-value" id="addressValue" style="color:#999;font-style:italic;">Not set</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Member Since:</span>
+                <span class="info-value" id="joinedValue"></span>
+              </div>
             </div>
-            <div class="info-row">
-              <span class="info-label">Member Since:</span>
-              <span class="info-value" id="joinedValue"></span>
+
+            <!-- Edit mode -->
+            <div id="profileEdit" style="display:none;">
+              <div style="margin-bottom:16px;">
+                <label style="display:block;font-weight:600;color:var(--dusk-blue);font-size:14px;margin-bottom:6px;">Name</label>
+                <input id="editName" type="text" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:15px;box-sizing:border-box;" />
+              </div>
+              <div style="margin-bottom:16px;">
+                <label style="display:block;font-weight:600;color:var(--dusk-blue);font-size:14px;margin-bottom:6px;">Email</label>
+                <input id="editEmail" type="email" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:15px;box-sizing:border-box;" />
+              </div>
+              <div style="margin-bottom:16px;">
+                <label style="display:block;font-weight:600;color:var(--dusk-blue);font-size:14px;margin-bottom:6px;">Home Address</label>
+                <div id="editAddrWrapper" style="position:relative;">
+                  <input id="editAddress" type="text" autocomplete="off" placeholder="Start typing your DC address..." style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:15px;box-sizing:border-box;" />
+                  <div id="editAddrSuggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:2px solid var(--turf-green);border-top:none;border-radius:0 0 8px 8px;max-height:180px;overflow-y:auto;z-index:20;box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
+                </div>
+              </div>
+              <div id="editMsg" style="font-size:13px;margin-bottom:12px;display:none;"></div>
+              <div style="display:flex;gap:10px;">
+                <button id="saveProfileBtn" style="flex:1;padding:12px;background:var(--turf-green);color:white;border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;">Save Changes</button>
+                <button id="cancelEditBtn" style="flex:1;padding:12px;background:var(--thistle);color:var(--dusk-blue);border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;">Cancel</button>
+              </div>
             </div>
           </div>
 
@@ -341,7 +376,7 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      Healthy Food Access · Built for DC communities
+      CornerLink · Built for DC communities
     </footer>
 
     <script>
@@ -356,32 +391,132 @@
         }
       }
 
-      fetch(`/api/user/${userId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
+      let profileData = null;
+
+      function loadProfile() {
+        fetch(`/api/user/${userId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              document.getElementById("loading").style.display = "none";
+              document.getElementById("error").style.display = "block";
+              document.getElementById("error").textContent = data.error;
+              return;
+            }
+
+            profileData = data;
+            document.getElementById("nameValue").textContent = data.name;
+            document.getElementById("emailValue").textContent = data.email;
+            document.getElementById("joinedValue").textContent = new Date(data.createdAt).toLocaleDateString();
+            const addrEl = document.getElementById("addressValue");
+            if (data.address) { addrEl.textContent = data.address; addrEl.style.cssText = ""; }
+
+            const allergiesList = document.getElementById("allergiesList");
+            if (data.allergies && data.allergies.length > 0) {
+              allergiesList.innerHTML = data.allergies.map(a => `<div class="allergen-tag">${a}</div>`).join('');
+            } else {
+              allergiesList.innerHTML = '<div class="no-allergies">No dietary preferences set</div>';
+            }
+
             document.getElementById("loading").style.display = "none";
-            document.getElementById("error").style.display = "block";
-            document.getElementById("error").textContent = data.error;
-            return;
-          }
+            document.getElementById("profileContent").style.display = "block";
+          });
+      }
 
-          document.getElementById("nameValue").textContent = data.name;
-          document.getElementById("emailValue").textContent = data.email;
-          document.getElementById("joinedValue").textContent = new Date(data.createdAt).toLocaleDateString();
+      loadProfile();
 
-          const allergiesList = document.getElementById("allergiesList");
-          if (data.allergies && data.allergies.length > 0) {
-            allergiesList.innerHTML = data.allergies.map(allergen => `
-              <div class="allergen-tag">${allergen}</div>
-            `).join('');
-          } else {
-            allergiesList.innerHTML = '<div class="no-allergies">No dietary preferences set</div>';
-          }
+      // Edit profile toggle
+      document.getElementById("editProfileBtn").addEventListener("click", () => {
+        document.getElementById("profileView").style.display = "none";
+        document.getElementById("profileEdit").style.display = "block";
+        document.getElementById("editProfileBtn").style.display = "none";
+        document.getElementById("editName").value = profileData.name || "";
+        document.getElementById("editEmail").value = profileData.email || "";
+        document.getElementById("editAddress").value = profileData.address || "";
+        editResolvedLat = profileData.latitude || null;
+        editResolvedLng = profileData.longitude || null;
+        editResolvedAddress = profileData.address || null;
+      });
 
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("profileContent").style.display = "block";
-        });
+      document.getElementById("cancelEditBtn").addEventListener("click", () => {
+        document.getElementById("profileView").style.display = "block";
+        document.getElementById("profileEdit").style.display = "none";
+        document.getElementById("editProfileBtn").style.display = "";
+        document.getElementById("editMsg").style.display = "none";
+      });
+
+      document.getElementById("saveProfileBtn").addEventListener("click", () => {
+        const name = document.getElementById("editName").value.trim();
+        const email = document.getElementById("editEmail").value.trim();
+        const addressVal = document.getElementById("editAddress").value.trim();
+        if (!name || !email) {
+          const msg = document.getElementById("editMsg");
+          msg.textContent = "Name and email are required.";
+          msg.style.cssText = "display:block;color:#c0392b;";
+          return;
+        }
+        fetch(`/api/user/${userId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name, email,
+            address: editResolvedAddress || addressVal || null,
+            latitude: editResolvedLat,
+            longitude: editResolvedLng,
+          }),
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.error || data.message === "Email already in use") {
+              const msg = document.getElementById("editMsg");
+              msg.textContent = data.message || data.error;
+              msg.style.cssText = "display:block;color:#c0392b;";
+              return;
+            }
+            document.getElementById("profileView").style.display = "block";
+            document.getElementById("profileEdit").style.display = "none";
+            document.getElementById("editProfileBtn").style.display = "";
+            document.getElementById("editMsg").style.display = "none";
+            loadProfile();
+          });
+      });
+
+      // Address autocomplete for edit mode
+      let editResolvedLat = null, editResolvedLng = null, editResolvedAddress = null, editAddrDebounce = null;
+      const editAddrInput = document.getElementById("editAddress");
+      const editAddrSugg = document.getElementById("editAddrSuggestions");
+
+      editAddrInput.addEventListener("input", () => {
+        clearTimeout(editAddrDebounce);
+        editResolvedLat = null; editResolvedLng = null; editResolvedAddress = null;
+        const query = editAddrInput.value.trim();
+        if (query.length < 3) { editAddrSugg.style.display = "none"; return; }
+        editAddrDebounce = setTimeout(() => {
+          fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ", Washington DC")}&format=json&limit=5&countrycodes=us`)
+            .then(r => r.json())
+            .then(data => {
+              if (!data.length) { editAddrSugg.style.display = "none"; return; }
+              editAddrSugg.innerHTML = data.map(r =>
+                `<div style="padding:10px 12px;cursor:pointer;font-size:13px;color:var(--dusk-blue);border-bottom:1px solid var(--thistle);" onmouseover="this.style.background='#d2f898'" onmouseout="this.style.background=''" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${r.display_name}">${r.display_name}</div>`
+              ).join('');
+              editAddrSugg.style.display = "block";
+              editAddrSugg.querySelectorAll("div").forEach(item => {
+                item.addEventListener("click", () => {
+                  editResolvedLat = parseFloat(item.dataset.lat);
+                  editResolvedLng = parseFloat(item.dataset.lon);
+                  editResolvedAddress = item.dataset.name;
+                  editAddrInput.value = editResolvedAddress;
+                  editAddrSugg.style.display = "none";
+                });
+              });
+            })
+            .catch(() => { editAddrSugg.style.display = "none"; });
+        }, 350);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#editAddrWrapper")) editAddrSugg.style.display = "none";
+      });
 
       document.getElementById("editBtn").addEventListener("click", () => {
         window.location.href = `/preferences/${userId}`;

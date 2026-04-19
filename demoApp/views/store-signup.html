@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Register Your Store - Healthy Food Access</title>
+    <title>Register Your Store - CornerLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -389,7 +389,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">🥗 CornerLink</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -466,7 +466,10 @@
 
           <div>
             <label for="addressInput">Store Address *</label>
-            <input type="text" id="addressInput" placeholder="e.g. 1234 Georgia Ave NW, Washington DC" required />
+            <div id="addressWrapper" style="position: relative;">
+              <input type="text" id="addressInput" placeholder="Start typing your DC address..." autocomplete="off" required />
+              <div id="addressSuggestions" style="display:none; position:absolute; top:100%; left:0; right:0; background:white; border:2px solid var(--turf-green); border-top:none; border-radius:0 0 8px 8px; max-height:200px; overflow-y:auto; z-index:20; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
+            </div>
           </div>
 
           <div class="section-title">⏰ Store Hours</div>
@@ -501,10 +504,46 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      Healthy Food Access · Built for DC communities
+      CornerLink · Built for DC communities
     </footer>
 
     <script>
+      let resolvedLat = null, resolvedLng = null, resolvedAddress = null, addrDebounce = null;
+      const addrInput = document.getElementById("addressInput");
+      const addrSuggestions = document.getElementById("addressSuggestions");
+
+      addrInput.addEventListener("input", () => {
+        clearTimeout(addrDebounce);
+        resolvedLat = null; resolvedLng = null; resolvedAddress = null;
+        const query = addrInput.value.trim();
+        if (query.length < 3) { addrSuggestions.style.display = "none"; return; }
+        addrDebounce = setTimeout(() => {
+          fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ", Washington DC")}&format=json&limit=5&countrycodes=us`)
+            .then(r => r.json())
+            .then(data => {
+              if (!data.length) { addrSuggestions.style.display = "none"; return; }
+              addrSuggestions.innerHTML = data.map(r =>
+                `<div style="padding:10px 12px;cursor:pointer;font-size:13px;color:var(--dusk-blue);border-bottom:1px solid var(--thistle);" onmouseover="this.style.background='#d2f898'" onmouseout="this.style.background=''" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${r.display_name}">${r.display_name}</div>`
+              ).join('');
+              addrSuggestions.style.display = "block";
+              addrSuggestions.querySelectorAll("div").forEach(item => {
+                item.addEventListener("click", () => {
+                  resolvedLat = parseFloat(item.dataset.lat);
+                  resolvedLng = parseFloat(item.dataset.lon);
+                  resolvedAddress = item.dataset.name;
+                  addrInput.value = resolvedAddress;
+                  addrSuggestions.style.display = "none";
+                });
+              });
+            })
+            .catch(() => { addrSuggestions.style.display = "none"; });
+        }, 350);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#addressWrapper")) addrSuggestions.style.display = "none";
+      });
+
       document.getElementById("storeSignupForm").addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -526,21 +565,26 @@
 
         const responseDiv = document.getElementById("response");
         responseDiv.className = "";
-        responseDiv.textContent = "Locating address...";
+        responseDiv.textContent = "Creating account...";
         responseDiv.style.display = "block";
 
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=us`)
-          .then(r => r.json())
-          .then(geo => {
-            const latitude  = geo.length > 0 ? parseFloat(geo[0].lat) : null;
-            const longitude = geo.length > 0 ? parseFloat(geo[0].lon) : null;
+        const doSignup = (latitude, longitude) =>
+          fetch("/api/store-signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ storeName, email, password, phone, address, latitude, longitude, hours }),
+          }).then(r => r.json());
 
-            return fetch("/api/store-signup", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ storeName, email, password, phone, address, latitude, longitude, hours }),
-            }).then(r => r.json());
-          })
+        const proceed = resolvedLat !== null
+          ? doSignup(resolvedLat, resolvedLng)
+          : fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address + ", Washington DC")}&format=json&limit=1`)
+              .then(r => r.json())
+              .then(geo => doSignup(
+                geo.length > 0 ? parseFloat(geo[0].lat) : null,
+                geo.length > 0 ? parseFloat(geo[0].lon) : null
+              ));
+
+        proceed
           .then((data) => {
             if (data.storeOwnerId) {
               responseDiv.className = "success";
