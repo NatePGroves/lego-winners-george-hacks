@@ -52,6 +52,42 @@ router.get("/map", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/map.html"));
 });
 
+// Learn Pages - For Customers
+router.get("/how-it-works", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/how-it-works.html"));
+});
+
+router.get("/dietary-filtering", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/dietary-filtering.html"));
+});
+
+// Learn Pages - For Corner Stores
+router.get("/why-list-your-store", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/why-list-your-store.html"));
+});
+
+router.get("/managing-products", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/managing-products.html"));
+});
+
+// Learn Pages - For Suppliers
+router.get("/partnership-overview", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/partnership-overview.html"));
+});
+
+router.get("/distribution-network", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/distribution-network.html"));
+});
+
+// Supplier Auth Pages
+router.get("/supplier-signin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/supplier-signin.html"));
+});
+
+router.get("/supplier-signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/supplier-signup.html"));
+});
+
 router.get("/api/stores", (req, res) => {
   Store.find({})
     .then((stores) => {
