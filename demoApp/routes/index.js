@@ -96,10 +96,6 @@ router.get("/supplier-dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/supplier-dashboard.html"));
 });
 
-router.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/admin.html"));
-});
-
 router.post("/api/supplier-signup", (req, res) => {
   const { companyName, contactName, email, password, phone, companyDescription } = req.body;
 
@@ -560,56 +556,6 @@ router.post("/api/recommend-store", (req, res) => {
   recommendation.save()
     .then(() => {
       res.json({ message: "Store recommendation submitted successfully" });
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
-});
-
-router.get("/api/admin/recommendations", (req, res) => {
-  StoreRecommendation.find({})
-    .sort({ createdAt: -1 })
-    .then((recommendations) => {
-      res.json(recommendations);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
-});
-
-router.post("/api/admin/recommendations/:id/approve", (req, res) => {
-  const { id } = req.params;
-
-  StoreRecommendation.findById(id)
-    .then((recommendation) => {
-      if (!recommendation) {
-        return res.status(404).json({ message: "Recommendation not found" });
-      }
-
-      if (recommendation.status !== 'pending') {
-        return res.status(400).json({ message: "Recommendation has already been processed" });
-      }
-
-      recommendation.status = 'approved';
-      return recommendation.save();
-    })
-    .then(() => {
-      res.json({ message: "Recommendation approved" });
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
-});
-
-router.post("/api/admin/recommendations/:id/reject", (req, res) => {
-  const { id } = req.params;
-
-  StoreRecommendation.findByIdAndUpdate(id, { status: 'rejected' })
-    .then((recommendation) => {
-      if (!recommendation) {
-        return res.status(404).json({ message: "Recommendation not found" });
-      }
-      res.json({ message: "Recommendation rejected" });
     })
     .catch((err) => {
       res.status(500).json({ message: err.message });
