@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #f8f8f8;
+        background: #eef6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -302,7 +302,43 @@
       }
 
       .popup-button:hover {
-        background: var(--turf-green-dark);
+        background: var(--lime-cream);
+        color: var(--turf-green-dark);
+      }
+
+      .restriction-filter-tag {
+        display: inline-flex;
+        align-items: center;
+        background: var(--lime-cream);
+        border: 1.5px solid var(--thistle);
+        border-radius: 20px;
+        padding: 5px 10px;
+        margin: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dusk-blue);
+        cursor: pointer;
+        transition: all 0.15s;
+        user-select: none;
+      }
+
+      .restriction-filter-tag:hover {
+        border-color: var(--turf-green);
+        color: var(--turf-green);
+      }
+
+      .restriction-filter-tag.active {
+        background: var(--turf-green);
+        border-color: var(--turf-green);
+        color: white;
+      }
+
+      #filterCount {
+        font-size: 12px;
+        color: var(--burnt-caramel);
+        font-weight: 600;
+        margin-top: 8px;
+        display: none;
       }
     </style>
   </head>
@@ -310,7 +346,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">Healthy Food Access</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -379,6 +415,21 @@
         </div>
 
         <div class="filter-group">
+          <label class="filter-label">Dietary Restrictions</label>
+          <div id="restrictionTags">
+            <span class="restriction-filter-tag" data-restriction="Gluten-Free">Gluten-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Dairy-Free">Dairy-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Nut-Free">Nut-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Peanut-Free">Peanut-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Vegan">Vegan</span>
+            <span class="restriction-filter-tag" data-restriction="Soy-Free">Soy-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Egg-Free">Egg-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Shellfish-Free">Shellfish-Free</span>
+          </div>
+          <div id="filterCount"></div>
+        </div>
+
+        <div class="filter-group">
           <label class="filter-label">Your Allergies</label>
           <div id="userAllergies" style="font-size: 13px; color: #666;">
             <p style="font-style: italic;">Sign in to see personalized results</p>
@@ -386,7 +437,7 @@
         </div>
 
         <div class="action-buttons">
-          <a href="/add-store">+ Add Store</a>
+          <a href="/recommend-store">Recommend Store</a>
         </div>
       </div>
 
@@ -415,12 +466,53 @@
       let allStores = [];
       let allProducts = {};
       let geoJsonLayer = null;
+      let activeRestrictions = new Set();
 
-      const map = L.map('map').setView([38.8951, -77.0369], 12);
+      const restrictionAllergenMap = {
+        "Gluten-Free":    ["Gluten", "Wheat"],
+        "Dairy-Free":     ["Dairy", "Lactose Intolerance"],
+        "Nut-Free":       ["Tree Nuts", "Peanuts"],
+        "Peanut-Free":    ["Peanuts"],
+        "Vegan":          ["Dairy", "Eggs", "Shellfish", "Fish"],
+        "Soy-Free":       ["Soy"],
+        "Egg-Free":       ["Eggs"],
+        "Shellfish-Free": ["Shellfish"],
+      };
+
+      document.querySelectorAll(".restriction-filter-tag").forEach(tag => {
+        tag.addEventListener("click", () => {
+          const r = tag.dataset.restriction;
+          if (activeRestrictions.has(r)) {
+            activeRestrictions.delete(r);
+            tag.classList.remove("active");
+          } else {
+            activeRestrictions.add(r);
+            tag.classList.add("active");
+          }
+          updateMap();
+        });
+      });
+
+      function storeMatchesRestrictions(storeId) {
+        if (activeRestrictions.size === 0) return true;
+        const products = allProducts[storeId] || [];
+        if (products.length === 0) return true;
+        return [...activeRestrictions].every(restriction => {
+          const allergens = restrictionAllergenMap[restriction] || [];
+          return products.some(p => {
+            const pa = p.allergens || [];
+            return !allergens.some(a => pa.includes(a));
+          });
+        });
+      }
+
+      const map = L.map('map', { zoomControl: false }).setView([38.8951, -77.0369], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
+
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
 
       if (userId) {
         fetch(`/api/user/${userId}`)
@@ -487,8 +579,17 @@
           const matchesSearch = name.includes(searchTerm) || searchTerm === "";
           const matchesSnap = !filterSnap || store.properties.snapMatch;
           const matchesWic = !filterWic || store.properties.wicVendor;
-          return matchesSearch && matchesSnap && matchesWic;
+          const matchesRestrictions = storeMatchesRestrictions(store.properties.storeId);
+          return matchesSearch && matchesSnap && matchesWic && matchesRestrictions;
         });
+
+        const countEl = document.getElementById("filterCount");
+        if (activeRestrictions.size > 0) {
+          countEl.style.display = "block";
+          countEl.textContent = `${filtered.length} store${filtered.length !== 1 ? "s" : ""} match your filters`;
+        } else {
+          countEl.style.display = "none";
+        }
 
         if (geoJsonLayer) map.removeLayer(geoJsonLayer);
 
@@ -548,7 +649,8 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      © 2026 Healthy Food Access · Built for DC communities
+      Healthy Food Access · Built for DC communities
     </footer>
-  </body>
+    <script src="/user-nav.js"></script>
+</body>
 </html>

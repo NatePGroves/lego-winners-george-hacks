@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const bcrypt = require("bcrypt");
-const { User, Store, Product, StoreOwner } = require("../database");
+const { User, Store, Product, StoreOwner, Supplier, StoreRecommendation } = require("../database");
 
 router.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/base.html"));
@@ -26,6 +26,10 @@ router.get("/preferences/:userId", (req, res) => {
 
 router.get("/add-store", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/add-store.html"));
+});
+
+router.get("/recommend-store", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/recommend-store.html"));
 });
 
 router.get("/add-product", (req, res) => {
@@ -88,6 +92,68 @@ router.get("/supplier-signup", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/supplier-signup.html"));
 });
 
+router.get("/supplier-dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/supplier-dashboard.html"));
+});
+
+router.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/admin.html"));
+});
+
+router.post("/api/supplier-signup", (req, res) => {
+  const { companyName, contactName, email, password, phone, companyDescription } = req.body;
+
+  bcrypt.hash(password, 10)
+    .then((hashedPassword) => {
+      const supplier = new Supplier({ companyName, contactName, email, password: hashedPassword, phone, companyDescription });
+      return supplier.save();
+    })
+    .then((saved) => {
+      res.json({ supplierId: saved._id, message: "Supplier account created!" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.post("/api/supplier-signin", (req, res) => {
+  const { email, password } = req.body;
+
+  Supplier.findOne({ email })
+    .then((supplier) => {
+      if (!supplier) return res.status(404).json({ message: "Supplier not found" });
+      return bcrypt.compare(password, supplier.password).then((isMatch) => {
+        if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+        res.json({ supplierId: supplier._id, companyName: supplier.companyName, message: "Sign in successful!" });
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.get("/supplier-tags/:supplierId", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/supplier-tags.html"));
+});
+
+router.post("/api/supplier-tags/:supplierId", (req, res) => {
+  const { dietaryTags } = req.body;
+  Supplier.findByIdAndUpdate(req.params.supplierId, { dietaryTags }, { new: true })
+    .then(() => res.json({ message: "Tags saved!" }))
+    .catch((err) => res.status(500).json({ message: err.message }));
+});
+
+router.get("/api/supplier/:supplierId", (req, res) => {
+  Supplier.findById(req.params.supplierId)
+    .then((supplier) => {
+      if (!supplier) return res.status(404).json({ error: "Supplier not found" });
+      res.json(supplier);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
 router.get("/api/stores", (req, res) => {
   Store.find({})
     .then((stores) => {
@@ -120,11 +186,11 @@ router.get("/api/stores", (req, res) => {
 });
 
 router.post("/api/signup", (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, address, latitude, longitude } = req.body;
 
   bcrypt.hash(password, 10)
     .then((hashedPassword) => {
-      const user = new User({ name, email, password: hashedPassword, allergies: [] });
+      const user = new User({ name, email, password: hashedPassword, allergies: [], address, latitude, longitude });
       return user.save();
     })
     .then((savedUser) => {
@@ -357,6 +423,196 @@ router.get("/api/store-owner/:storeOwnerId/products", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });
+    });
+});
+
+router.get("/api/community-insights/:storeOwnerId", (req, res) => {
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 3958.8;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  StoreOwner.findById(req.params.storeOwnerId)
+    .then(owner => {
+      if (!owner) return res.status(404).json({ error: "Store owner not found" });
+      return Store.findById(owner.storeId).then(store => {
+        if (!store || store.latitude == null) return res.status(404).json({ error: "Store location not set" });
+        return User.find({ latitude: { $ne: null }, longitude: { $ne: null } }).then(users => {
+          const nearby = users.filter(u =>
+            haversineDistance(store.latitude, store.longitude, u.latitude, u.longitude) <= 1
+          );
+
+          const counts = {};
+          nearby.forEach(u => {
+            (u.allergies || []).forEach(a => {
+              counts[a] = (counts[a] || 0) + 1;
+            });
+          });
+
+          const breakdown = Object.entries(counts)
+            .map(([restriction, count]) => ({ restriction, count }))
+            .sort((a, b) => b.count - a.count);
+
+          res.json({ totalNearby: nearby.length, breakdown });
+        });
+      });
+    })
+    .catch(err => res.status(500).json({ error: err.message }));
+});
+
+router.get("/api/recommended-suppliers/:storeOwnerId", (req, res) => {
+  // Maps customer restriction labels to supplier dietary tag labels
+  const restrictionToTags = {
+    "Gluten":             ["Gluten-Free"],
+    "Wheat":              ["Gluten-Free"],
+    "Dairy":              ["Dairy-Free", "Lactose-Free"],
+    "Lactose Intolerance":["Dairy-Free", "Lactose-Free"],
+    "Dairy-Free":         ["Dairy-Free"],
+    "Peanuts":            ["Peanut-Free", "Nut-Free"],
+    "Tree Nuts":          ["Nut-Free"],
+    "Soy":                ["Soy-Free"],
+    "Eggs":               ["Egg-Free"],
+    "Shellfish":          ["Shellfish-Free"],
+    "Fish":               ["Fish-Free"],
+    "Vegan":              ["Vegan"],
+    "Vegetarian":         ["Vegetarian"],
+    "Halal":              ["Halal"],
+    "Kosher":             ["Kosher"],
+    "Keto":               ["Keto"],
+    "Heart Risk":         ["Heart-Healthy"],
+  };
+
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 3958.8;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  StoreOwner.findById(req.params.storeOwnerId)
+    .then(owner => {
+      if (!owner) return res.status(404).json({ error: "Store owner not found" });
+      return Store.findById(owner.storeId).then(store => {
+        if (!store || store.latitude == null) return res.status(404).json({ error: "Store location not set" });
+
+        return Promise.all([
+          User.find({ latitude: { $ne: null }, longitude: { $ne: null } }),
+          Supplier.find({ dietaryTags: { $exists: true, $not: { $size: 0 } } })
+        ]).then(([users, suppliers]) => {
+          const nearby = users.filter(u =>
+            haversineDistance(store.latitude, store.longitude, u.latitude, u.longitude) <= 1
+          );
+
+          // Count local restrictions
+          const counts = {};
+          nearby.forEach(u => {
+            (u.allergies || []).forEach(a => { counts[a] = (counts[a] || 0) + 1; });
+          });
+
+          // Build a set of needed supplier tags weighted by count
+          const tagWeights = {};
+          Object.entries(counts).forEach(([restriction, count]) => {
+            const tags = restrictionToTags[restriction] || [];
+            tags.forEach(tag => { tagWeights[tag] = (tagWeights[tag] || 0) + count; });
+          });
+
+          // Score each supplier by how well their tags match local needs
+          const scored = suppliers.map(s => {
+            const score = (s.dietaryTags || []).reduce((sum, tag) => sum + (tagWeights[tag] || 0), 0);
+            const matchedNeeds = (s.dietaryTags || []).filter(tag => tagWeights[tag] > 0);
+            return {
+              supplierId: s._id,
+              companyName: s.companyName,
+              contactName: s.contactName,
+              email: s.email,
+              phone: s.phone,
+              dietaryTags: s.dietaryTags,
+              matchedNeeds,
+              score,
+            };
+          });
+
+          const recommended = scored
+            .filter(s => s.score > 0)
+            .sort((a, b) => b.score - a.score);
+
+          res.json({ recommended, totalNearby: nearby.length });
+        });
+      });
+    })
+    .catch(err => res.status(500).json({ error: err.message }));
+});
+
+router.post("/api/recommend-store", (req, res) => {
+  const { name, address } = req.body;
+
+  if (!name || !address) {
+    return res.status(400).json({ message: "Name and address are required" });
+  }
+
+  const recommendation = new StoreRecommendation({ name, address });
+  recommendation.save()
+    .then(() => {
+      res.json({ message: "Store recommendation submitted successfully" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.get("/api/admin/recommendations", (req, res) => {
+  StoreRecommendation.find({})
+    .sort({ createdAt: -1 })
+    .then((recommendations) => {
+      res.json(recommendations);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.post("/api/admin/recommendations/:id/approve", (req, res) => {
+  const { id } = req.params;
+
+  StoreRecommendation.findById(id)
+    .then((recommendation) => {
+      if (!recommendation) {
+        return res.status(404).json({ message: "Recommendation not found" });
+      }
+
+      if (recommendation.status !== 'pending') {
+        return res.status(400).json({ message: "Recommendation has already been processed" });
+      }
+
+      recommendation.status = 'approved';
+      return recommendation.save();
+    })
+    .then(() => {
+      res.json({ message: "Recommendation approved" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.post("/api/admin/recommendations/:id/reject", (req, res) => {
+  const { id } = req.params;
+
+  StoreRecommendation.findByIdAndUpdate(id, { status: 'rejected' })
+    .then((recommendation) => {
+      if (!recommendation) {
+        return res.status(404).json({ message: "Recommendation not found" });
+      }
+      res.json({ message: "Recommendation rejected" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
     });
 });
 

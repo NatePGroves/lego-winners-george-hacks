@@ -4,11 +4,10 @@
     <meta charset="utf-8" />
     <title>Register Your Store - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #f8f8f8;
+        background: #eef6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -463,22 +462,11 @@
             <input type="password" id="password" name="password" required />
           </div>
 
-          <div class="section-title">📍 Store Location</div>
+          <div class="section-title">Store Location</div>
 
-          <div class="map-instruction">
-            Search for your address or click on the map to pinpoint your store. If you see nearby stores below, you can claim one instead of creating new.
-          </div>
-
-          <div class="address-search">
-            <input type="text" id="addressSearch" placeholder="Search address..." />
-            <button type="button" id="searchBtn">🔍</button>
-          </div>
-
-          <div id="mapPreview"></div>
-
-          <div id="nearbyStoresContainer" class="nearby-stores-container">
-            <div class="nearby-stores-title">⭐ Found Nearby Stores - Claim Yours!</div>
-            <div id="nearbyStoresList"></div>
+          <div>
+            <label for="addressInput">Store Address *</label>
+            <input type="text" id="addressInput" placeholder="e.g. 1234 Georgia Ave NW, Washington DC" required />
           </div>
 
           <div class="section-title">⏰ Store Hours</div>
@@ -513,172 +501,63 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      © 2026 Healthy Food Access · Built for DC communities
+      Healthy Food Access · Built for DC communities
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      let selectedStoreId = null;
-      let latitude = null;
-      let longitude = null;
-      let allStores = [];
-      let marker = null;
-
-      const map = L.map('mapPreview').setView([38.8951, -77.0369], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
-
-      fetch('/api/stores')
-        .then((res) => res.json())
-        .then((data) => {
-          allStores = data.features;
-          data.features.forEach(store => {
-            L.circleMarker([store.geometry.coordinates[1], store.geometry.coordinates[0]], {
-              radius: 5,
-              fillColor: '#2c5f2d',
-              color: '#fff',
-              weight: 1.5,
-              opacity: 0.7,
-              fillOpacity: 0.6
-            }).addTo(map);
-          });
-        });
-
-      function setLocationMarker(lat, lng) {
-        latitude = lat;
-        longitude = lng;
-
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([latitude, longitude], {
-          icon: L.icon({
-            iconUrl: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232c5f2d" width="32" height="32"><path d="M12 0C8.13 0 5 3.13 5 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32]
-          })
-        }).addTo(map).bindPopup("Your Store Location");
-
-        map.setView([latitude, longitude], 15);
-        findNearbyStores(latitude, longitude);
-        selectedStoreId = null;
-      }
-
-      map.on('click', (e) => {
-        setLocationMarker(e.latlng.lat, e.latlng.lng);
-      });
-
-      document.getElementById("searchBtn").addEventListener("click", () => {
-        const address = document.getElementById("addressSearch").value;
-        if (!address) return;
-
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.length > 0) {
-              const result = data[0];
-              setLocationMarker(parseFloat(result.lat), parseFloat(result.lon));
-            } else {
-              alert("Address not found");
-            }
-          });
-      });
-
-      function findNearbyStores(lat, lng) {
-        const nearby = allStores.filter(store => {
-          const storeLat = store.geometry.coordinates[1];
-          const storeLng = store.geometry.coordinates[0];
-          const distance = Math.sqrt(Math.pow(lat - storeLat, 2) + Math.pow(lng - storeLng, 2));
-          return distance < 0.01;
-        });
-
-        if (nearby.length > 0) {
-          displayNearbyStores(nearby);
-        } else {
-          document.getElementById("nearbyStoresContainer").style.display = "none";
-        }
-      }
-
-      function displayNearbyStores(stores) {
-        const container = document.getElementById("nearbyStoresContainer");
-        const list = document.getElementById("nearbyStoresList");
-
-        list.innerHTML = stores.map(store => `
-          <label class="store-claim-option">
-            <input type="radio" name="existingStore" value="${store.properties.storeId}" />
-            <div class="store-info">
-              <div class="store-name">${store.properties.name}</div>
-              <div class="store-address">${store.properties.address}</div>
-            </div>
-          </label>
-        `).join('');
-
-        document.querySelectorAll('input[name="existingStore"]').forEach(input => {
-          input.addEventListener('change', (e) => {
-            if (e.target.checked) {
-              selectedStoreId = e.target.value;
-            }
-          });
-        });
-
-        container.style.display = "block";
-      }
-
       document.getElementById("storeSignupForm").addEventListener("submit", (e) => {
         e.preventDefault();
-
-        if (!latitude || !longitude) {
-          document.getElementById("response").className = "error";
-          document.getElementById("response").textContent = "❌ Please search for an address or click on the map to set your store location";
-          document.getElementById("response").style.display = "block";
-          return;
-        }
 
         const storeName = document.getElementById("storeName").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const phone = document.getElementById("phone").value;
+        const address = document.getElementById("addressInput").value;
 
         const hours = {
-          monday: { open: document.getElementById("mondayOpen").value, close: document.getElementById("mondayClose").value },
-          tuesday: { open: document.getElementById("tuesdayOpen").value, close: document.getElementById("tuesdayClose").value },
+          monday:    { open: document.getElementById("mondayOpen").value,    close: document.getElementById("mondayClose").value },
+          tuesday:   { open: document.getElementById("tuesdayOpen").value,   close: document.getElementById("tuesdayClose").value },
           wednesday: { open: document.getElementById("wednesdayOpen").value, close: document.getElementById("wednesdayClose").value },
-          thursday: { open: document.getElementById("thursdayOpen").value, close: document.getElementById("thursdayClose").value },
-          friday: { open: document.getElementById("fridayOpen").value, close: document.getElementById("fridayClose").value },
-          saturday: { open: document.getElementById("saturdayOpen").value, close: document.getElementById("saturdayClose").value },
-          sunday: { open: document.getElementById("sundayOpen").value, close: document.getElementById("sundayClose").value }
+          thursday:  { open: document.getElementById("thursdayOpen").value,  close: document.getElementById("thursdayClose").value },
+          friday:    { open: document.getElementById("fridayOpen").value,    close: document.getElementById("fridayClose").value },
+          saturday:  { open: document.getElementById("saturdayOpen").value,  close: document.getElementById("saturdayClose").value },
+          sunday:    { open: document.getElementById("sundayOpen").value,    close: document.getElementById("sundayClose").value }
         };
 
-        fetch("/api/store-signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            storeName,
-            email,
-            password,
-            phone,
-            latitude,
-            longitude,
-            hours,
-            claimStoreId: selectedStoreId
-          }),
-        })
-          .then((res) => res.json())
+        const responseDiv = document.getElementById("response");
+        responseDiv.className = "";
+        responseDiv.textContent = "Locating address...";
+        responseDiv.style.display = "block";
+
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=us`)
+          .then(r => r.json())
+          .then(geo => {
+            const latitude  = geo.length > 0 ? parseFloat(geo[0].lat) : null;
+            const longitude = geo.length > 0 ? parseFloat(geo[0].lon) : null;
+
+            return fetch("/api/store-signup", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ storeName, email, password, phone, address, latitude, longitude, hours }),
+            }).then(r => r.json());
+          })
           .then((data) => {
-            const responseDiv = document.getElementById("response");
             if (data.storeOwnerId) {
               responseDiv.className = "success";
-              responseDiv.textContent = "✓ Account created! Redirecting to dashboard...";
+              responseDiv.textContent = "Account created! Redirecting to dashboard...";
               setTimeout(() => {
                 localStorage.setItem("storeOwnerId", data.storeOwnerId);
                 localStorage.removeItem("userId");
-                window.location.href = `/store-dashboard`;
+                window.location.href = "/store-dashboard";
               }, 1500);
             } else {
               responseDiv.className = "error";
               responseDiv.textContent = data.message || "Signup failed";
             }
-            responseDiv.style.display = "block";
+          })
+          .catch(() => {
+            responseDiv.className = "error";
+            responseDiv.textContent = "Something went wrong. Please try again.";
           });
       });
     </script>

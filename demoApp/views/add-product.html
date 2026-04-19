@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #f8f8f8;
+        background: #eef6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -369,7 +369,7 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      © 2026 Healthy Food Access · Built for DC communities
+      Healthy Food Access · Built for DC communities
     </footer>
 
     <script>
@@ -427,7 +427,7 @@
               responseDiv.className = "success";
               responseDiv.textContent = "✓ Product added! Redirecting...";
               responseDiv.style.display = "block";
-              setTimeout(() => window.location.href = `/store-detail?id=${storeId}`, 1500);
+              setTimeout(() => window.location.href = `/store-dashboard`, 1500);
             } else {
               responseDiv.className = "error";
               responseDiv.textContent = data.message || "Failed to add product";
@@ -436,5 +436,6 @@
           });
       });
     </script>
-  </body>
+    <script src="/user-nav.js"></script>
+</body>
 </html>

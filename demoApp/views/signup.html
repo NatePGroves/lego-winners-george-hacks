@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #f8f8f8;
+        background: #eef6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -141,7 +141,7 @@
       }
 
       .form-container h1 {
-        color: var(--dusk-blue);
+        color: #297045;
         font-size: 28px;
         margin-bottom: 8px;
         margin-top: 0;
@@ -236,13 +236,46 @@
       .auth-link a:hover {
         text-decoration: underline;
       }
+
+      .address-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .address-row input {
+        flex: 1;
+      }
+
+      .geocode-btn {
+        width: auto !important;
+        padding: 12px 16px !important;
+        font-size: 13px !important;
+        margin-top: 0 !important;
+        background: var(--dusk-blue) !important;
+        flex-shrink: 0;
+      }
+
+      .geocode-btn:hover {
+        background: #2e3d52 !important;
+      }
+
+      .address-confirm {
+        font-size: 13px;
+        color: var(--turf-green);
+        margin-top: 4px;
+        display: none;
+      }
+
+      .address-confirm.error {
+        color: #c0392b;
+      }
     </style>
   </head>
   <body>
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">Healthy Food Access</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -310,6 +343,15 @@
             <input type="password" id="password" name="password" required />
           </div>
 
+          <div>
+            <label for="addressInput">Home Address</label>
+            <div class="address-row">
+              <input type="text" id="addressInput" placeholder="e.g. 1600 Pennsylvania Ave NW, DC" />
+              <button type="button" class="geocode-btn" id="geocodeBtn">Verify</button>
+            </div>
+            <div class="address-confirm" id="addressConfirm"></div>
+          </div>
+
           <button type="submit">Sign Up</button>
         </form>
 
@@ -323,10 +365,44 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      © 2026 Healthy Food Access · Built for DC communities
+      Healthy Food Access · Built for DC communities
     </footer>
 
     <script>
+      let resolvedLat = null;
+      let resolvedLng = null;
+      let resolvedAddress = null;
+
+      document.getElementById("geocodeBtn").addEventListener("click", () => {
+        const query = document.getElementById("addressInput").value.trim();
+        const confirm = document.getElementById("addressConfirm");
+        if (!query) return;
+
+        confirm.textContent = "Verifying...";
+        confirm.className = "address-confirm";
+        confirm.style.display = "block";
+
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us&viewbox=-77.119759,38.995548,-76.909393,38.791645&bounded=1`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.length > 0) {
+              resolvedLat = parseFloat(data[0].lat);
+              resolvedLng = parseFloat(data[0].lon);
+              resolvedAddress = data[0].display_name;
+              confirm.textContent = "Found: " + resolvedAddress;
+              confirm.className = "address-confirm";
+            } else {
+              resolvedLat = null; resolvedLng = null; resolvedAddress = null;
+              confirm.textContent = "Address not found. Try a more specific DC address.";
+              confirm.className = "address-confirm error";
+            }
+          })
+          .catch(() => {
+            confirm.textContent = "Could not verify address. You can still sign up.";
+            confirm.className = "address-confirm error";
+          });
+      });
+
       document.getElementById("signupForm").addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -337,7 +413,12 @@
         fetch("/api/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({
+            name, email, password,
+            address: resolvedAddress || document.getElementById("addressInput").value || null,
+            latitude: resolvedLat,
+            longitude: resolvedLng,
+          }),
         })
           .then((res) => res.json())
           .then((data) => {

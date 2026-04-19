@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #f8f8f8;
+        background: #eef6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -140,7 +140,7 @@
       }
 
       .content-container h1 {
-        color: var(--dusk-blue);
+        color: #297045;
         font-size: 32px;
         margin-bottom: 12px;
         margin-top: 0;
@@ -170,19 +170,24 @@
       .feature-list {
         list-style: none;
         margin-bottom: 24px;
+        padding: 0;
       }
 
       .feature-list li {
-        padding: 12px;
+        background: white;
+        border: 1px solid rgba(70, 87, 117, 0.12);
+        border-left: 4px solid var(--burnt-caramel);
+        border-radius: 12px;
+        padding: 18px 20px;
         margin-bottom: 12px;
-        background: var(--lime-cream);
-        border-radius: 8px;
         color: var(--dusk-blue);
         font-size: 15px;
+        line-height: 1.6;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       }
 
       .feature-list li strong {
-        color: var(--turf-green);
+        color: #297045;
       }
     </style>
   </head>
@@ -190,7 +195,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">Healthy Food Access</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -276,8 +281,9 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      © 2026 Healthy Food Access · Built for DC communities
+      Healthy Food Access · Built for DC communities
     </footer>
 
-  </body>
+    <script src="/user-nav.js"></script>
+</body>
 </html>

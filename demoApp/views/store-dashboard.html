@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
-        background: #f8f8f8;
+        background: #eef6ef;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -302,6 +302,121 @@
         opacity: 0.9;
         margin-top: auto;
       }
+
+      .insights-meta {
+        font-size: 14px;
+        color: var(--dusk-blue);
+        opacity: 0.7;
+        margin-bottom: 20px;
+      }
+
+      .restriction-bar-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .restriction-label {
+        width: 160px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dusk-blue);
+        text-transform: capitalize;
+        flex-shrink: 0;
+      }
+
+      .bar-track {
+        flex: 1;
+        background: var(--thistle);
+        border-radius: 6px;
+        height: 18px;
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        background: var(--burnt-caramel);
+        border-radius: 6px;
+        transition: width 0.6s ease;
+      }
+
+      .restriction-count {
+        width: 48px;
+        text-align: right;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--burnt-caramel);
+        flex-shrink: 0;
+      }
+
+      .no-insights {
+        text-align: center;
+        color: var(--dusk-blue);
+        opacity: 0.6;
+        font-size: 14px;
+        padding: 20px 0;
+      }
+
+      .supplier-card {
+        border: 1px solid var(--thistle);
+        border-left: 4px solid var(--turf-green);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+
+      .supplier-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+
+      .supplier-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--turf-green);
+        margin: 0;
+      }
+
+      .supplier-contact {
+        font-size: 13px;
+        color: var(--dusk-blue);
+        opacity: 0.7;
+        margin: 2px 0 10px;
+      }
+
+      .supplier-match-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--burnt-caramel);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .supplier-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .supplier-tag {
+        background: var(--lime-cream);
+        color: var(--dusk-blue);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .supplier-tag.matched {
+        background: var(--burnt-caramel);
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -351,7 +466,6 @@
         </div>
 
         <a href="/map" class="nav-item browse">Browse Map</a>
-        <button class="nav-item signout" onclick="signOut()">Sign Out</button>
       </nav>
     </header>
 
@@ -383,12 +497,28 @@
           <div id="loading" class="loading">Loading products...</div>
           <div id="productsList" style="display: none;"></div>
         </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span>Community Dietary Insights</span>
+          </div>
+          <p class="insights-meta" id="insightsMeta">Loading nearby customer data...</p>
+          <div id="insightsChart"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span>Recommended Suppliers</span>
+          </div>
+          <p class="insights-meta" id="suppliersMeta">Finding suppliers that match your community's needs...</p>
+          <div id="suppliersList"></div>
+        </div>
       </div>
     </div>
 
     <!-- Footer -->
     <footer class="site-footer">
-      © 2026 Healthy Food Access · Built for DC communities
+      Healthy Food Access · Built for DC communities
     </footer>
 
     <script>
@@ -434,6 +564,44 @@
             document.getElementById("storeEmail").textContent = data.email;
 
             loadProducts();
+            loadInsights();
+            loadRecommendedSuppliers();
+          });
+      }
+
+      function loadInsights() {
+        fetch(`/api/community-insights/${storeOwnerId}`)
+          .then(r => r.json())
+          .then(data => {
+            const meta = document.getElementById("insightsMeta");
+            const chart = document.getElementById("insightsChart");
+
+            if (data.error) {
+              meta.textContent = "Could not load insights: " + data.error;
+              return;
+            }
+
+            if (data.totalNearby === 0 || data.breakdown.length === 0) {
+              meta.textContent = data.totalNearby + " customers with location data found within 1 mile. No dietary restrictions recorded yet.";
+              chart.innerHTML = '<p class="no-insights">As customers in your area sign up and set their dietary preferences, their aggregated restrictions will appear here.</p>';
+              return;
+            }
+
+            meta.textContent = data.totalNearby + " customer" + (data.totalNearby !== 1 ? "s" : "") + " with dietary data found within 1 mile of your store.";
+
+            const max = data.breakdown[0].count;
+            chart.innerHTML = data.breakdown.map(item => `
+              <div class="restriction-bar-row">
+                <div class="restriction-label">${item.restriction}</div>
+                <div class="bar-track">
+                  <div class="bar-fill" style="width: ${Math.round((item.count / max) * 100)}%"></div>
+                </div>
+                <div class="restriction-count">${item.count}</div>
+              </div>
+            `).join('');
+          })
+          .catch(() => {
+            document.getElementById("insightsMeta").textContent = "Could not load community insights.";
           });
       }
 
@@ -467,6 +635,48 @@
           });
       }
 
+      function loadRecommendedSuppliers() {
+        fetch(`/api/recommended-suppliers/${storeOwnerId}`)
+          .then(r => r.json())
+          .then(data => {
+            const meta = document.getElementById("suppliersMeta");
+            const list = document.getElementById("suppliersList");
+
+            if (data.error) {
+              meta.textContent = "Could not load supplier recommendations: " + data.error;
+              return;
+            }
+
+            if (!data.recommended || data.recommended.length === 0) {
+              meta.textContent = "No matched suppliers yet. As suppliers join and tag their products, recommendations will appear here.";
+              list.innerHTML = '';
+              return;
+            }
+
+            meta.textContent = data.recommended.length + " supplier" + (data.recommended.length !== 1 ? "s" : "") + " match your community's dietary needs.";
+
+            list.innerHTML = data.recommended.map(s => `
+              <div class="supplier-card">
+                <div class="supplier-card-header">
+                  <div>
+                    <p class="supplier-name">${s.companyName}</p>
+                    <p class="supplier-contact">${s.contactName} &middot; ${s.email}${s.phone ? ' &middot; ' + s.phone : ''}</p>
+                  </div>
+                </div>
+                <div class="supplier-match-label">Covers local needs</div>
+                <div class="supplier-tags">
+                  ${(s.dietaryTags || []).map(tag =>
+                    `<span class="supplier-tag ${s.matchedNeeds.includes(tag) ? 'matched' : ''}">${tag}</span>`
+                  ).join('')}
+                </div>
+              </div>
+            `).join('');
+          })
+          .catch(() => {
+            document.getElementById("suppliersMeta").textContent = "Could not load supplier recommendations.";
+          });
+      }
+
       function signOut() {
         localStorage.removeItem("storeOwnerId");
         window.location.href = "/";
@@ -474,5 +684,6 @@
 
       loadStore();
     </script>
-  </body>
+    <script src="/user-nav.js"></script>
+</body>
 </html>

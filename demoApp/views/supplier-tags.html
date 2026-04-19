@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Dietary Preferences - Healthy Food Access</title>
+    <title>Dietary Tags - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -92,10 +92,7 @@
         transition: background 0.15s;
       }
 
-      .dropdown-menu a:hover {
-        background: var(--lime-cream);
-        color: var(--turf-green);
-      }
+      .dropdown-menu a:hover { background: var(--lime-cream); color: var(--turf-green); }
 
       .dropdown-menu .menu-section {
         padding: 6px 20px 4px;
@@ -106,12 +103,7 @@
         letter-spacing: 0.08em;
       }
 
-      .dropdown-menu hr {
-        border: none;
-        border-top: 1px solid var(--thistle);
-        margin: 6px 0;
-      }
-
+      .dropdown-menu hr { border: none; border-top: 1px solid var(--thistle); margin: 6px 0; }
       .dropdown-caret { margin-left: 4px; font-size: 11px; }
 
       .site-footer {
@@ -140,9 +132,9 @@
       }
 
       .content-container h1 {
-        color: var(--dusk-blue);
-        font-size: 32px;
-        margin-bottom: 12px;
+        color: #297045;
+        font-size: 28px;
+        margin-bottom: 8px;
         margin-top: 0;
       }
 
@@ -153,9 +145,7 @@
         opacity: 0.7;
       }
 
-      .form-group {
-        margin-bottom: 24px;
-      }
+      .form-group { margin-bottom: 24px; }
 
       .form-group label {
         display: block;
@@ -165,11 +155,9 @@
         font-size: 14px;
       }
 
-      .allergen-select {
-        position: relative;
-      }
+      .tag-select { position: relative; }
 
-      .allergen-select input {
+      .tag-select input {
         width: 100%;
         padding: 12px;
         border: 2px solid var(--thistle);
@@ -179,10 +167,7 @@
         box-sizing: border-box;
       }
 
-      .allergen-select input:focus {
-        outline: none;
-        border-color: var(--turf-green);
-      }
+      .tag-select input:focus { outline: none; border-color: var(--turf-green); }
 
       .suggestions {
         display: none;
@@ -199,9 +184,7 @@
         z-index: 10;
       }
 
-      .suggestions.show {
-        display: block;
-      }
+      .suggestions.show { display: block; }
 
       .suggestion-item {
         padding: 10px 12px;
@@ -210,18 +193,16 @@
         transition: background 0.15s;
       }
 
-      .suggestion-item:hover {
-        background: var(--lime-cream);
-      }
+      .suggestion-item:hover { background: var(--lime-cream); }
 
-      .selected-allergens {
+      .selected-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         margin-bottom: 24px;
       }
 
-      .allergen-tag {
+      .tag-pill {
         background: var(--lime-cream);
         color: var(--dusk-blue);
         padding: 8px 12px;
@@ -233,7 +214,7 @@
         gap: 8px;
       }
 
-      .allergen-tag button {
+      .tag-pill button {
         background: none;
         border: none;
         color: var(--dusk-blue);
@@ -241,6 +222,7 @@
         font-size: 18px;
         padding: 0;
         margin: 0;
+        line-height: 1;
       }
 
       .buttons {
@@ -260,23 +242,10 @@
         transition: all 0.2s;
       }
 
-      .buttons button:first-child {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-      }
-
-      .buttons button:first-child:hover {
-        background: var(--thistle);
-      }
-
-      .buttons button:last-child {
-        background: var(--turf-green);
-        color: white;
-      }
-
-      .buttons button:last-child:hover {
-        background: var(--turf-green-dark);
-      }
+      .btn-skip { background: var(--lime-cream); color: var(--dusk-blue); }
+      .btn-skip:hover { background: var(--thistle); }
+      .btn-save { background: var(--turf-green); color: white; }
+      .btn-save:hover { background: var(--turf-green-dark); }
 
       #response {
         padding: 12px;
@@ -287,25 +256,14 @@
         display: none;
       }
 
-      #response.success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-
-      #response.error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-      }
+      #response.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+      #response.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
   </head>
   <body>
 
-    <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
-
+      <a href="/" class="header-brand">Healthy Food Access</a>
       <nav class="site-nav">
         <div class="nav-item dropdown">
           For Customers <span class="dropdown-caret">▾</span>
@@ -319,7 +277,6 @@
             <a href="/signin">Sign In</a>
           </div>
         </div>
-
         <div class="nav-item dropdown">
           For Corner Stores <span class="dropdown-caret">▾</span>
           <div class="dropdown-menu">
@@ -332,7 +289,6 @@
             <a href="/store-signin">Store Sign In</a>
           </div>
         </div>
-
         <div class="nav-item dropdown">
           For Suppliers <span class="dropdown-caret">▾</span>
           <div class="dropdown-menu">
@@ -345,139 +301,119 @@
             <a href="/supplier-signin">Supplier Sign In</a>
           </div>
         </div>
-
         <a href="/map" class="nav-item browse">Browse Map</a>
       </nav>
     </header>
 
-    <!-- Page Content -->
     <div class="page-content">
       <div class="content-container">
-        <h1>Dietary Preferences</h1>
-        <p class="subtitle">Add any allergies or dietary restrictions (optional)</p>
+        <h1>What dietary needs do you serve?</h1>
+        <p class="subtitle">Tag the dietary restrictions and food needs your products address. Stores use this to find suppliers that match their community's needs.</p>
 
-        <form id="preferencesForm">
-          <div class="form-group">
-            <label for="allergen-input">Search or add allergies</label>
-            <div class="allergen-select">
-              <input
-                type="text"
-                id="allergen-input"
-                placeholder="e.g., peanuts, dairy, gluten..."
-                autocomplete="off"
-              />
-              <div id="suggestions" class="suggestions"></div>
-            </div>
+        <div class="form-group">
+          <label for="tag-input">Search or add dietary tags</label>
+          <div class="tag-select">
+            <input type="text" id="tag-input" placeholder="e.g., Gluten-Free, Vegan, Halal..." autocomplete="off" />
+            <div id="suggestions" class="suggestions"></div>
           </div>
+        </div>
 
-          <div id="selected-allergens" class="selected-allergens"></div>
+        <div id="selected-tags" class="selected-tags"></div>
 
-          <div class="buttons">
-            <button type="button" id="skipBtn">Skip for Now</button>
-            <button type="button" id="saveBtn">Save Preferences</button>
-          </div>
-        </form>
+        <div class="buttons">
+          <button class="btn-skip" id="skipBtn">Skip for Now</button>
+          <button class="btn-save" id="saveBtn">Save Tags</button>
+        </div>
 
         <div id="response"></div>
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="site-footer">
       Healthy Food Access · Built for DC communities
     </footer>
 
     <script>
-      const commonAllergens = [
-        "Peanuts", "Tree Nuts", "Shellfish", "Fish", "Eggs", "Milk",
-        "Soy", "Wheat", "Sesame", "Gluten", "Dairy", "Corn", "Mustard",
-        "Celery", "Sulfites", "Kiwi", "Latex",
-        "Vegan", "Vegetarian", "Lactose Intolerance", "Kosher", "Halal", "Keto", "Dairy-Free", "Heart Risk"
+      const allTags = [
+        "Gluten-Free", "Vegan", "Vegetarian", "Dairy-Free", "Nut-Free",
+        "Peanut-Free", "Halal", "Kosher", "Keto", "Paleo",
+        "Low-Sodium", "Low-Sugar", "Organic", "Non-GMO", "Soy-Free",
+        "Egg-Free", "Shellfish-Free", "Fish-Free", "SNAP-Eligible",
+        "WIC-Eligible", "Heart-Healthy", "Diabetic-Friendly", "Lactose-Free"
       ];
 
-      let selectedAllergens = [];
-      const userId = window.location.pathname.split('/').pop();
+      const supplierId = window.location.pathname.split('/').pop();
+      let selectedTags = [];
 
-      const input = document.getElementById("allergen-input");
+      const input = document.getElementById("tag-input");
       const suggestionsDiv = document.getElementById("suggestions");
 
-      input.addEventListener("input", (e) => {
-        const val = e.target.value.toLowerCase();
-        if (!val) {
-          suggestionsDiv.classList.remove("show");
-          return;
-        }
+      input.addEventListener("input", () => {
+        const val = input.value.toLowerCase();
+        if (!val) { suggestionsDiv.classList.remove("show"); return; }
 
-        const filtered = commonAllergens.filter(a =>
-          a.toLowerCase().includes(val) && !selectedAllergens.includes(a)
+        const filtered = allTags.filter(t =>
+          t.toLowerCase().includes(val) && !selectedTags.includes(t)
         );
 
         if (filtered.length > 0) {
-          suggestionsDiv.innerHTML = filtered.map(allergen => `
-            <div class="suggestion-item">${allergen}</div>
-          `).join('');
+          suggestionsDiv.innerHTML = filtered.map(t => `<div class="suggestion-item">${t}</div>`).join('');
           suggestionsDiv.classList.add("show");
-
           document.querySelectorAll(".suggestion-item").forEach(item => {
-            item.addEventListener("click", () => {
-              addAllergen(item.textContent);
-            });
+            item.addEventListener("click", () => addTag(item.textContent));
           });
         } else {
           suggestionsDiv.classList.remove("show");
         }
       });
 
-      function addAllergen(allergen) {
-        if (!selectedAllergens.includes(allergen)) {
-          selectedAllergens.push(allergen);
-          renderAllergens();
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".tag-select")) suggestionsDiv.classList.remove("show");
+      });
+
+      function addTag(tag) {
+        if (!selectedTags.includes(tag)) {
+          selectedTags.push(tag);
+          renderTags();
           input.value = "";
           suggestionsDiv.classList.remove("show");
         }
       }
 
-      function removeAllergen(allergen) {
-        selectedAllergens = selectedAllergens.filter(a => a !== allergen);
-        renderAllergens();
+      function removeTag(tag) {
+        selectedTags = selectedTags.filter(t => t !== tag);
+        renderTags();
       }
 
-      function renderAllergens() {
-        const container = document.getElementById("selected-allergens");
-        container.innerHTML = selectedAllergens.map(allergen => `
-          <div class="allergen-tag">
-            ${allergen}
-            <button type="button" onclick="removeAllergen('${allergen}')">×</button>
+      function renderTags() {
+        document.getElementById("selected-tags").innerHTML = selectedTags.map(tag => `
+          <div class="tag-pill">
+            ${tag}
+            <button type="button" onclick="removeTag('${tag}')">×</button>
           </div>
         `).join('');
       }
 
-      document.getElementById("preferencesForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-      });
-
       document.getElementById("skipBtn").addEventListener("click", () => {
-        window.location.href = "/map";
+        window.location.href = "/supplier-dashboard";
       });
 
       document.getElementById("saveBtn").addEventListener("click", () => {
-        fetch(`/api/preferences/${userId}`, {
+        fetch(`/api/supplier-tags/${supplierId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ allergies: selectedAllergens }),
+          body: JSON.stringify({ dietaryTags: selectedTags }),
         })
-          .then((res) => res.json())
-          .then((data) => {
+          .then(r => r.json())
+          .then(() => {
             const responseDiv = document.getElementById("response");
             responseDiv.className = "success";
-            responseDiv.textContent = "Preferences saved! Redirecting to map...";
+            responseDiv.textContent = "Tags saved! Redirecting to your dashboard...";
             responseDiv.style.display = "block";
-            setTimeout(() => {
-              window.location.href = "/map";
-            }, 1500);
+            setTimeout(() => { window.location.href = "/supplier-dashboard"; }, 1500);
           });
       });
     </script>
     <script src="/user-nav.js"></script>
-</body>
+  </body>
 </html>
