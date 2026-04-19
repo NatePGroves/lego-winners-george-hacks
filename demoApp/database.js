@@ -6,8 +6,11 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  age: { type: Number, required: true },
+  age: Number,
   allergies: [String],
+  address: String,
+  latitude: Number,
+  longitude: Number,
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -24,6 +27,15 @@ const storeSchema = new Schema({
   longitude: { type: Number, required: true },
   userAdded: { type: Boolean, default: false },
   claimed: { type: Boolean, default: false },
+  hours: {
+    monday: { open: String, close: String },
+    tuesday: { open: String, close: String },
+    wednesday: { open: String, close: String },
+    thursday: { open: String, close: String },
+    friday: { open: String, close: String },
+    saturday: { open: String, close: String },
+    sunday: { open: String, close: String }
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -32,6 +44,7 @@ const productSchema = new Schema({
   name: { type: String, required: true },
   storeId: { type: Schema.Types.ObjectId, ref: "Store", required: true },
   allergens: [String],
+  features: [String],
   price: Number,
   createdAt: { type: Date, default: Date.now },
 });
@@ -46,10 +59,32 @@ const storeOwnerSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Supplier Schema
+const supplierSchema = new Schema({
+  companyName: { type: String, required: true },
+  contactName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  phone: String,
+  companyDescription: String,
+  dietaryTags: [String],
+  createdAt: { type: Date, default: Date.now },
+});
+
+// StoreRecommendation Schema
+const storeRecommendationSchema = new Schema({
+  name: { type: String, required: true },
+  address: { type: String, required: true },
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const User = mongoose.model("User", userSchema);
 const Store = mongoose.model("Store", storeSchema);
 const Product = mongoose.model("Product", productSchema);
 const StoreOwner = mongoose.model("StoreOwner", storeOwnerSchema);
+const Supplier = mongoose.model("Supplier", supplierSchema);
+const StoreRecommendation = mongoose.model("StoreRecommendation", storeRecommendationSchema);
 
 const connectDB = async () => {
   try {
@@ -67,4 +102,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = { connectDB, User, Store, Product, StoreOwner };
+module.exports = { connectDB, User, Store, Product, StoreOwner, Supplier, StoreRecommendation };

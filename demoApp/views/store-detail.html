@@ -2,181 +2,459 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Store Details</title>
+    <title>Store Details - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/styles.css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: Arial, sans-serif; background: #f5f5f5; }
-      
-      .navbar {
-        background: white;
-        padding: 15px 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      body {
+        background: #eef6ef;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        background: rgba(255,255,255,0.98);
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       }
-      
-      .navbar-brand { color: #2c5f2d; font-weight: bold; }
-      .navbar-links a { color: #2c5f2d; text-decoration: none; margin-left: 20px; }
-      
-      .container {
-        max-width: 700px;
-        margin: 30px auto;
-        background: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      }
-      
-      h1 { color: #2c5f2d; margin-bottom: 20px; }
-      
-      .store-info {
-        background: #f9f9f9;
-        padding: 15px;
-        border-radius: 4px;
-        margin-bottom: 20px;
-      }
-      
-      .info-row { margin: 8px 0; }
-      .info-label { font-weight: bold; color: #666; }
-      .info-value { color: #333; }
-      
-      .products-section { margin-top: 30px; }
-      .section-title { font-size: 20px; font-weight: bold; color: #2c5f2d; margin-bottom: 15px; }
-      
-      .product-item {
-        background: #f9f9f9;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 4px;
-        border-left: 4px solid #2c5f2d;
-      }
-      
-      .product-name { font-weight: bold; color: #333; }
-      .allergens {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 8px;
-      }
-      
-      .allergen-tag {
-        background: #ffebee;
-        color: #c62828;
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 12px;
-      }
-      
-      .add-product-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background: #2c5f2d;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
         text-decoration: none;
       }
-      
-      .add-product-btn:hover { background: #1e4620; }
-      
-      .no-products {
-        color: #999;
-        font-style: italic;
-        text-align: center;
-        padding: 20px;
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
-      
+
+      .nav-item {
+        position: relative;
+        padding: 0 16px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s;
+      }
+
+      .nav-item:hover { color: var(--turf-green); }
+
+      .nav-item.browse {
+        background: var(--turf-green);
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
+      }
+
+      .nav-item.browse:hover { background: var(--turf-green-dark); color: white; }
+
+      .dropdown .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 200px;
+        padding: 8px 0;
+        border-top: 3px solid var(--turf-green);
+      }
+
+      .dropdown:hover .dropdown-menu { display: block; }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--dusk-blue);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.15s;
+      }
+
+      .dropdown-menu a:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green);
+      }
+
+      .dropdown-menu .menu-section {
+        padding: 6px 20px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--burnt-caramel);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dropdown-menu hr {
+        border: none;
+        border-top: 1px solid var(--thistle);
+        margin: 6px 0;
+      }
+
+      .dropdown-caret { margin-left: 4px; font-size: 11px; }
+
+      .page-content {
+        flex: 1;
+        padding: 40px;
+      }
+
+      .detail-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+      }
+
+      #storeMap {
+        height: 400px;
+        width: 100%;
+      }
+
+      .content {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #storeName {
+        color: var(--dusk-blue);
+        font-size: 28px;
+        margin: 0 0 16px 0;
+      }
+
+      .store-info {
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 2px solid var(--thistle);
+      }
+
+      .info-row {
+        display: flex;
+        padding: 8px 0;
+        color: var(--dusk-blue);
+        font-size: 15px;
+      }
+
+      .info-label {
+        font-weight: 600;
+        width: 100px;
+        margin-right: 12px;
+      }
+
+      .info-value {
+        flex: 1;
+      }
+
       .badges {
         display: flex;
         gap: 8px;
-        margin-top: 10px;
+        margin-top: 12px;
       }
-      
+
       .badge {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 12px;
+        padding: 6px 12px;
+        border-radius: 4px;
         font-size: 12px;
         font-weight: bold;
       }
-      
+
       .snap-badge {
         background: #d4edda;
         color: #155724;
       }
-      
+
       .wic-badge {
         background: #cfe2ff;
         color: #084298;
       }
+
+      .products-section {
+        flex: 1;
+      }
+
+      .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--dusk-blue);
+        margin-bottom: 16px;
+      }
+
+      .add-product-btn {
+        background: var(--turf-green);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .add-product-btn:hover {
+        background: var(--turf-green-dark);
+      }
+
+      #productsList {
+        display: grid;
+        gap: 12px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .product-item {
+        padding: 12px;
+        background: var(--lime-cream);
+        border-radius: 6px;
+        border-left: 4px solid var(--turf-green);
+      }
+
+      #storeMap {
+        position: relative;
+        z-index: 0;
+      }
+
+      .leaflet-pane,
+      .leaflet-tile,
+      .leaflet-pane > svg,
+      .leaflet-pane > canvas {
+        z-index: 0 !important;
+      }
+
+      .product-name {
+        font-weight: 600;
+        color: var(--turf-green);
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+
+      .product-price {
+        color: var(--dusk-blue);
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      .allergens {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .allergen-tag {
+        background: #ffebee;
+        color: #c62828;
+        padding: 3px 6px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .no-products {
+        text-align: center;
+        color: #999;
+        padding: 20px;
+        font-style: italic;
+      }
+
+      .site-footer {
+        background: var(--dusk-blue);
+        color: white;
+        text-align: center;
+        padding: 24px;
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: auto;
+      }
+
+      @media (max-width: 768px) {
+        .detail-container {
+          grid-template-columns: 1fr;
+        }
+
+        #storeMap {
+          height: 300px;
+        }
+      }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <div class="navbar-brand">Healthy Food Access</div>
-      <div class="navbar-links">
-        <a href="/map">Map</a>
-        <a href="/profile">Profile</a>
-      </div>
-    </div>
-    
-    <div class="container">
-      <h1 id="storeName"></h1>
-      
-      <div class="store-info">
-        <div class="info-row">
-          <span class="info-label">Address:</span>
-          <span class="info-value" id="storeAddress"></span>
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+
+      <nav class="site-nav">
+        <div class="nav-item dropdown">
+          For Customers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/dietary-filtering">Dietary Filtering</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/signup">Create Account</a>
+            <a href="/signin">Sign In</a>
+          </div>
         </div>
-        <div class="info-row">
-          <span class="info-label">Zip:</span>
-          <span class="info-value" id="storeZip"></span>
+
+        <div class="nav-item dropdown">
+          For Corner Stores <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/why-list-your-store">Why List Your Store?</a>
+            <a href="/managing-products">Managing Products</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/store-signup">Register Your Store</a>
+            <a href="/store-signin">Store Sign In</a>
+          </div>
         </div>
-        <div id="badges" class="badges"></div>
-      </div>
-      
-      <div class="products-section">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-          <div class="section-title">Available Products</div>
-          <a href="#" class="add-product-btn" id="addProductBtn">+ Add Product</a>
+
+        <div class="nav-item dropdown">
+          For Suppliers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/partnership-overview">Partnership Overview</a>
+            <a href="/distribution-network">Distribution Network</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/supplier-signup">Create Supplier Account</a>
+            <a href="/supplier-signin">Supplier Sign In</a>
+          </div>
         </div>
-        
-        <div id="productsList"></div>
+
+        <a href="/map" class="nav-item browse">Browse Map</a>
+      </nav>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <div class="detail-container">
+        <div id="storeMap"></div>
+
+        <div class="content">
+          <h1 id="storeName"></h1>
+
+          <div class="store-info">
+            <div class="info-row">
+              <span class="info-label">📍 Address:</span>
+              <span class="info-value" id="storeAddress"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">🏘️ Zip:</span>
+              <span class="info-value" id="storeZip"></span>
+            </div>
+            <div id="badges" class="badges"></div>
+          </div>
+
+          <div class="products-section">
+            <div class="section-title">
+              <span>🛒 Available Products</span>
+            </div>
+
+            <div id="productsList"></div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="site-footer">
+      Healthy Food Access · Built for DC communities
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
       const storeId = new URLSearchParams(window.location.search).get("id");
-      
+      let storeLocation = null;
+
+      const map = L.map('storeMap').setView([38.8951, -77.0369], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
       fetch(`/api/stores/${storeId}`)
         .then((res) => res.json())
-        .then((store) => {
-          document.getElementById("storeName").textContent = store.name;
-          document.getElementById("storeAddress").textContent = store.address;
-          document.getElementById("storeZip").textContent = store.zipcode || "N/A";
-          
+        .then((data) => {
+          storeLocation = data;
+
+          document.getElementById("storeName").textContent = data.name;
+          document.getElementById("storeAddress").textContent = data.address;
+          document.getElementById("storeZip").textContent = data.zipcode || "N/A";
+
           const badges = document.getElementById("badges");
-          if (store.snapMatch) badges.innerHTML += '<span class="badge snap-badge">SNAP Match</span>';
-          if (store.wicVendor) badges.innerHTML += '<span class="badge wic-badge">WIC Vendor</span>';
-          
-          document.getElementById("addProductBtn").href = `/add-product?storeId=${storeId}`;
+          if (data.snapMatch) badges.innerHTML += '<span class="badge snap-badge">✓ SNAP Match</span>';
+          if (data.wicVendor) badges.innerHTML += '<span class="badge wic-badge">✓ WIC Vendor</span>';
+
+          // Center map on store and add prominent marker
+          map.setView([data.latitude, data.longitude], 15);
+
+          // Create custom icon
+          const customIcon = L.icon({
+            iconUrl: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232c5f2d" width="48" height="48"><path d="M12 0C8.13 0 5 3.13 5 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+            iconSize: [48, 48],
+            iconAnchor: [24, 48],
+            popupAnchor: [0, -48]
+          });
+
+          // Add store marker
+          L.marker([data.latitude, data.longitude], { icon: customIcon })
+            .bindPopup(`<div class="store-marker-popup">${data.name}</div>`)
+            .addTo(map)
+            .openPopup();
+
+          // Add a circle around the store to show coverage area
+          L.circle([data.latitude, data.longitude], {
+            color: '#2c5f2d',
+            fillColor: '#2c5f2d',
+            fillOpacity: 0.1,
+            radius: 500
+          }).addTo(map);
         });
-      
+
       fetch(`/api/products?storeId=${storeId}`)
         .then((res) => res.json())
         .then((products) => {
           const list = document.getElementById("productsList");
           if (products.length === 0) {
-            list.innerHTML = '<div class="no-products">No products listed yet</div>';
+            list.innerHTML = '<div class="no-products">No products listed yet. Click + Add Product to get started!</div>';
             return;
           }
-          
+
           list.innerHTML = products.map(p => `
             <div class="product-item">
               <div class="product-name">${p.name}</div>
-              ${p.price ? `<div>Price: $${p.price.toFixed(2)}</div>` : ''}
+              ${p.price ? `<div class="product-price">💰 $${p.price.toFixed(2)}</div>` : ''}
               ${p.allergens && p.allergens.length > 0 ? `
                 <div class="allergens">
                   ${p.allergens.map(a => `<span class="allergen-tag">${a}</span>`).join('')}
@@ -186,5 +464,6 @@
           `).join('');
         });
     </script>
-  </body>
+    <script src="/user-nav.js"></script>
+</body>
 </html>

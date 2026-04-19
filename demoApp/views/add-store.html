@@ -2,128 +2,452 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Add Store</title>
+    <title>Add Store - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/styles.css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: Arial, sans-serif; background: #f5f5f5; }
-      
-      .navbar {
+      body {
+        background: #eef6ef;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
         background: white;
-        padding: 15px 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       }
-      
-      .navbar-brand { color: #2c5f2d; font-weight: bold; }
-      .navbar-links a { color: #2c5f2d; text-decoration: none; margin-left: 20px; }
-      .navbar-links a:hover { text-decoration: underline; }
-      
-      .container {
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
+        text-decoration: none;
+      }
+
+      .site-nav {
         display: flex;
-        height: calc(100vh - 60px);
+        align-items: center;
+        gap: 8px;
       }
-      
-      .form-section {
-        width: 30%;
-        background: white;
-        padding: 25px;
-        overflow-y: auto;
-        box-shadow: 2px 0 6px rgba(0,0,0,0.1);
-      }
-      
-      .map-section {
-        flex: 1;
+
+      .nav-item {
         position: relative;
+        padding: 0 16px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s;
       }
-      
-      h1 { color: #2c5f2d; margin-bottom: 20px; font-size: 24px; }
-      
-      form { display: flex; flex-direction: column; gap: 15px; }
-      
-      label { font-weight: bold; color: #333; font-size: 14px; }
-      
-      input {
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+
+      .nav-item:hover { color: var(--turf-green); }
+
+      .nav-item.browse {
+        background: var(--turf-green);
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
       }
-      
-      input:focus {
-        outline: none;
-        border-color: #2c5f2d;
-        box-shadow: 0 0 5px rgba(44, 95, 45, 0.3);
+
+      .nav-item.browse:hover { background: var(--turf-green-dark); color: white; }
+
+      .dropdown .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 200px;
+        padding: 8px 0;
+        border-top: 3px solid var(--turf-green);
       }
-      
-      #map { height: 100%; width: 100%; }
-      
-      .location-info {
-        background: #f0f0f0;
-        padding: 10px;
-        border-radius: 4px;
-        font-size: 13px;
-        color: #666;
+
+      .dropdown:hover .dropdown-menu { display: block; }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--dusk-blue);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.15s;
       }
-      
-      button {
+
+      .dropdown-menu a:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green);
+      }
+
+      .dropdown-menu .menu-section {
+        padding: 6px 20px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--burnt-caramel);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dropdown-menu hr {
+        border: none;
+        border-top: 1px solid var(--thistle);
+        margin: 6px 0;
+      }
+
+      .dropdown-caret { margin-left: 4px; font-size: 11px; }
+
+      .page-wrapper {
+        flex: 1;
+        display: flex;
+        min-height: 0;
+      }
+
+      .split-layout {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        width: 100%;
+        height: 100%;
+      }
+
+      .form-section {
+        background: white;
+        padding: 32px;
+        overflow-y: auto;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      }
+
+      .form-section h1 {
+        color: var(--dusk-blue);
+        font-size: 24px;
+        margin: 0 0 12px 0;
+      }
+
+      .instructions {
+        background: var(--lime-cream);
+        border-left: 4px solid var(--turf-green);
         padding: 12px;
-        font-size: 16px;
-        background-color: #2c5f2d;
+        border-radius: 6px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        color: var(--dusk-blue);
+      }
+
+      .form-section form div {
+        margin-bottom: 16px;
+      }
+
+      .form-section label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .form-section input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid var(--thistle);
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      .form-section input:focus {
+        outline: none;
+        border-color: var(--turf-green);
+      }
+
+      .location-info {
+        background: #f5f5f5;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: var(--dusk-blue);
+        margin-bottom: 16px;
+      }
+
+      .form-section button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background: var(--turf-green);
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: bold;
         cursor: pointer;
+        transition: background 0.2s;
       }
-      
-      button:hover { background-color: #1e4620; }
-      
+
+      .form-section button[type="submit"]:hover {
+        background: var(--turf-green-dark);
+      }
+
       #response {
-        margin-top: 15px;
         padding: 12px;
-        border-radius: 4px;
+        border-radius: 6px;
+        margin-top: 16px;
+        text-align: center;
+        font-size: 13px;
         display: none;
-        font-size: 14px;
       }
-      
+
       #response.success {
-        background-color: #d4edda;
+        background: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
-        display: block;
       }
-      
+
       #response.error {
-        background-color: #f8d7da;
+        background: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
-        display: block;
       }
-      
-      .instructions {
-        background: #e3f2fd;
-        padding: 12px;
-        border-radius: 4px;
-        border-left: 4px solid #2196f3;
-        color: #1565c0;
+
+      .map-section {
+        flex: 1;
+        min-height: 0;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+
+      .site-footer {
+        background: var(--dusk-blue);
+        color: white;
+        text-align: center;
+        padding: 24px;
         font-size: 14px;
-        margin-bottom: 15px;
+        opacity: 0.9;
       }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <div class="navbar-brand">Healthy Food Access</div>
-      <div class="navbar-links">
-        <a href="/map">Map</a>
-        <a href="/profile">Profile</a>
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+
+      <nav class="site-nav">
+        <div class="nav-item dropdown">
+          For Customers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/dietary-filtering">Dietary Filtering</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/signup">Create Account</a>
+            <a href="/signin">Sign In</a>
+          </div>
+        </div>
+
+        <div class="nav-item dropdown">
+          For Corner Stores <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/why-list-your-store">Why List Your Store?</a>
+            <a href="/managing-products">Managing Products</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/store-signup">Register Your Store</a>
+            <a href="/store-signin">Store Sign In</a>
+          </div>
+        </div>
+
+        <div class="nav-item dropdown">
+          For Suppliers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/partnership-overview">Partnership Overview</a>
+            <a href="/distribution-network">Distribution Network</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/supplier-signup">Create Supplier Account</a>
+            <a href="/supplier-signin">Supplier Sign In</a>
+          </div>
+        </div>
+
+        <a href="/map" class="nav-item browse">Browse Map</a>
+      </nav>
+    </header>
+
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+      <div class="split-layout">
+        <div class="form-section">
+          <h1>Add a Store</h1>
+
+          <div class="instructions">
+            💡 Click on the map to set your store's location. You'll see existing stores in the area.
+          </div>
+
+          <form id="addStoreForm">
+            <div>
+              <label for="name">Store Name *</label>
+              <input type="text" id="name" name="name" placeholder="e.g., Fresh Mart" required />
+            </div>
+
+            <div>
+              <label for="address">Address *</label>
+              <input type="text" id="address" name="address" placeholder="e.g., 123 Main St" required />
+            </div>
+
+            <div>
+              <label for="zipcode">Zip Code</label>
+              <input type="text" id="zipcode" name="zipcode" placeholder="20001" />
+            </div>
+
+            <div class="location-info">
+              📍 Latitude: <span id="latValue">-</span><br/>
+              📍 Longitude: <span id="lngValue">-</span>
+            </div>
+
+            <button type="submit">Add Store</button>
+          </form>
+
+          <div id="response"></div>
+        </div>
+
+        <div class="map-section">
+          <div id="map"></div>
+        </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      Healthy Food Access · Built for DC communities
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      const userId = localStorage.getItem("userId");
+      if (!userId) window.location.href = "/signin";
+
+      let latitude = null;
+      let longitude = null;
+
+      const map = L.map('map').setView([38.8951, -77.0369], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Load and display existing stores
+      fetch('/api/stores')
+        .then((res) => res.json())
+        .then((data) => {
+          L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => {
+              const color = feature.properties.userAdded ? '#ff6b6b' : '#2c5f2d';
+              return L.circleMarker(latlng, {
+                radius: 6,
+                fillColor: color,
+                color: '#fff',
+                weight: 2,
+                opacity: 0.7,
+                fillOpacity: 0.6
+              });
+            },
+            onEachFeature: (feature, layer) => {
+              const props = feature.properties;
+              const popup = `
+                <strong>${props.name}</strong><br/>
+                ${props.address}<br/>
+                ${props.snapMatch ? '✓ SNAP Match<br/>' : ''}
+                ${props.wicVendor ? '✓ WIC Vendor' : ''}
+              `;
+              layer.bindPopup(popup);
+            }
+          }).addTo(map);
+        });
+
+      // User's new marker
+      let marker = null;
+      map.on('click', (e) => {
+        latitude = e.latlng.lat;
+        longitude = e.latlng.lng;
+
+        document.getElementById("latValue").textContent = latitude.toFixed(6);
+        document.getElementById("lngValue").textContent = longitude.toFixed(6);
+
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([latitude, longitude], {
+          icon: L.icon({
+            iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMjc3ZjMxIiBkPSJNMTIgMEMxNC43NyAwIDE3IDIuMjMgMTcgNWMwIDIuNjUtMi4wNSA0Ljg0LTQuNzcgNS45N1YyMEMxMiAyMS43IDE0LjMgMjQgMTcgMjRjMy4zIDAgNi0yLjcgNi02cy0yLjctNi02LTZoLTJWNGMwLTIuMTctMS44My00LTQtNHMtNCAyLjgzLTQgNGgyYzAtMS4xLjktMiAyLTItMi42NSAwLTQtMS4zNS00LTN6Ii8+PC9zdmc+',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
+          })
+        }).addTo(map)
+          .bindPopup("📍 New Store Location");
+      });
+
+      document.getElementById("addStoreForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if (!latitude || !longitude) {
+          document.getElementById("response").className = "error";
+          document.getElementById("response").textContent = "❌ Please click on the map to set location";
+          document.getElementById("response").style.display = "block";
+          return;
+        }
+
+        fetch("/api/stores/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: document.getElementById("name").value,
+            address: document.getElementById("address").value,
+            zipcode: document.getElementById("zipcode").value,
+            latitude,
+            longitude
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const responseDiv = document.getElementById("response");
+            if (data.storeId) {
+              responseDiv.className = "success";
+              responseDiv.textContent = "✓ Store added! Redirecting...";
+              responseDiv.style.display = "block";
+              setTimeout(() => window.location.href = "/map", 1500);
+            } else {
+              responseDiv.className = "error";
+              responseDiv.textContent = "❌ " + (data.message || "Failed to add store");
+              responseDiv.style.display = "block";
+            }
+          });
+      });
+    </script>
+    <script src="/user-nav.js"></script>
+</body>
+</html>
+
     
-    <div class="container">
+    <div class="split-layout">
       <div class="form-section">
         <h1>Add a Store</h1>
         
@@ -263,5 +587,6 @@
           });
       });
     </script>
-  </body>
+    <script src="/user-nav.js"></script>
+</body>
 </html>

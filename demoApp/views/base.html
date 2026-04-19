@@ -4,110 +4,285 @@
     <meta charset="utf-8" />
     <title>Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles.css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { 
-        font-family: Arial, sans-serif; 
-        background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
+      body.landing {
+        display: block;
+        background: #eef6ef;
         min-height: 100vh;
-        padding: 20px;
       }
-      
-      .container {
-        max-width: 1000px;
+
+      /* ----- Site Header ----- */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
+        text-decoration: none;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+        padding: 0 16px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s;
+      }
+
+      .nav-item:hover { color: var(--turf-green); }
+
+      .nav-item.browse {
+        background: var(--turf-green);
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
+      }
+
+      .nav-item.browse:hover { background: var(--turf-green-dark); color: white; }
+
+      /* Dropdowns */
+      .dropdown .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 200px;
+        padding: 8px 0;
+        border-top: 3px solid var(--turf-green);
+      }
+
+      .dropdown:hover .dropdown-menu { display: block; }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--dusk-blue);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.15s;
+      }
+
+      .dropdown-menu a:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green);
+      }
+
+      .dropdown-menu .menu-section {
+        padding: 6px 20px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--burnt-caramel);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dropdown-menu hr {
+        border: none;
+        border-top: 1px solid var(--thistle);
+        margin: 6px 0;
+      }
+
+      .dropdown-caret { margin-left: 4px; font-size: 11px; }
+
+      /* ----- Hero ----- */
+      .hero {
+        background: var(--turf-green);
+        color: white;
+        padding: 100px 40px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        color: white;
+        font-size: 56px;
+        line-height: 1.15;
+        margin-bottom: 20px;
+      }
+
+      .hero h1 span { color: var(--lime-cream); }
+
+      .hero p {
+        font-size: 20px;
+        color: rgba(255,255,255,0.85);
+        max-width: 560px;
+        margin: 0 auto 40px;
+        line-height: 1.6;
+      }
+
+      .hero-cta {
+        display: inline-block;
+        background: var(--lime-cream);
+        color: var(--turf-green-dark);
+        font-weight: bold;
+        font-size: 18px;
+        padding: 16px 40px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      }
+
+      .hero-cta:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      }
+
+      /* ----- Info Section ----- */
+      .info-section {
+        padding: 80px 40px;
+        background: white;
+      }
+
+      .info-section-title {
+        text-align: center;
+        font-size: 32px;
+        color: var(--dusk-blue);
+        margin-bottom: 12px;
+      }
+
+      .info-section-subtitle {
+        text-align: center;
+        color: var(--dusk-blue);
+        font-size: 16px;
+        margin-bottom: 56px;
+        opacity: 0.7;
+      }
+
+      .info-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        max-width: 1100px;
         margin: 0 auto;
       }
-      
-      .hero {
+
+      .info-card {
         background: white;
-        padding: 60px 40px;
+        border: 2px solid var(--thistle);
         border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        text-align: center;
-        margin-bottom: 30px;
-      }
-      
-      h1 {
-        color: #2c5f2d;
-        margin-bottom: 15px;
-        font-size: 40px;
-      }
-      
-      .subtitle {
-        color: #666;
-        margin-bottom: 40px;
-        font-size: 18px;
-      }
-      
-      .sections {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-      }
-      
-      .card {
-        background: white;
-        padding: 40px 30px;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      }
-      
-      .card h2 {
-        color: #2c5f2d;
-        margin-bottom: 25px;
-        font-size: 24px;
-        border-bottom: 2px solid #2c5f2d;
-        padding-bottom: 15px;
-      }
-      
-      .buttons {
+        padding: 36px 28px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
+        transition: box-shadow 0.2s, transform 0.2s;
       }
-      
-      a, button {
+
+      .info-card:hover {
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        transform: translateY(-4px);
+      }
+
+      .info-card-icon {
+        font-size: 36px;
+      }
+
+      .info-card h3 {
+        color: var(--turf-green);
+        font-size: 22px;
+        margin: 0;
+      }
+
+      .info-card p {
+        color: var(--dusk-blue);
+        font-size: 15px;
+        line-height: 1.6;
+        flex: 1;
+      }
+
+      .info-card-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .info-card-link {
         display: block;
-        padding: 15px 30px;
-        font-size: 16px;
-        border: none;
+        text-align: center;
+        padding: 10px;
         border-radius: 6px;
-        text-decoration: none;
+        font-size: 14px;
         font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s;
+        text-decoration: none;
+        transition: all 0.2s;
       }
-      
-      .btn-primary {
-        background-color: #2c5f2d;
+
+      .info-card-link.primary {
+        background: var(--turf-green);
         color: white;
       }
-      
-      .btn-primary:hover {
-        background-color: #1e4620;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+
+      .info-card-link.primary:hover { background: var(--turf-green-dark); }
+
+      .info-card-link.secondary {
+        background: var(--lime-cream);
+        color: var(--dusk-blue);
       }
-      
-      .btn-secondary {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 2px solid #2c5f2d;
+
+      .info-card-link.secondary:hover { background: var(--thistle); }
+
+      /* ----- Stats Bar ----- */
+      .stats-bar {
+        background: var(--thistle);
+        padding: 48px 40px;
+        display: flex;
+        justify-content: center;
+        gap: 80px;
+        text-align: center;
       }
-      
-      .btn-secondary:hover {
-        background-color: #e8e8e8;
-        transform: translateY(-2px);
+
+      .stat-item strong {
+        display: block;
+        font-size: 40px;
+        color: var(--turf-green);
+        font-weight: bold;
       }
-      
-      .btn-outline {
-        background-color: transparent;
-        color: #333;
-        border: 2px solid #666;
+
+      .stat-item span {
+        font-size: 15px;
+        color: var(--dusk-blue);
       }
-      
-      .btn-outline:hover {
-        background-color: #f0f0f0;
+
+      /* ----- Footer ----- */
+      .site-footer {
+        background: var(--dusk-blue);
+        color: white;
+        text-align: center;
+        padding: 24px;
+        font-size: 14px;
+        opacity: 0.9;
       }
       
       .icon {
@@ -126,32 +301,128 @@
       }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <div class="hero">
-        <h1>🥗 Healthy Food Access</h1>
-        <p class="subtitle">Find healthy corner stores and manage your dietary preferences</p>
+  <body class="landing">
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">Healthy Food Access</a>
+
+      <nav class="site-nav">
+
+        <!-- For Customers -->
+        <div class="nav-item dropdown">
+          For Customers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/dietary-filtering">Dietary Filtering</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/signup">Create Account</a>
+            <a href="/signin">Sign In</a>
+          </div>
+        </div>
+
+        <!-- For Corner Stores -->
+        <div class="nav-item dropdown">
+          For Corner Stores <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/why-list-your-store">Why List Your Store?</a>
+            <a href="/managing-products">Managing Products</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/store-signup">Register Your Store</a>
+            <a href="/store-signin">Store Sign In</a>
+          </div>
+        </div>
+
+        <!-- For Suppliers -->
+        <div class="nav-item dropdown">
+          For Suppliers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/partnership-overview">Partnership Overview</a>
+            <a href="/distribution-network">Distribution Network</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/supplier-signup">Create Supplier Account</a>
+            <a href="/supplier-signin">Supplier Sign In</a>
+          </div>
+        </div>
+
+        <a href="/map" class="nav-item browse">Browse Map</a>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1><span style="color: var(--lime-cream);">Healthy Food in Every</span><br><span>Neighborhood</span></h1>
+      <p>Find corner stores near you that carry fresh, affordable products tailored to your dietary needs. Search by restriction, browse the map, and eat well in your community.</p>
+      <a href="/map" class="hero-cta">Browse the Map →</a>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <strong>500+</strong>
+        <span>Corner Stores</span>
       </div>
-      
-      <div class="sections">
-        <div class="card">
-          <h2><div class="icon">👤</div>For Customers</h2>
-          <div class="buttons">
-            <a href="/signup" class="btn-primary">Sign Up</a>
-            <a href="/signin" class="btn-secondary">Sign In</a>
-            <a href="/map" class="btn-outline">Browse Map (Guest)</a>
-          </div>
-        </div>
-        
-        <div class="card">
-          <h2><div class="icon">🏪</div>For Stores</h2>
-          <div class="buttons">
-            <a href="/store-signup" class="btn-primary">Create Store Account</a>
-            <a href="/store-signin" class="btn-secondary">Store Sign In</a>
-            <a href="/map" class="btn-outline">View Map</a>
-          </div>
-        </div>
+      <div class="stat-item">
+        <strong>DC</strong>
+        <span>Area Coverage</span>
+      </div>
+      <div class="stat-item">
+        <strong>Free</strong>
+        <span>Always Free to Use</span>
       </div>
     </div>
+
+    <!-- Info Cards -->
+    <section class="info-section">
+      <h2 class="info-section-title">Who Is This For?</h2>
+      <p class="info-section-subtitle">Healthy Food Access connects customers, stores, and suppliers in one place.</p>
+
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="info-card-icon">🛒</div>
+          <h3>Customers</h3>
+          <p>Browse nearby corner stores, filter products by your allergies and dietary restrictions, and find healthy options that work for you — all in one map.</p>
+          <div class="info-card-links">
+            <a href="/signup" class="info-card-link primary">Create Free Account</a>
+            <a href="/signin" class="info-card-link secondary">Sign In</a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">🏪</div>
+          <h3>Corner Stores</h3>
+          <p>List your store on the map, add your product catalog, and reach customers who are specifically looking for what you carry. Increase foot traffic from health-conscious shoppers.</p>
+          <div class="info-card-links">
+            <a href="/store-signup" class="info-card-link primary">Register Your Store</a>
+            <a href="/store-signin" class="info-card-link secondary">Store Sign In</a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon">🚚</div>
+          <h3>Suppliers</h3>
+          <p>Connect with a network of corner stores actively seeking healthy, affordable products. Expand your distribution reach and support food equity in under-served communities.</p>
+          <div class="info-card-links">
+            <a href="/supplier-signup" class="info-card-link primary">Become a Partner</a>
+            <a href="/partnership-overview" class="info-card-link secondary">Learn More</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      Healthy Food Access · Built for DC communities
+    </footer>
+
+  <script src="/user-nav.js"></script>
   </body>
 </html>

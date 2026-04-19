@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>My Profile - Healthy Food Access</title>
+    <title>Managing Products - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -135,117 +135,59 @@
         padding: 48px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 700px;
+        max-width: 900px;
         margin: 0 auto;
       }
 
       .content-container h1 {
-        color: var(--dusk-blue);
+        color: #297045;
         font-size: 32px;
-        margin-bottom: 32px;
+        margin-bottom: 12px;
         margin-top: 0;
       }
 
-      .profile-section {
-        margin-bottom: 40px;
-      }
-
-      .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: var(--turf-green);
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid var(--thistle);
-      }
-
-      .info-row {
-        display: flex;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--thistle);
-      }
-
-      .info-label {
-        font-weight: 600;
+      .content-container .subtitle {
         color: var(--dusk-blue);
-        width: 150px;
-      }
-
-      .info-value {
-        color: var(--dusk-blue);
-        flex: 1;
-      }
-
-      .allergies-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .allergen-tag {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-        padding: 6px 12px;
-        border-radius: 16px;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
-      .no-allergies {
-        font-style: italic;
-        color: #999;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 32px;
-      }
-
-      .buttons button {
-        flex: 1;
-        padding: 14px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .buttons button:first-child {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-      }
-
-      .buttons button:first-child:hover {
-        background: var(--thistle);
-      }
-
-      .buttons button:last-child {
-        background: var(--turf-green);
-        color: white;
-      }
-
-      .buttons button:last-child:hover {
-        background: var(--turf-green-dark);
-      }
-
-      #loading, #error {
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
         font-size: 16px;
+        margin-bottom: 32px;
+        opacity: 0.7;
       }
 
-      #loading {
+      .content-container h2 {
+        color: var(--turf-green);
+        font-size: 22px;
+        margin-top: 32px;
+        margin-bottom: 16px;
+      }
+
+      .content-container p {
         color: var(--dusk-blue);
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 16px;
       }
 
-      #error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+      .step-list {
+        list-style: none;
+        margin-bottom: 24px;
+        padding: 0;
+      }
+
+      .step-list li {
+        background: white;
+        border: 1px solid rgba(70, 87, 117, 0.12);
+        border-left: 4px solid var(--burnt-caramel);
+        border-radius: 12px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
+        color: var(--dusk-blue);
+        font-size: 15px;
+        line-height: 1.6;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .step-list li strong {
+        color: #297045;
       }
     </style>
   </head>
@@ -253,7 +195,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+      <a href="/" class="header-brand">Healthy Food Access</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -302,40 +244,41 @@
     <!-- Page Content -->
     <div class="page-content">
       <div class="content-container">
-        <h1>My Profile</h1>
+        <h1>Managing Products</h1>
+        <p class="subtitle">Keep your store catalog current and help customers find what they need</p>
 
-        <div id="loading">Loading profile...</div>
-        <div id="error" style="display: none;"></div>
-        <div id="profileContent" style="display: none;">
+        <h2>Why Keep Your Products Updated</h2>
+        <p>Your product inventory is what helps customers find your store. By keeping your catalog current, you:</p>
+        <ul class="step-list">
+          <li>Increase visibility with customers searching for specific items</li>
+          <li>Help customers make better dietary choices with allergen information</li>
+          <li>Highlight what makes your store unique</li>
+        </ul>
 
-          <div class="profile-section">
-            <div class="section-title">Personal Information</div>
-            <div class="info-row">
-              <span class="info-label">Name:</span>
-              <span class="info-value" id="nameValue"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Email:</span>
-              <span class="info-value" id="emailValue"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Member Since:</span>
-              <span class="info-value" id="joinedValue"></span>
-            </div>
-          </div>
+        <h2>Adding Products</h2>
+        <p>Once you've created your store account, you can start adding products through your dashboard:</p>
+        <ul class="step-list">
+          <li><strong>Step 1:</strong> Log into your store dashboard</li>
+          <li><strong>Step 2:</strong> Click "Add Product" to create a new listing</li>
+          <li><strong>Step 3:</strong> Add product name, category, and description</li>
+          <li><strong>Step 4:</strong> Tag allergens (if any) so customers can filter safely</li>
+          <li><strong>Step 5:</strong> Save and you're live on the map</li>
+        </ul>
 
-          <div class="profile-section">
-            <div class="section-title">Dietary Preferences</div>
-            <div id="allergiesContainer">
-              <div class="allergies-list" id="allergiesList"></div>
-            </div>
-          </div>
+        <h2>Product Information</h2>
+        <p>Here's what we ask for each product:</p>
+        <ul class="step-list">
+          <li><strong>Product Name:</strong> The name customers will see when searching</li>
+          <li><strong>Category:</strong> Produce, dairy, snacks, beverages, etc.</li>
+          <li><strong>Allergens:</strong> Common allergens found in the product</li>
+          <li><strong>Description:</strong> Optional details about the product</li>
+        </ul>
 
-          <div class="buttons">
-            <button id="editBtn">Edit Preferences</button>
-            <button id="signoutBtn">Sign Out</button>
-          </div>
-        </div>
+        <h2>Keeping Information Fresh</h2>
+        <p>You can edit or delete products anytime. We recommend reviewing your catalog monthly to ensure accuracy. Customers appreciate knowing exactly what's available at your store.</p>
+
+        <h2>Need Help?</h2>
+        <p>Your store dashboard includes a help guide and support resources. Most stores are able to manage their inventory in just a few minutes a week.</p>
       </div>
     </div>
 
@@ -344,54 +287,6 @@
       Healthy Food Access · Built for DC communities
     </footer>
 
-    <script>
-      const userId = localStorage.getItem("userId");
-      const storeOwnerId = localStorage.getItem("storeOwnerId");
-
-      if (!userId) {
-        if (storeOwnerId) {
-          window.location.href = "/store-dashboard";
-        } else {
-          window.location.href = "/signin";
-        }
-      }
-
-      fetch(`/api/user/${userId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("error").style.display = "block";
-            document.getElementById("error").textContent = data.error;
-            return;
-          }
-
-          document.getElementById("nameValue").textContent = data.name;
-          document.getElementById("emailValue").textContent = data.email;
-          document.getElementById("joinedValue").textContent = new Date(data.createdAt).toLocaleDateString();
-
-          const allergiesList = document.getElementById("allergiesList");
-          if (data.allergies && data.allergies.length > 0) {
-            allergiesList.innerHTML = data.allergies.map(allergen => `
-              <div class="allergen-tag">${allergen}</div>
-            `).join('');
-          } else {
-            allergiesList.innerHTML = '<div class="no-allergies">No dietary preferences set</div>';
-          }
-
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("profileContent").style.display = "block";
-        });
-
-      document.getElementById("editBtn").addEventListener("click", () => {
-        window.location.href = `/preferences/${userId}`;
-      });
-
-      document.getElementById("signoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("userId");
-        window.location.href = "/";
-      });
-    </script>
     <script src="/user-nav.js"></script>
 </body>
 </html>

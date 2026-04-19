@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Admin - Store Recommendations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body {
+        background: #eef6ef;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
+        text-decoration: none;
+      }
+
+      .page-wrapper {
+        flex: 1;
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .admin-section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        padding: 40px;
+      }
+
+      .admin-section h1 {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--turf-green);
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      .recommendation-card {
+        border: 1px solid var(--thistle);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background: white;
+      }
+
+      .recommendation-card.pending {
+        border-left: 4px solid #ffc107;
+      }
+
+      .recommendation-card.approved {
+        border-left: 4px solid #28a745;
+      }
+
+      .recommendation-card.rejected {
+        border-left: 4px solid #dc3545;
+      }
+
+      .recommendation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .recommendation-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--dusk-blue);
+        margin: 0;
+      }
+
+      .recommendation-status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .status-pending { background: #fff3cd; color: #856404; }
+      .status-approved { background: #d4edda; color: #155724; }
+      .status-rejected { background: #f8d7da; color: #721c24; }
+
+      .recommendation-address {
+        color: var(--burnt-caramel);
+        margin-bottom: 12px;
+      }
+
+      .recommendation-date {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 16px;
+      }
+
+      .recommendation-actions {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .approval-form {
+        display: none;
+        margin-top: 16px;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border: 1px solid var(--thistle);
+      }
+
+      .approval-form.show {
+        display: block;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .form-group {
+        flex: 1;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--dusk-blue);
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--thistle);
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-approve {
+        background: var(--turf-green);
+        color: white;
+      }
+
+      .btn-approve:hover {
+        background: var(--turf-green-dark);
+      }
+
+      .btn-reject {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-reject:hover {
+        background: #c82333;
+      }
+
+      .no-recommendations {
+        text-align: center;
+        color: var(--dusk-blue);
+        font-size: 18px;
+        padding: 40px;
+      }
+
+      .site-footer {
+        background: var(--dusk-blue);
+        color: white;
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">Healthy Food Access</a>
+      <span>Admin Panel</span>
+    </header>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+      <div class="admin-section">
+        <h1>Store Recommendations</h1>
+        <div id="recommendationsContainer">
+          <p>Loading recommendations...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      Healthy Food Access · Admin Panel
+    </footer>
+
+    <script>
+      async function loadRecommendations() {
+        try {
+          const response = await fetch('/api/admin/recommendations');
+          const recommendations = await response.json();
+
+          const container = document.getElementById('recommendationsContainer');
+
+          if (recommendations.length === 0) {
+            container.innerHTML = '<div class="no-recommendations">No store recommendations to review.</div>';
+            return;
+          }
+
+          container.innerHTML = recommendations.map(rec => `
+            <div class="recommendation-card ${rec.status}">
+              <div class="recommendation-header">
+                <h3 class="recommendation-name">${rec.name}</h3>
+                <span class="recommendation-status status-${rec.status}">${rec.status}</span>
+              </div>
+              <div class="recommendation-address">${rec.address}</div>
+              <div class="recommendation-date">Submitted: ${new Date(rec.createdAt).toLocaleDateString()}</div>
+              ${rec.status === 'pending' ? `
+                <div class="recommendation-actions">
+                  <button class="btn btn-approve" onclick="approveRecommendation('${rec._id}')">Approve</button>
+                  <button class="btn btn-reject" onclick="rejectRecommendation('${rec._id}')">Reject</button>
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        } catch (error) {
+          console.error('Error loading recommendations:', error);
+          document.getElementById('recommendationsContainer').innerHTML =
+            '<div class="no-recommendations">Error loading recommendations.</div>';
+        }
+      }
+
+      async function approveRecommendation(id) {
+        try {
+          const response = await fetch(`/api/admin/recommendations/${id}/approve`, {
+            method: 'POST'
+          });
+
+          if (response.ok) {
+            loadRecommendations(); // Reload the list
+          } else {
+            const error = await response.json();
+            alert('Error approving recommendation: ' + (error.message || 'Unknown error'));
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error approving recommendation');
+        }
+      }
+
+      async function rejectRecommendation(id) {
+        try {
+          const response = await fetch(`/api/admin/recommendations/${id}/reject`, {
+            method: 'POST'
+          });
+
+          if (response.ok) {
+            loadRecommendations(); // Reload the list
+          } else {
+            alert('Error rejecting recommendation');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error rejecting recommendation');
+        }
+      }
+
+      // Load recommendations on page load
+      loadRecommendations();
+    </script>
+  </body>
+</html>

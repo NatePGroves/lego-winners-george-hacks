@@ -2,133 +2,462 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Healthy Food Access - DC</title>
+    <title>Store Map - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/styles.css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: Arial, sans-serif; }
-      
-      .navbar {
+      body {
+        background: #eef6ef;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10000;
         background: white;
-        padding: 15px 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       }
-      
-      .navbar-brand { color: #2c5f2d; font-weight: bold; font-size: 18px; }
-      .navbar-links a { color: #2c5f2d; text-decoration: none; margin-left: 20px; }
-      
-      #sidebar {
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
+        text-decoration: none;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+        padding: 0 16px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s;
+      }
+
+      .nav-item:hover { color: var(--turf-green); }
+
+      .nav-item.browse {
+        background: var(--turf-green);
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
+      }
+
+      .nav-item.browse:hover { background: var(--turf-green-dark); color: white; }
+
+      .dropdown .dropdown-menu {
+        display: none;
         position: absolute;
-        top: 70px;
-        left: 10px;
+        top: 100%;
+        left: 0;
         background: white;
-        padding: 15px;
         border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        z-index: 1000;
-        max-width: 300px;
-        max-height: 600px;
-        overflow-y: auto;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 200px;
+        padding: 8px 0;
+        border-top: 3px solid var(--turf-green);
       }
-      
-      .sidebar-title { font-weight: bold; color: #2c5f2d; margin-bottom: 15px; }
-      .filter-group { margin-bottom: 15px; }
-      .filter-label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; font-size: 14px; }
-      
-      input[type="text"], select {
+
+      .dropdown:hover .dropdown-menu { display: block; }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--dusk-blue);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.15s;
+      }
+
+      .dropdown-menu a:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green);
+      }
+
+      .dropdown-menu .menu-section {
+        padding: 6px 20px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--burnt-caramel);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dropdown-menu hr {
+        border: none;
+        border-top: 1px solid var(--thistle);
+        margin: 6px 0;
+      }
+
+      .dropdown-caret { margin-left: 4px; font-size: 11px; }
+
+      .page-wrapper {
+        flex: 1;
+        display: flex;
+        min-height: 0;
+      }
+
+      #sidebar {
+        width: 320px;
+        background: white;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        overflow-y: auto;
+        padding: 20px;
+        border-right: 2px solid var(--thistle);
+      }
+
+      .sidebar-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--turf-green);
+        margin-bottom: 20px;
+      }
+
+      .filter-group {
+        margin-bottom: 20px;
+      }
+
+      .filter-label {
+        display: block;
+        font-weight: 600;
+        color: var(--dusk-blue);
+        font-size: 13px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .filter-group input {
         width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 5px;
+        padding: 10px;
+        border: 2px solid var(--thistle);
+        border-radius: 6px;
         font-size: 14px;
       }
-      
-      .checkbox-group { margin: 8px 0; }
-      .checkbox-group label { display: flex; align-items: center; font-size: 14px; cursor: pointer; }
-      .checkbox-group input { width: auto; margin-right: 8px; }
-      
-      .action-buttons { display: flex; flex-direction: column; gap: 8px; }
-      .action-buttons a { display: block; padding: 8px; background: #2c5f2d; color: white; text-decoration: none; border-radius: 4px; text-align: center; font-size: 14px; }
-      .action-buttons a:hover { background: #1e4620; }
-      
-      #map { height: calc(100vh - 60px); width: 100%; }
-      
-      .store-popup { font-family: Arial, sans-serif; }
-      .store-popup h3 { color: #2c5f2d; margin-bottom: 8px; font-size: 16px; }
-      .store-popup p { font-size: 13px; margin: 4px 0; }
-      .popup-button { display: block; margin-top: 10px; padding: 8px; background: #2c5f2d; color: white; text-decoration: none; border-radius: 4px; text-align: center; font-size: 14px; }
-      
-      .safe-products { background: #d4edda; padding: 8px; border-radius: 3px; margin-top: 8px; font-size: 12px; color: #155724; }
-      
-      .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold; margin-right: 5px; }
-      .snap-badge { background: #d4edda; color: #155724; }
-      .wic-badge { background: #cfe2ff; color: #084298; }
-      
-      .legend { background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); position: absolute; bottom: 20px; left: 10px; z-index: 1000; font-size: 13px; }
-      .legend-item { margin: 8px 0; display: flex; align-items: center; }
-      .legend-color { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+
+      .filter-group input:focus {
+        outline: none;
+        border-color: var(--turf-green);
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .checkbox-group input {
+        margin-right: 8px;
+        cursor: pointer;
+      }
+
+      .checkbox-group label {
+        cursor: pointer;
+      }
+
+      #userAllergies {
+        font-size: 13px;
+        color: #666;
+      }
+
+      .allergen-tag {
+        display: inline-block;
+        background: #ffebee;
+        color: #c62828;
+        padding: 4px 8px;
+        border-radius: 12px;
+        margin: 2px;
+        font-size: 12px;
+      }
+
+      .action-buttons {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid var(--thistle);
+      }
+
+      .action-buttons a {
+        display: block;
+        background: var(--turf-green);
+        color: white;
+        padding: 12px;
+        border-radius: 6px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .action-buttons a:hover {
+        background: var(--turf-green-dark);
+      }
+
+      #map {
+        flex: 1;
+        min-height: 0;
+      }
+
+      .legend {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        padding: 12px;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        z-index: 40;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 13px;
+      }
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .store-popup {
+        font-family: Arial, sans-serif;
+      }
+
+      .store-popup h3 {
+        margin: 0 0 8px 0;
+        color: var(--turf-green);
+        font-size: 16px;
+      }
+
+      .store-popup p {
+        margin: 0 0 8px 0;
+        font-size: 13px;
+        color: var(--dusk-blue);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-right: 4px;
+      }
+
+      .snap-badge {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .wic-badge {
+        background: #cfe2ff;
+        color: #084298;
+      }
+
+      .safe-products {
+        color: #155724;
+        font-weight: bold;
+        margin: 8px 0;
+      }
+
+      .popup-button {
+        display: block;
+        background: var(--turf-green);
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 12px;
+        margin-top: 8px;
+      }
+
+      .popup-button:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green-dark);
+      }
+
+      .restriction-filter-tag {
+        display: inline-flex;
+        align-items: center;
+        background: var(--lime-cream);
+        border: 1.5px solid var(--thistle);
+        border-radius: 20px;
+        padding: 5px 10px;
+        margin: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dusk-blue);
+        cursor: pointer;
+        transition: all 0.15s;
+        user-select: none;
+      }
+
+      .restriction-filter-tag:hover {
+        border-color: var(--turf-green);
+        color: var(--turf-green);
+      }
+
+      .restriction-filter-tag.active {
+        background: var(--turf-green);
+        border-color: var(--turf-green);
+        color: white;
+      }
+
+      #filterCount {
+        font-size: 12px;
+        color: var(--burnt-caramel);
+        font-weight: 600;
+        margin-top: 8px;
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <div class="navbar-brand">Healthy Food Access</div>
-      <div class="navbar-links">
-        <a href="/">Home</a>
-        <a href="/profile">Profile</a>
-      </div>
-    </div>
-    
-    <div id="sidebar">
-      <div class="sidebar-title">🔍 Search & Filter</div>
-      
-      <div class="filter-group">
-        <label class="filter-label">Search Stores</label>
-        <input type="text" id="searchInput" placeholder="Store name..." />
-      </div>
-      
-      <div class="filter-group">
-        <label class="filter-label">Filter Options</label>
-        <div class="checkbox-group">
-          <label><input type="checkbox" id="filterSnap"> SNAP Match</label>
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">Healthy Food Access</a>
+
+      <nav class="site-nav">
+        <div class="nav-item dropdown">
+          For Customers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/dietary-filtering">Dietary Filtering</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/signup">Create Account</a>
+            <a href="/signin">Sign In</a>
+          </div>
         </div>
-        <div class="checkbox-group">
-          <label><input type="checkbox" id="filterWic"> WIC Vendor</label>
+
+        <div class="nav-item dropdown">
+          For Corner Stores <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/why-list-your-store">Why List Your Store?</a>
+            <a href="/managing-products">Managing Products</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/store-signup">Register Your Store</a>
+            <a href="/store-signin">Store Sign In</a>
+          </div>
+        </div>
+
+        <div class="nav-item dropdown">
+          For Suppliers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/partnership-overview">Partnership Overview</a>
+            <a href="/distribution-network">Distribution Network</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/supplier-signup">Create Supplier Account</a>
+            <a href="/supplier-signin">Supplier Sign In</a>
+          </div>
+        </div>
+
+        <a href="/map" class="nav-item browse">Browse Map</a>
+      </nav>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-wrapper">
+      <div id="sidebar">
+        <div class="sidebar-title">🔍 Search & Filter</div>
+
+        <div class="filter-group">
+          <label class="filter-label">Search Stores</label>
+          <input type="text" id="searchInput" placeholder="Store name..." />
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Filter Options</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="filterSnap">
+            <label for="filterSnap">SNAP Match</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="filterWic">
+            <label for="filterWic">WIC Vendor</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Dietary Restrictions</label>
+          <div id="restrictionTags">
+            <span class="restriction-filter-tag" data-restriction="Gluten-Free">Gluten-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Dairy-Free">Dairy-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Nut-Free">Nut-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Peanut-Free">Peanut-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Vegan">Vegan</span>
+            <span class="restriction-filter-tag" data-restriction="Soy-Free">Soy-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Egg-Free">Egg-Free</span>
+            <span class="restriction-filter-tag" data-restriction="Shellfish-Free">Shellfish-Free</span>
+          </div>
+          <div id="filterCount"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Your Allergies</label>
+          <div id="userAllergies" style="font-size: 13px; color: #666;">
+            <p style="font-style: italic;">Sign in to see personalized results</p>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="/recommend-store">Recommend Store</a>
         </div>
       </div>
-      
-      <div class="filter-group">
-        <label class="filter-label">Your Allergies</label>
-        <div id="userAllergies" style="font-size: 13px; color: #666;">
-          <p style="font-style: italic;">Sign in to see personalized results</p>
+
+      <div id="legend" class="legend" style="display: none;">
+        <div class="legend-item">
+          <div class="legend-color" style="background: #2c5f2d;"></div>
+          <span>Safe for you</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #ffc107;"></div>
+          <span>May have allergens</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #ff6b6b;"></div>
+          <span>User-added store</span>
         </div>
       </div>
-      
-      <div class="action-buttons">
-        <a href="/add-store">+ Add Store</a>
-      </div>
+
+      <div id="map"></div>
     </div>
-    
-    <div id="legend" class="legend" style="display: none;">
-      <div class="legend-item">
-        <div class="legend-color" style="background: #2c5f2d;"></div>
-        <span>Safe for you</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color" style="background: #ffc107;"></div>
-        <span>May have allergens</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color" style="background: #ff6b6b;"></div>
-        <span>User-added store</span>
-      </div>
-    </div>
-    
-    <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -137,13 +466,54 @@
       let allStores = [];
       let allProducts = {};
       let geoJsonLayer = null;
-      
-      const map = L.map('map').setView([38.8951, -77.0369], 12);
+      let activeRestrictions = new Set();
+
+      const restrictionAllergenMap = {
+        "Gluten-Free":    ["Gluten", "Wheat"],
+        "Dairy-Free":     ["Dairy", "Lactose Intolerance"],
+        "Nut-Free":       ["Tree Nuts", "Peanuts"],
+        "Peanut-Free":    ["Peanuts"],
+        "Vegan":          ["Dairy", "Eggs", "Shellfish", "Fish"],
+        "Soy-Free":       ["Soy"],
+        "Egg-Free":       ["Eggs"],
+        "Shellfish-Free": ["Shellfish"],
+      };
+
+      document.querySelectorAll(".restriction-filter-tag").forEach(tag => {
+        tag.addEventListener("click", () => {
+          const r = tag.dataset.restriction;
+          if (activeRestrictions.has(r)) {
+            activeRestrictions.delete(r);
+            tag.classList.remove("active");
+          } else {
+            activeRestrictions.add(r);
+            tag.classList.add("active");
+          }
+          updateMap();
+        });
+      });
+
+      function storeMatchesRestrictions(storeId) {
+        if (activeRestrictions.size === 0) return true;
+        const products = allProducts[storeId] || [];
+        if (products.length === 0) return true;
+        return [...activeRestrictions].every(restriction => {
+          const allergens = restrictionAllergenMap[restriction] || [];
+          return products.some(p => {
+            const pa = p.allergens || [];
+            return !allergens.some(a => pa.includes(a));
+          });
+        });
+      }
+
+      const map = L.map('map', { zoomControl: false }).setView([38.8951, -77.0369], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
-      
+
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
       if (userId) {
         fetch(`/api/user/${userId}`)
           .then((res) => res.json())
@@ -158,39 +528,39 @@
       } else {
         loadStores();
       }
-      
+
       function renderUserAllergies() {
         const container = document.getElementById("userAllergies");
         if (userAllergies.length === 0) {
           container.innerHTML = '<p style="font-style: italic; color: #999;">No allergies set</p>';
           return;
         }
-        container.innerHTML = userAllergies.map(a => 
-          `<div style="display: inline-block; background: #ffebee; color: #c62828; padding: 4px 8px; border-radius: 12px; margin: 2px; font-size: 12px;">${a}</div>`
+        container.innerHTML = userAllergies.map(a =>
+          `<div class="allergen-tag">${a}</div>`
         ).join('');
       }
-      
+
       function checkStoreSafety(storeId) {
         const products = allProducts[storeId] || [];
         if (products.length === 0 || userAllergies.length === 0) return null;
-        
+
         const hasAllergens = products.some(p => {
           if (!p.allergens || p.allergens.length === 0) return false;
           return p.allergens.some(allergen => userAllergies.includes(allergen));
         });
-        
+
         return !hasAllergens;
       }
-      
+
       function loadStores() {
         fetch('/api/stores')
           .then((res) => res.json())
           .then((data) => {
             allStores = data.features;
-            
+
             const storeIds = allStores.map(s => s.properties.storeId);
             Promise.all(
-              storeIds.map(id => 
+              storeIds.map(id =>
                 fetch(`/api/products?storeId=${id}`)
                   .then(r => r.json())
                   .then(products => { allProducts[id] = products; })
@@ -198,35 +568,44 @@
             ).then(() => { updateMap(); });
           });
       }
-      
+
       function updateMap() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
         const filterSnap = document.getElementById("filterSnap").checked;
         const filterWic = document.getElementById("filterWic").checked;
-        
+
         const filtered = allStores.filter(store => {
           const name = store.properties.name.toLowerCase();
           const matchesSearch = name.includes(searchTerm) || searchTerm === "";
           const matchesSnap = !filterSnap || store.properties.snapMatch;
           const matchesWic = !filterWic || store.properties.wicVendor;
-          return matchesSearch && matchesSnap && matchesWic;
+          const matchesRestrictions = storeMatchesRestrictions(store.properties.storeId);
+          return matchesSearch && matchesSnap && matchesWic && matchesRestrictions;
         });
-        
+
+        const countEl = document.getElementById("filterCount");
+        if (activeRestrictions.size > 0) {
+          countEl.style.display = "block";
+          countEl.textContent = `${filtered.length} store${filtered.length !== 1 ? "s" : ""} match your filters`;
+        } else {
+          countEl.style.display = "none";
+        }
+
         if (geoJsonLayer) map.removeLayer(geoJsonLayer);
-        
+
         const geojson = { type: "FeatureCollection", features: filtered };
-        
+
         geoJsonLayer = L.geoJSON(geojson, {
           pointToLayer: (feature, latlng) => {
             let color = '#2c5f2d';
-            
+
             if (feature.properties.userAdded) {
               color = '#ff6b6b';
             } else if (userAllergies.length > 0) {
               const isSafe = checkStoreSafety(feature.properties.storeId);
               if (isSafe === false) color = '#ffc107';
             }
-            
+
             return L.circleMarker(latlng, {
               radius: 8,
               fillColor: color,
@@ -239,12 +618,12 @@
           onEachFeature: (feature, layer) => {
             const props = feature.properties;
             const products = allProducts[props.storeId] || [];
-            
+
             const safeProducts = products.filter(p => {
               if (!p.allergens || p.allergens.length === 0) return true;
               return !p.allergens.some(a => userAllergies.includes(a));
             });
-            
+
             const popup = `
               <div class="store-popup">
                 <h3>${props.name}</h3>
@@ -262,10 +641,16 @@
           }
         }).addTo(map);
       }
-      
+
       document.getElementById("searchInput").addEventListener("input", updateMap);
       document.getElementById("filterSnap").addEventListener("change", updateMap);
       document.getElementById("filterWic").addEventListener("change", updateMap);
     </script>
-  </body>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      Healthy Food Access · Built for DC communities
+    </footer>
+    <script src="/user-nav.js"></script>
+</body>
 </html>
