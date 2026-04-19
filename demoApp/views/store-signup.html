@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Store Sign Up - Healthy Food Access</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: Arial, sans-serif; background: #f5f5f5; }
+      
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      h1 { color: #2c5f2d; margin-bottom: 10px; }
+      .subtitle { color: #666; margin-bottom: 25px; font-size: 14px; }
+      
+      form { display: flex; flex-direction: column; gap: 15px; }
+      
+      label { font-weight: bold; color: #333; margin-bottom: 5px; display: block; }
+      
+      input, select {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+      }
+      
+      input:focus, select:focus {
+        outline: none;
+        border-color: #2c5f2d;
+        box-shadow: 0 0 5px rgba(44, 95, 45, 0.3);
+      }
+      
+      .section-title {
+        font-weight: bold;
+        color: #2c5f2d;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 16px;
+        border-bottom: 2px solid #2c5f2d;
+        padding-bottom: 8px;
+      }
+      
+      #mapPreview {
+        height: 300px;
+        width: 100%;
+        border: 2px solid #2c5f2d;
+        border-radius: 4px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+      }
+      
+      .location-info {
+        background: #f0f0f0;
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+      }
+      
+      .map-instruction {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #1565c0;
+        margin-bottom: 15px;
+      }
+      
+      .nearby-stores-container {
+        background: linear-gradient(135deg, #fff8e1 0%, #fffbea 100%);
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        display: none;
+      }
+      
+      .nearby-stores-title {
+        font-weight: bold;
+        color: #856404;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .store-claim-option {
+        background: white;
+        border: 2px solid #ffc107;
+        border-radius: 6px;
+        padding: 12px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      
+      .store-claim-option:hover {
+        background: #fffbea;
+        border-color: #ff9800;
+        box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+      }
+      
+      .store-claim-option input[type="radio"] {
+        width: auto;
+        margin-top: 3px;
+        cursor: pointer;
+      }
+      
+      .store-info {
+        flex: 1;
+      }
+      
+      .store-name {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 4px;
+      }
+      
+      .store-address {
+        font-size: 13px;
+        color: #666;
+      }
+      
+      button {
+        padding: 12px;
+        font-size: 16px;
+        background-color: #2c5f2d;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      
+      button:hover {
+        background-color: #1e4620;
+      }
+      
+      #response {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 4px;
+        display: none;
+      }
+      
+      #response.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        display: block;
+      }
+      
+      #response.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        display: block;
+      }
+      
+      .nav { margin-bottom: 20px; }
+      .nav a { color: #2c5f2d; text-decoration: none; margin-right: 15px; }
+      .nav a:hover { text-decoration: underline; }
+      
+      .links {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+      }
+      
+      .links a {
+        color: #2c5f2d;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav">
+        <a href="/">Home</a>
+        <a href="/map">Map</a>
+      </div>
+      
+      <h1>Store Sign Up</h1>
+      <p class="subtitle">Register your store to manage products and connect with customers</p>
+      
+      <form id="storeSignupForm">
+        <div>
+          <label for="storeName">Store Name *</label>
+          <input type="text" id="storeName" name="storeName" placeholder="e.g., Fresh Corner Market" required />
+        </div>
+        
+        <div>
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" placeholder="store@example.com" required />
+        </div>
+        
+        <div>
+          <label for="phone">Phone (Optional)</label>
+          <input type="tel" id="phone" name="phone" placeholder="(202) 555-0100" />
+        </div>
+        
+        <div>
+          <label for="password">Password *</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        
+        <div class="section-title">📍 Store Location</div>
+        
+        <div class="map-instruction">
+          Click on the map to pinpoint your store. If you see nearby stores below, you can claim one instead of creating new.
+        </div>
+        
+        <div id="mapPreview"></div>
+        
+        <div class="location-info">
+          Latitude: <strong id="latValue">-</strong><br/>
+          Longitude: <strong id="lngValue">-</strong>
+        </div>
+        
+        <div id="nearbyStoresContainer" class="nearby-stores-container">
+          <div class="nearby-stores-title">⭐ Found Nearby Stores - Claim Yours!</div>
+          <div id="nearbyStoresList"></div>
+        </div>
+        
+        <button type="submit">Create Store Account</button>
+      </form>
+      
+      <div id="response"></div>
+      
+      <div class="links">
+        Already have a store account? <a href="/store-signin">Sign in here</a>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      let selectedStoreId = null;
+      let latitude = null;
+      let longitude = null;
+      let allStores = [];
+      let marker = null;
+      
+      const map = L.map('mapPreview').setView([38.8951, -77.0369], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      
+      fetch('/api/stores')
+        .then((res) => res.json())
+        .then((data) => {
+          allStores = data.features;
+          data.features.forEach(store => {
+            L.circleMarker([store.geometry.coordinates[1], store.geometry.coordinates[0]], {
+              radius: 5,
+              fillColor: '#2c5f2d',
+              color: '#fff',
+              weight: 1.5,
+              opacity: 0.7,
+              fillOpacity: 0.6
+            }).addTo(map);
+          });
+        });
+      
+      map.on('click', (e) => {
+        latitude = e.latlng.lat;
+        longitude = e.latlng.lng;
+        
+        document.getElementById("latValue").textContent = latitude.toFixed(6);
+        document.getElementById("lngValue").textContent = longitude.toFixed(6);
+        
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([latitude, longitude], {
+          icon: L.icon({
+            iconUrl: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232c5f2d" width="32" height="32"><path d="M12 0C8.13 0 5 3.13 5 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
+          })
+        }).addTo(map).bindPopup("Your Store Location");
+        
+        findNearbyStores(latitude, longitude);
+        selectedStoreId = null;
+      });
+      
+      function findNearbyStores(lat, lng) {
+        const nearby = allStores.filter(store => {
+          const storeLat = store.geometry.coordinates[1];
+          const storeLng = store.geometry.coordinates[0];
+          const distance = Math.sqrt(Math.pow(lat - storeLat, 2) + Math.pow(lng - storeLng, 2));
+          return distance < 0.01;
+        });
+        
+        if (nearby.length > 0) {
+          displayNearbyStores(nearby);
+        } else {
+          document.getElementById("nearbyStoresContainer").style.display = "none";
+        }
+      }
+      
+      function displayNearbyStores(stores) {
+        const container = document.getElementById("nearbyStoresContainer");
+        const list = document.getElementById("nearbyStoresList");
+        
+        list.innerHTML = stores.map(store => `
+          <label class="store-claim-option">
+            <input type="radio" name="existingStore" value="${store.properties.storeId}" />
+            <div class="store-info">
+              <div class="store-name">${store.properties.name}</div>
+              <div class="store-address">${store.properties.address}</div>
+            </div>
+          </label>
+        `).join('');
+        
+        document.querySelectorAll('input[name="existingStore"]').forEach(input => {
+          input.addEventListener('change', (e) => {
+            if (e.target.checked) {
+              selectedStoreId = e.target.value;
+            }
+          });
+        });
+        
+        container.style.display = "block";
+      }
+      
+      document.getElementById("storeSignupForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if (!latitude || !longitude) {
+          document.getElementById("response").className = "error";
+          document.getElementById("response").textContent = "❌ Please click on the map to set your store location";
+          document.getElementById("response").style.display = "block";
+          return;
+        }
+
+        const storeName = document.getElementById("storeName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const phone = document.getElementById("phone").value;
+
+        fetch("/api/store-signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            storeName, 
+            email, 
+            password, 
+            phone,
+            latitude,
+            longitude,
+            claimStoreId: selectedStoreId
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const responseDiv = document.getElementById("response");
+            if (data.storeOwnerId) {
+              responseDiv.className = "success";
+              responseDiv.textContent = "✓ Account created! Redirecting to dashboard...";
+              setTimeout(() => {
+                localStorage.setItem("storeOwnerId", data.storeOwnerId);
+                window.location.href = `/store-dashboard`;
+              }, 1500);
+            } else {
+              responseDiv.className = "error";
+              responseDiv.textContent = data.message || "Signup failed";
+            }
+            responseDiv.style.display = "block";
+          });
+      });
+    </script>
+  </body>
+</html>
