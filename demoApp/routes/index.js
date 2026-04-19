@@ -150,6 +150,44 @@ router.get("/api/supplier/:supplierId", (req, res) => {
     });
 });
 
+router.put("/api/supplier/:supplierId", (req, res) => {
+  const { companyName, contactName, email, phone, companyDescription } = req.body;
+  const update = {};
+  if (companyName) update.companyName = companyName;
+  if (contactName) update.contactName = contactName;
+  if (email) update.email = email;
+  if (phone !== undefined) update.phone = phone;
+  if (companyDescription !== undefined) update.companyDescription = companyDescription;
+
+  Supplier.findByIdAndUpdate(req.params.supplierId, update, { new: true })
+    .then((supplier) => {
+      if (!supplier) return res.status(404).json({ error: "Supplier not found" });
+      res.json({ message: "Profile updated!", supplier });
+    })
+    .catch((err) => {
+      if (err.code === 11000) return res.status(409).json({ message: "Email already in use" });
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.put("/api/store-owner/:storeOwnerId", (req, res) => {
+  const { storeName, email, phone } = req.body;
+  const update = {};
+  if (storeName) update.storeName = storeName;
+  if (email) update.email = email;
+  if (phone !== undefined) update.phone = phone;
+
+  StoreOwner.findByIdAndUpdate(req.params.storeOwnerId, update, { new: true })
+    .then((owner) => {
+      if (!owner) return res.status(404).json({ error: "Store not found" });
+      res.json({ message: "Profile updated!", owner });
+    })
+    .catch((err) => {
+      if (err.code === 11000) return res.status(409).json({ message: "Email already in use" });
+      res.status(500).json({ message: err.message });
+    });
+});
+
 router.get("/api/stores", (req, res) => {
   Store.find({})
     .then((stores) => {
@@ -244,6 +282,26 @@ router.get("/api/user/:userId", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });
+    });
+});
+
+router.put("/api/user/:userId", (req, res) => {
+  const { name, email, address, latitude, longitude } = req.body;
+  const update = {};
+  if (name) update.name = name;
+  if (email) update.email = email;
+  if (address !== undefined) update.address = address;
+  if (latitude !== undefined) update.latitude = latitude;
+  if (longitude !== undefined) update.longitude = longitude;
+
+  User.findByIdAndUpdate(req.params.userId, update, { new: true })
+    .then((user) => {
+      if (!user) return res.status(404).json({ error: "User not found" });
+      res.json({ message: "Profile updated!", user });
+    })
+    .catch((err) => {
+      if (err.code === 11000) return res.status(409).json({ message: "Email already in use" });
+      res.status(500).json({ message: err.message });
     });
 });
 

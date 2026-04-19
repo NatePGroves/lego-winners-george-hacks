@@ -1,8 +1,8 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Supplier Dashboard - Healthy Food Access</title>
+    <title>Supplier Dashboard - CornerLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -224,7 +224,7 @@
 
     <!-- Header -->
     <header class="site-header">
-      <a href="/" class="header-brand">Healthy Food Access</a>
+      <a href="/" class="header-brand">CornerLink</a>
 
       <nav class="site-nav">
         <div class="nav-item dropdown">
@@ -289,8 +289,44 @@
           </div>
         </div>
 
-        <div class="section-title">About Your Company</div>
-        <div class="description-box" id="companyDescription">No description provided.</div>
+        <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+          About Your Company
+          <button id="editProfileBtn" style="font-size:13px;padding:6px 14px;background:var(--lime-cream);color:var(--dusk-blue);border:none;border-radius:6px;cursor:pointer;font-weight:600;">Edit Profile</button>
+        </div>
+        <div id="profileView">
+          <div class="description-box" id="companyDescription">No description provided.</div>
+        </div>
+
+        <!-- Edit Profile Form -->
+        <div id="profileEdit" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div>
+              <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Company Name</label>
+              <input id="editCompanyName" type="text" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Contact Name</label>
+              <input id="editContactName" type="text" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Email</label>
+              <input id="editEmail" type="email" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Phone</label>
+              <input id="editPhone" type="tel" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;" />
+            </div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--dusk-blue);margin-bottom:6px;">Company Description</label>
+            <textarea id="editDescription" rows="3" style="width:100%;padding:10px;border:2px solid var(--thistle);border-radius:8px;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea>
+          </div>
+          <div id="editMsg" style="display:none;font-size:13px;margin-bottom:12px;"></div>
+          <div style="display:flex;gap:10px;">
+            <button id="saveProfileBtn" style="flex:1;padding:12px;background:var(--turf-green);color:white;border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;">Save Changes</button>
+            <button id="cancelEditBtn" style="flex:1;padding:12px;background:var(--thistle);color:var(--dusk-blue);border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;">Cancel</button>
+          </div>
+        </div>
 
         <div class="section-title" style="margin-top: 32px;">Dietary Tags</div>
         <div id="dietaryTags" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;"></div>
@@ -300,7 +336,7 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      Healthy Food Access · Built for DC communities
+      CornerLink · Built for DC communities
     </footer>
 
     <script>
@@ -315,27 +351,87 @@
         window.location.href = "/";
       }
 
-      fetch("/api/supplier/" + supplierId)
-        .then(r => r.json())
-        .then(data => {
-          if (data.error) { window.location.href = "/supplier-signin"; return; }
-          document.getElementById("companyName").textContent = data.companyName;
-          document.getElementById("contactInfo").textContent = data.email;
-          document.getElementById("contactName").textContent = data.contactName || "-";
-          document.getElementById("phone").textContent = data.phone || "Not provided";
-          document.getElementById("companyDescription").textContent = data.companyDescription || "No description provided.";
+      let supplierData = null;
 
-          const tagsContainer = document.getElementById("dietaryTags");
-          document.getElementById("editTagsLink").href = "/supplier-tags/" + supplierId;
-          if (data.dietaryTags && data.dietaryTags.length > 0) {
-            tagsContainer.innerHTML = data.dietaryTags.map(t =>
-              `<span style="background: var(--lime-cream); color: var(--dusk-blue); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">${t}</span>`
-            ).join('');
-          } else {
-            tagsContainer.innerHTML = '<span style="color: var(--dusk-blue); opacity: 0.6; font-size: 14px;">No tags set yet.</span>';
-          }
+      function loadSupplier() {
+        fetch("/api/supplier/" + supplierId)
+          .then(r => r.json())
+          .then(data => {
+            if (data.error) { window.location.href = "/supplier-signin"; return; }
+            supplierData = data;
+            document.getElementById("companyName").textContent = data.companyName;
+            document.getElementById("contactInfo").textContent = data.email;
+            document.getElementById("contactName").textContent = data.contactName || "-";
+            document.getElementById("phone").textContent = data.phone || "Not provided";
+            document.getElementById("companyDescription").textContent = data.companyDescription || "No description provided.";
+
+            const tagsContainer = document.getElementById("dietaryTags");
+            document.getElementById("editTagsLink").href = "/supplier-tags/" + supplierId;
+            if (data.dietaryTags && data.dietaryTags.length > 0) {
+              tagsContainer.innerHTML = data.dietaryTags.map(t =>
+                `<span style="background: var(--lime-cream); color: var(--dusk-blue); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">${t}</span>`
+              ).join('');
+            } else {
+              tagsContainer.innerHTML = '<span style="color: var(--dusk-blue); opacity: 0.6; font-size: 14px;">No tags set yet.</span>';
+            }
+          })
+          .catch(() => { window.location.href = "/supplier-signin"; });
+      }
+
+      loadSupplier();
+
+      document.getElementById("editProfileBtn").addEventListener("click", () => {
+        document.getElementById("profileView").style.display = "none";
+        document.getElementById("profileEdit").style.display = "block";
+        document.getElementById("editProfileBtn").style.display = "none";
+        document.getElementById("editCompanyName").value = supplierData.companyName || "";
+        document.getElementById("editContactName").value = supplierData.contactName || "";
+        document.getElementById("editEmail").value = supplierData.email || "";
+        document.getElementById("editPhone").value = supplierData.phone || "";
+        document.getElementById("editDescription").value = supplierData.companyDescription || "";
+      });
+
+      document.getElementById("cancelEditBtn").addEventListener("click", () => {
+        document.getElementById("profileView").style.display = "block";
+        document.getElementById("profileEdit").style.display = "none";
+        document.getElementById("editProfileBtn").style.display = "";
+        document.getElementById("editMsg").style.display = "none";
+      });
+
+      document.getElementById("saveProfileBtn").addEventListener("click", () => {
+        const body = {
+          companyName: document.getElementById("editCompanyName").value.trim(),
+          contactName: document.getElementById("editContactName").value.trim(),
+          email: document.getElementById("editEmail").value.trim(),
+          phone: document.getElementById("editPhone").value.trim(),
+          companyDescription: document.getElementById("editDescription").value.trim(),
+        };
+        if (!body.companyName || !body.email) {
+          const msg = document.getElementById("editMsg");
+          msg.textContent = "Company name and email are required.";
+          msg.style.cssText = "display:block;color:#c0392b;";
+          return;
+        }
+        fetch("/api/supplier/" + supplierId, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
         })
-        .catch(() => { window.location.href = "/supplier-signin"; });
+          .then(r => r.json())
+          .then(data => {
+            if (data.error || data.message === "Email already in use") {
+              const msg = document.getElementById("editMsg");
+              msg.textContent = data.message || data.error;
+              msg.style.cssText = "display:block;color:#c0392b;";
+              return;
+            }
+            document.getElementById("profileView").style.display = "block";
+            document.getElementById("profileEdit").style.display = "none";
+            document.getElementById("editProfileBtn").style.display = "";
+            document.getElementById("editMsg").style.display = "none";
+            loadSupplier();
+          });
+      });
     </script>
     <script src="/user-nav.js"></script>
   </body>
