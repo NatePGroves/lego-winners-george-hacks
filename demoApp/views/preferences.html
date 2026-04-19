@@ -391,7 +391,8 @@
       const commonAllergens = [
         "Peanuts", "Tree Nuts", "Shellfish", "Fish", "Eggs", "Milk",
         "Soy", "Wheat", "Sesame", "Gluten", "Dairy", "Corn", "Mustard",
-        "Celery", "Sulfites", "Kiwi", "Latex"
+        "Celery", "Sulfites", "Kiwi", "Latex",
+        "Vegan", "Vegetarian", "Lactose Intolerance", "Kosher", "Halal", "Keto", "Dairy-Free", "Heart Risk"
       ];
 
       let selectedAllergens = [];
@@ -450,6 +451,10 @@
           </div>
         `).join('');
       }
+
+      document.getElementById("preferencesForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+      });
 
       document.getElementById("skipBtn").addEventListener("click", () => {
         window.location.href = "/map";

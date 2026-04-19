@@ -227,12 +227,71 @@
       }
 
       .location-info {
-        background: #f0f0f0;
-        padding: 12px;
-        border-radius: 6px;
-        font-size: 14px;
+        display: none;
+      }
+
+      .address-search {
+        display: flex;
+        gap: 8px;
         margin-bottom: 16px;
+        align-items: stretch;
+      }
+
+      .address-search input {
+        flex: 1;
+        width: auto !important;
+        padding: 12px;
+        border: 2px solid var(--thistle);
+        border-radius: 8px;
+        font-size: 15px;
         color: var(--dusk-blue);
+        box-sizing: border-box;
+      }
+
+      .address-search input:focus {
+        outline: none;
+        border-color: var(--turf-green);
+      }
+
+      .address-search button {
+        padding: 0 12px;
+        background: var(--turf-green);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        flex-shrink: 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        width: fit-content;
+      }
+
+      .address-search button:hover {
+        background: var(--turf-green-dark);
+      }
+
+      .address-search button:hover {
+        background: var(--turf-green-dark);
+      }
+
+      .hours-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .hours-grid label {
+        font-size: 13px;
+      }
+
+      .hours-grid input {
+        padding: 10px !important;
+        font-size: 13px;
       }
 
       .nearby-stores-container {
@@ -404,19 +463,38 @@
           <div class="section-title">📍 Store Location</div>
 
           <div class="map-instruction">
-            Click on the map to pinpoint your store. If you see nearby stores below, you can claim one instead of creating new.
+            Search for your address or click on the map to pinpoint your store. If you see nearby stores below, you can claim one instead of creating new.
+          </div>
+
+          <div class="address-search">
+            <input type="text" id="addressSearch" placeholder="Search address..." />
+            <button type="button" id="searchBtn">🔍</button>
           </div>
 
           <div id="mapPreview"></div>
 
-          <div class="location-info">
-            Latitude: <strong id="latValue">-</strong><br/>
-            Longitude: <strong id="lngValue">-</strong>
-          </div>
-
           <div id="nearbyStoresContainer" class="nearby-stores-container">
             <div class="nearby-stores-title">⭐ Found Nearby Stores - Claim Yours!</div>
             <div id="nearbyStoresList"></div>
+          </div>
+
+          <div class="section-title">⏰ Store Hours</div>
+
+          <div class="hours-grid">
+            <div><label for="mondayOpen">Monday Open</label><input type="time" id="mondayOpen" name="mondayOpen" /></div>
+            <div><label for="mondayClose">Monday Close</label><input type="time" id="mondayClose" name="mondayClose" /></div>
+            <div><label for="tuesdayOpen">Tuesday Open</label><input type="time" id="tuesdayOpen" name="tuesdayOpen" /></div>
+            <div><label for="tuesdayClose">Tuesday Close</label><input type="time" id="tuesdayClose" name="tuesdayClose" /></div>
+            <div><label for="wednesdayOpen">Wednesday Open</label><input type="time" id="wednesdayOpen" name="wednesdayOpen" /></div>
+            <div><label for="wednesdayClose">Wednesday Close</label><input type="time" id="wednesdayClose" name="wednesdayClose" /></div>
+            <div><label for="thursdayOpen">Thursday Open</label><input type="time" id="thursdayOpen" name="thursdayOpen" /></div>
+            <div><label for="thursdayClose">Thursday Close</label><input type="time" id="thursdayClose" name="thursdayClose" /></div>
+            <div><label for="fridayOpen">Friday Open</label><input type="time" id="fridayOpen" name="fridayOpen" /></div>
+            <div><label for="fridayClose">Friday Close</label><input type="time" id="fridayClose" name="fridayClose" /></div>
+            <div><label for="saturdayOpen">Saturday Open</label><input type="time" id="saturdayOpen" name="saturdayOpen" /></div>
+            <div><label for="saturdayClose">Saturday Close</label><input type="time" id="saturdayClose" name="saturdayClose" /></div>
+            <div><label for="sundayOpen">Sunday Open</label><input type="time" id="sundayOpen" name="sundayOpen" /></div>
+            <div><label for="sundayClose">Sunday Close</label><input type="time" id="sundayClose" name="sundayClose" /></div>
           </div>
 
           <button type="submit">Create Store Account</button>
@@ -465,12 +543,9 @@
           });
         });
 
-      map.on('click', (e) => {
-        latitude = e.latlng.lat;
-        longitude = e.latlng.lng;
-
-        document.getElementById("latValue").textContent = latitude.toFixed(6);
-        document.getElementById("lngValue").textContent = longitude.toFixed(6);
+      function setLocationMarker(lat, lng) {
+        latitude = lat;
+        longitude = lng;
 
         if (marker) map.removeLayer(marker);
         marker = L.marker([latitude, longitude], {
@@ -481,8 +556,29 @@
           })
         }).addTo(map).bindPopup("Your Store Location");
 
+        map.setView([latitude, longitude], 15);
         findNearbyStores(latitude, longitude);
         selectedStoreId = null;
+      }
+
+      map.on('click', (e) => {
+        setLocationMarker(e.latlng.lat, e.latlng.lng);
+      });
+
+      document.getElementById("searchBtn").addEventListener("click", () => {
+        const address = document.getElementById("addressSearch").value;
+        if (!address) return;
+
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.length > 0) {
+              const result = data[0];
+              setLocationMarker(parseFloat(result.lat), parseFloat(result.lon));
+            } else {
+              alert("Address not found");
+            }
+          });
       });
 
       function findNearbyStores(lat, lng) {
@@ -530,7 +626,7 @@
 
         if (!latitude || !longitude) {
           document.getElementById("response").className = "error";
-          document.getElementById("response").textContent = "❌ Please click on the map to set your store location";
+          document.getElementById("response").textContent = "❌ Please search for an address or click on the map to set your store location";
           document.getElementById("response").style.display = "block";
           return;
         }
@@ -539,6 +635,16 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const phone = document.getElementById("phone").value;
+
+        const hours = {
+          monday: { open: document.getElementById("mondayOpen").value, close: document.getElementById("mondayClose").value },
+          tuesday: { open: document.getElementById("tuesdayOpen").value, close: document.getElementById("tuesdayClose").value },
+          wednesday: { open: document.getElementById("wednesdayOpen").value, close: document.getElementById("wednesdayClose").value },
+          thursday: { open: document.getElementById("thursdayOpen").value, close: document.getElementById("thursdayClose").value },
+          friday: { open: document.getElementById("fridayOpen").value, close: document.getElementById("fridayClose").value },
+          saturday: { open: document.getElementById("saturdayOpen").value, close: document.getElementById("saturdayClose").value },
+          sunday: { open: document.getElementById("sundayOpen").value, close: document.getElementById("sundayClose").value }
+        };
 
         fetch("/api/store-signup", {
           method: "POST",
@@ -550,6 +656,7 @@
             phone,
             latitude,
             longitude,
+            hours,
             claimStoreId: selectedStoreId
           }),
         })

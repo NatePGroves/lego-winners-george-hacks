@@ -2,49 +2,399 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Store Dashboard</title>
+    <title>Store Dashboard - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body {
+        background: #f8f8f8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
+        text-decoration: none;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+        padding: 0 16px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s;
+      }
+
+      .nav-item:hover { color: var(--turf-green); }
+
+      .nav-item.browse {
+        background: var(--turf-green);
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
+      }
+
+      .nav-item.browse:hover { background: var(--turf-green-dark); color: white; }
+
+      .nav-item.signout {
+        background: #ff6b6b;
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .nav-item.signout:hover { background: #e74c3c; }
+
+      .dropdown .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 200px;
+        padding: 8px 0;
+        border-top: 3px solid var(--turf-green);
+      }
+
+      .dropdown:hover .dropdown-menu { display: block; }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--dusk-blue);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.15s;
+      }
+
+      .dropdown-menu a:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green);
+      }
+
+      .dropdown-menu .menu-section {
+        padding: 6px 20px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--burnt-caramel);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dropdown-menu hr {
+        border: none;
+        border-top: 1px solid var(--thistle);
+        margin: 6px 0;
+      }
+
+      .dropdown-caret { margin-left: 4px; font-size: 11px; }
+
+      .page-content {
+        flex: 1;
+        padding: 40px;
+      }
+
+      .dashboard-container {
+        background: white;
+        border-radius: 12px;
+        padding: 48px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .dashboard-header {
+        margin-bottom: 32px;
+        border-bottom: 2px solid var(--thistle);
+        padding-bottom: 20px;
+      }
+
+      #storeName {
+        color: var(--dusk-blue);
+        font-size: 32px;
+        margin: 0 0 8px 0;
+      }
+
+      .store-subtitle {
+        color: var(--dusk-blue);
+        font-size: 15px;
+        margin: 0;
+        opacity: 0.7;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .stat-card {
+        background: var(--lime-cream);
+        border-radius: 12px;
+        padding: 24px;
+        border-left: 4px solid var(--turf-green);
+      }
+
+      .stat-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dusk-blue);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: bold;
+        color: var(--turf-green);
+      }
+
+      .section {
+        margin-bottom: 40px;
+      }
+
+      .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--dusk-blue);
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--thistle);
+      }
+
+      .add-btn {
+        background: var(--turf-green);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .add-btn:hover {
+        background: var(--turf-green-dark);
+      }
+
+      .loading {
+        text-align: center;
+        color: var(--dusk-blue);
+        padding: 20px;
+      }
+
+      #productsList {
+        display: grid;
+        gap: 16px;
+      }
+
+      .product-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        background: var(--thistle);
+        border-radius: 8px;
+        transition: box-shadow 0.2s;
+      }
+
+      .product-item:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      .product-info {
+        flex: 1;
+      }
+
+      .product-info h4 {
+        margin: 0 0 8px 0;
+        color: var(--turf-green);
+        font-size: 16px;
+      }
+
+      .product-info p {
+        margin: 0 0 8px 0;
+        color: var(--dusk-blue);
+        font-size: 14px;
+      }
+
+      .allergens {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .allergen-tag {
+        background: #ffebee;
+        color: #c62828;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .delete-btn {
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+      }
+
+      .delete-btn:hover {
+        background: #e74c3c;
+      }
+
+      .site-footer {
+        background: var(--dusk-blue);
+        color: white;
+        text-align: center;
+        padding: 24px;
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: auto;
+      }
+    </style>
   </head>
   <body>
-    <div class="navbar">
-      <div class="navbar-brand">🏪 Store Dashboard</div>
-      <div class="navbar-links">
-        <a href="/map">View Map</a>
-        <button onclick="signOut()">Sign Out</button>
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+
+      <nav class="site-nav">
+        <div class="nav-item dropdown">
+          For Customers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/dietary-filtering">Dietary Filtering</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/signup">Create Account</a>
+            <a href="/signin">Sign In</a>
+          </div>
+        </div>
+
+        <div class="nav-item dropdown">
+          For Corner Stores <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/why-list-your-store">Why List Your Store?</a>
+            <a href="/managing-products">Managing Products</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/store-signup">Register Your Store</a>
+            <a href="/store-signin">Store Sign In</a>
+          </div>
+        </div>
+
+        <div class="nav-item dropdown">
+          For Suppliers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/partnership-overview">Partnership Overview</a>
+            <a href="/distribution-network">Distribution Network</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/supplier-signup">Create Supplier Account</a>
+            <a href="/supplier-signin">Supplier Sign In</a>
+          </div>
+        </div>
+
+        <a href="/map" class="nav-item browse">Browse Map</a>
+        <button class="nav-item signout" onclick="signOut()">Sign Out</button>
+      </nav>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <div class="dashboard-container">
+        <div class="dashboard-header">
+          <h1 id="storeName"></h1>
+          <p class="store-subtitle">📍 <span id="storeEmail"></span></p>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Total Products</div>
+            <div class="stat-value" id="productCount">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Store Status</div>
+            <div class="stat-value" style="color: #4caf50;">✓ Active</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span>Products</span>
+            <a href="#" class="add-btn" onclick="addProduct(); return false;">+ Add Product</a>
+          </div>
+
+          <div id="loading" class="loading">Loading products...</div>
+          <div id="productsList" style="display: none;"></div>
+        </div>
       </div>
     </div>
-    
-    <div class="container container-wide">
-      <h1 id="storeName"></h1>
-      <p class="store-subtitle">📍 <span id="storeEmail"></span></p>
-      
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-label">Total Products</div>
-          <div class="stat-value" id="productCount">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Store Status</div>
-          <div class="stat-value" style="font-size: 24px; color: #4caf50;">✓ Active</div>
-        </div>
-      </div>
-      
-      <div class="section">
-        <div class="section-title">
-          <span>Products</span>
-          <a href="#" class="add-btn" onclick="addProduct(); return false;">+ Add Product</a>
-        </div>
-        
-        <div id="loading" class="loading">Loading products...</div>
-        <div id="productsList" style="display: none;"></div>
-      </div>
-    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      © 2026 Healthy Food Access · Built for DC communities
+    </footer>
 
     <script>
       const storeOwnerId = localStorage.getItem("storeOwnerId");
       const userId = localStorage.getItem("userId");
-      
+
       if (!storeOwnerId) {
         if (userId) {
           window.location.href = "/profile";
@@ -52,24 +402,24 @@
           window.location.href = "/store-signin";
         }
       }
-      
+
       let storeData = null;
-      
+
       function addProduct() {
         const storeId = storeData._id;
         window.location.href = `/add-product?storeId=${storeId}`;
       }
-      
+
       function deleteProduct(productId) {
         if (!confirm("Delete this product?")) return;
-        
+
         fetch(`/api/products/${productId}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((data) => {
             if (data.success) loadProducts();
           });
       }
-      
+
       function loadStore() {
         fetch(`/api/store-owner/${storeOwnerId}`)
           .then((res) => res.json())
@@ -78,15 +428,15 @@
               window.location.href = "/store-signin";
               return;
             }
-            
+
             storeData = data.store;
             document.getElementById("storeName").textContent = data.storeName;
             document.getElementById("storeEmail").textContent = data.email;
-            
+
             loadProducts();
           });
       }
-      
+
       function loadProducts() {
         fetch(`/api/store-owner/${storeOwnerId}/products`)
           .then((res) => res.json())
@@ -94,12 +444,12 @@
             document.getElementById("productCount").textContent = products.length;
             document.getElementById("loading").style.display = "none";
             document.getElementById("productsList").style.display = "block";
-            
+
             if (products.length === 0) {
               document.getElementById("productsList").innerHTML = '<p style="text-align: center; color: #999;">No products yet. Click + Add Product to get started!</p>';
               return;
             }
-            
+
             document.getElementById("productsList").innerHTML = products.map(p => `
               <div class="product-item">
                 <div class="product-info">
@@ -116,12 +466,12 @@
             `).join('');
           });
       }
-      
+
       function signOut() {
         localStorage.removeItem("storeOwnerId");
         window.location.href = "/";
       }
-      
+
       loadStore();
     </script>
   </body>
