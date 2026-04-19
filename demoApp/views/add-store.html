@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Add Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-brand">Healthy Food Access</div>
+      <div class="navbar-links">
+        <a href="/map">Map</a>
+        <a href="/profile">Profile</a>
+      </div>
+    </div>
+    
+    <div class="split-layout">
+      <div class="form-section">
+        <h1>Add a Store</h1>
+        
+        <div class="instructions">
+          💡 Click on the map to set your store's location. You'll see existing stores in the area.
+        </div>
+        
+        <form id="addStoreForm">
+          <div>
+            <label for="name">Store Name *</label>
+            <input type="text" id="name" name="name" placeholder="e.g., Fresh Mart" required />
+          </div>
+          
+          <div>
+            <label for="address">Address *</label>
+            <input type="text" id="address" name="address" placeholder="e.g., 123 Main St" required />
+          </div>
+          
+          <div>
+            <label for="zipcode">Zip Code</label>
+            <input type="text" id="zipcode" name="zipcode" placeholder="20001" />
+          </div>
+          
+          <div class="location-info">
+            📍 Latitude: <span id="latValue">-</span><br/>
+            📍 Longitude: <span id="lngValue">-</span>
+          </div>
+          
+          <button type="submit">Add Store</button>
+        </form>
+        
+        <div id="response"></div>
+      </div>
+      
+      <div class="map-section">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      const userId = localStorage.getItem("userId");
+      if (!userId) window.location.href = "/signin";
+      
+      let latitude = null;
+      let longitude = null;
+      
+      const map = L.map('map').setView([38.8951, -77.0369], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      
+      // Load and display existing stores
+      fetch('/api/stores')
+        .then((res) => res.json())
+        .then((data) => {
+          L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => {
+              const color = feature.properties.userAdded ? '#ff6b6b' : '#2c5f2d';
+              return L.circleMarker(latlng, {
+                radius: 6,
+                fillColor: color,
+                color: '#fff',
+                weight: 2,
+                opacity: 0.7,
+                fillOpacity: 0.6
+              });
+            },
+            onEachFeature: (feature, layer) => {
+              const props = feature.properties;
+              const popup = `
+                <strong>${props.name}</strong><br/>
+                ${props.address}<br/>
+                ${props.snapMatch ? '✓ SNAP Match<br/>' : ''}
+                ${props.wicVendor ? '✓ WIC Vendor' : ''}
+              `;
+              layer.bindPopup(popup);
+            }
+          }).addTo(map);
+        });
+      
+      // User's new marker
+      let marker = null;
+      map.on('click', (e) => {
+        latitude = e.latlng.lat;
+        longitude = e.latlng.lng;
+        
+        document.getElementById("latValue").textContent = latitude.toFixed(6);
+        document.getElementById("lngValue").textContent = longitude.toFixed(6);
+        
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([latitude, longitude], {
+          icon: L.icon({
+            iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMjc3ZjMxIiBkPSJNMTIgMEMxNC43NyAwIDE3IDIuMjMgMTcgNWMwIDIuNjUtMi4wNSA0Ljg0LTQuNzcgNS45N1YyMEMxMiAyMS43IDE0LjMgMjQgMTcgMjRjMy4zIDAgNi0yLjcgNi02cy0yLjctNi02LTZoLTJWNGMwLTIuMTctMS44My00LTQtNHMtNCAyLjgzLTQgNGgyYzAtMS4xLjktMiAyLTItMi42NSAwLTQtMS4zNS00LTN6Ii8+PC9zdmc+',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
+          })
+        }).addTo(map)
+         .bindPopup("📍 New Store Location");
+      });
+      
+      document.getElementById("addStoreForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        if (!latitude || !longitude) {
+          document.getElementById("response").className = "error";
+          document.getElementById("response").textContent = "❌ Please click on the map to set location";
+          document.getElementById("response").style.display = "block";
+          return;
+        }
+        
+        fetch("/api/stores/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: document.getElementById("name").value,
+            address: document.getElementById("address").value,
+            zipcode: document.getElementById("zipcode").value,
+            latitude,
+            longitude
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const responseDiv = document.getElementById("response");
+            if (data.storeId) {
+              responseDiv.className = "success";
+              responseDiv.textContent = "✓ Store added! Redirecting...";
+              responseDiv.style.display = "block";
+              setTimeout(() => window.location.href = "/map", 1500);
+            } else {
+              responseDiv.className = "error";
+              responseDiv.textContent = "❌ " + (data.message || "Failed to add store");
+              responseDiv.style.display = "block";
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

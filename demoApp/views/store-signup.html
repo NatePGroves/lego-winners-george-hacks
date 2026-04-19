@@ -2,8 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Sign Up - Healthy Food Access</title>
+    <title>Register Your Store - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
       body {
@@ -121,14 +122,11 @@
         padding: 24px;
         font-size: 14px;
         opacity: 0.9;
-        margin-top: auto;
       }
 
       .page-content {
         flex: 1;
         padding: 60px 40px;
-        display: flex;
-        justify-content: center;
       }
 
       .form-container {
@@ -137,7 +135,8 @@
         padding: 48px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 420px;
+        max-width: 600px;
+        margin: 0 auto;
       }
 
       .form-container h1 {
@@ -197,6 +196,93 @@
 
       .form-container button:hover {
         background: var(--turf-green-dark);
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: var(--dusk-blue);
+        margin-top: 32px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--thistle);
+      }
+
+      .map-instruction {
+        background: var(--lime-cream);
+        border-left: 4px solid var(--turf-green);
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        color: var(--dusk-blue);
+      }
+
+      #mapPreview {
+        width: 100%;
+        height: 350px;
+        border-radius: 8px;
+        border: 2px solid var(--thistle);
+        margin-bottom: 16px;
+      }
+
+      .location-info {
+        background: #f0f0f0;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        color: var(--dusk-blue);
+      }
+
+      .nearby-stores-container {
+        background: #f9f9f9;
+        border: 2px solid var(--thistle);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+        display: none;
+      }
+
+      .nearby-stores-title {
+        font-weight: bold;
+        color: var(--turf-green);
+        margin-bottom: 12px;
+      }
+
+      .store-claim-option {
+        display: block;
+        padding: 12px;
+        margin-bottom: 8px;
+        border: 2px solid var(--thistle);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .store-claim-option:hover {
+        border-color: var(--turf-green);
+        background: var(--lime-cream);
+      }
+
+      .store-claim-option input {
+        margin-right: 8px;
+        cursor: pointer;
+      }
+
+      .store-info {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .store-name {
+        font-weight: 600;
+        color: var(--dusk-blue);
+      }
+
+      .store-address {
+        font-size: 12px;
+        color: #666;
       }
 
       #response {
@@ -291,32 +377,55 @@
     <!-- Page Content -->
     <div class="page-content">
       <div class="form-container">
-        <h1>Create Your Account</h1>
-        <p class="form-subtitle">Sign up to start finding healthy food options</p>
+        <h1>Register Your Store</h1>
+        <p class="form-subtitle">Get listed on the map and start connecting with customers</p>
 
-        <form id="signupForm">
+        <form id="storeSignupForm">
           <div>
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required />
+            <label for="storeName">Store Name *</label>
+            <input type="text" id="storeName" name="storeName" placeholder="e.g., Fresh Corner Market" required />
           </div>
 
           <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" placeholder="store@example.com" required />
           </div>
 
           <div>
-            <label for="password">Password</label>
+            <label for="phone">Phone (Optional)</label>
+            <input type="tel" id="phone" name="phone" placeholder="(202) 555-0100" />
+          </div>
+
+          <div>
+            <label for="password">Password *</label>
             <input type="password" id="password" name="password" required />
           </div>
 
-          <button type="submit">Sign Up</button>
+          <div class="section-title">📍 Store Location</div>
+
+          <div class="map-instruction">
+            Click on the map to pinpoint your store. If you see nearby stores below, you can claim one instead of creating new.
+          </div>
+
+          <div id="mapPreview"></div>
+
+          <div class="location-info">
+            Latitude: <strong id="latValue">-</strong><br/>
+            Longitude: <strong id="lngValue">-</strong>
+          </div>
+
+          <div id="nearbyStoresContainer" class="nearby-stores-container">
+            <div class="nearby-stores-title">⭐ Found Nearby Stores - Claim Yours!</div>
+            <div id="nearbyStoresList"></div>
+          </div>
+
+          <button type="submit">Create Store Account</button>
         </form>
 
         <div id="response"></div>
 
         <div class="auth-link">
-          Already have an account? <a href="/signin">Sign in here</a>
+          Already have a store account? <a href="/store-signin">Sign in here</a>
         </div>
       </div>
     </div>
@@ -326,27 +435,134 @@
       © 2026 Healthy Food Access · Built for DC communities
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      document.getElementById("signupForm").addEventListener("submit", (e) => {
+      let selectedStoreId = null;
+      let latitude = null;
+      let longitude = null;
+      let allStores = [];
+      let marker = null;
+
+      const map = L.map('mapPreview').setView([38.8951, -77.0369], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      fetch('/api/stores')
+        .then((res) => res.json())
+        .then((data) => {
+          allStores = data.features;
+          data.features.forEach(store => {
+            L.circleMarker([store.geometry.coordinates[1], store.geometry.coordinates[0]], {
+              radius: 5,
+              fillColor: '#2c5f2d',
+              color: '#fff',
+              weight: 1.5,
+              opacity: 0.7,
+              fillOpacity: 0.6
+            }).addTo(map);
+          });
+        });
+
+      map.on('click', (e) => {
+        latitude = e.latlng.lat;
+        longitude = e.latlng.lng;
+
+        document.getElementById("latValue").textContent = latitude.toFixed(6);
+        document.getElementById("lngValue").textContent = longitude.toFixed(6);
+
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([latitude, longitude], {
+          icon: L.icon({
+            iconUrl: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232c5f2d" width="32" height="32"><path d="M12 0C8.13 0 5 3.13 5 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32]
+          })
+        }).addTo(map).bindPopup("Your Store Location");
+
+        findNearbyStores(latitude, longitude);
+        selectedStoreId = null;
+      });
+
+      function findNearbyStores(lat, lng) {
+        const nearby = allStores.filter(store => {
+          const storeLat = store.geometry.coordinates[1];
+          const storeLng = store.geometry.coordinates[0];
+          const distance = Math.sqrt(Math.pow(lat - storeLat, 2) + Math.pow(lng - storeLng, 2));
+          return distance < 0.01;
+        });
+
+        if (nearby.length > 0) {
+          displayNearbyStores(nearby);
+        } else {
+          document.getElementById("nearbyStoresContainer").style.display = "none";
+        }
+      }
+
+      function displayNearbyStores(stores) {
+        const container = document.getElementById("nearbyStoresContainer");
+        const list = document.getElementById("nearbyStoresList");
+
+        list.innerHTML = stores.map(store => `
+          <label class="store-claim-option">
+            <input type="radio" name="existingStore" value="${store.properties.storeId}" />
+            <div class="store-info">
+              <div class="store-name">${store.properties.name}</div>
+              <div class="store-address">${store.properties.address}</div>
+            </div>
+          </label>
+        `).join('');
+
+        document.querySelectorAll('input[name="existingStore"]').forEach(input => {
+          input.addEventListener('change', (e) => {
+            if (e.target.checked) {
+              selectedStoreId = e.target.value;
+            }
+          });
+        });
+
+        container.style.display = "block";
+      }
+
+      document.getElementById("storeSignupForm").addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const name = document.getElementById("name").value;
+        if (!latitude || !longitude) {
+          document.getElementById("response").className = "error";
+          document.getElementById("response").textContent = "❌ Please click on the map to set your store location";
+          document.getElementById("response").style.display = "block";
+          return;
+        }
+
+        const storeName = document.getElementById("storeName").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
+        const phone = document.getElementById("phone").value;
 
-        fetch("/api/signup", {
+        fetch("/api/store-signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({
+            storeName,
+            email,
+            password,
+            phone,
+            latitude,
+            longitude,
+            claimStoreId: selectedStoreId
+          }),
         })
           .then((res) => res.json())
           .then((data) => {
             const responseDiv = document.getElementById("response");
-            if (data.userId) {
+            if (data.storeOwnerId) {
               responseDiv.className = "success";
-              responseDiv.textContent = "Sign up successful! Redirecting...";
+              responseDiv.textContent = "✓ Account created! Redirecting to dashboard...";
               setTimeout(() => {
-                window.location.href = `/preferences/${data.userId}`;
+                localStorage.setItem("storeOwnerId", data.storeOwnerId);
+                localStorage.removeItem("userId");
+                window.location.href = `/store-dashboard`;
               }, 1500);
             } else {
               responseDiv.className = "error";

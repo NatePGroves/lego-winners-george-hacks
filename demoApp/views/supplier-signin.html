@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Dietary Preferences - Healthy Food Access</title>
+    <title>Supplier Sign In - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -127,49 +127,46 @@
       .page-content {
         flex: 1;
         padding: 60px 40px;
+        display: flex;
+        justify-content: center;
       }
 
-      .content-container {
+      .form-container {
         background: white;
         border-radius: 12px;
         padding: 48px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
+        max-width: 420px;
       }
 
-      .content-container h1 {
+      .form-container h1 {
         color: var(--dusk-blue);
-        font-size: 32px;
-        margin-bottom: 12px;
+        font-size: 28px;
+        margin-bottom: 8px;
         margin-top: 0;
       }
 
-      .content-container .subtitle {
+      .form-container .form-subtitle {
         color: var(--dusk-blue);
         font-size: 15px;
         margin-bottom: 32px;
         opacity: 0.7;
       }
 
-      .form-group {
-        margin-bottom: 24px;
+      .form-container form div {
+        margin-bottom: 20px;
       }
 
-      .form-group label {
+      .form-container label {
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         color: var(--dusk-blue);
         font-weight: 600;
         font-size: 14px;
       }
 
-      .allergen-select {
-        position: relative;
-      }
-
-      .allergen-select input {
+      .form-container input {
         width: 100%;
         padding: 12px;
         border: 2px solid var(--thistle);
@@ -179,102 +176,26 @@
         box-sizing: border-box;
       }
 
-      .allergen-select input:focus {
+      .form-container input:focus {
         outline: none;
         border-color: var(--turf-green);
       }
 
-      .suggestions {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border: 2px solid var(--turf-green);
-        border-top: none;
-        border-radius: 0 0 8px 8px;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 10;
-      }
-
-      .suggestions.show {
-        display: block;
-      }
-
-      .suggestion-item {
-        padding: 10px 12px;
-        cursor: pointer;
-        color: var(--dusk-blue);
-        transition: background 0.15s;
-      }
-
-      .suggestion-item:hover {
-        background: var(--lime-cream);
-      }
-
-      .selected-allergens {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 24px;
-      }
-
-      .allergen-tag {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-        padding: 8px 12px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .allergen-tag button {
-        background: none;
-        border: none;
-        color: var(--dusk-blue);
-        cursor: pointer;
-        font-size: 18px;
-        padding: 0;
-        margin: 0;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 32px;
-      }
-
-      .buttons button {
-        flex: 1;
+      .form-container button {
+        width: 100%;
         padding: 14px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .buttons button:first-child {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-      }
-
-      .buttons button:first-child:hover {
-        background: var(--thistle);
-      }
-
-      .buttons button:last-child {
         background: var(--turf-green);
         color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 8px;
       }
 
-      .buttons button:last-child:hover {
+      .form-container button:hover {
         background: var(--turf-green-dark);
       }
 
@@ -297,6 +218,23 @@
         background: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
+      }
+
+      .auth-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: var(--dusk-blue);
+      }
+
+      .auth-link a {
+        color: var(--turf-green);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .auth-link a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
@@ -352,33 +290,29 @@
 
     <!-- Page Content -->
     <div class="page-content">
-      <div class="content-container">
-        <h1>Dietary Preferences</h1>
-        <p class="subtitle">Add any allergies or dietary restrictions (optional)</p>
+      <div class="form-container">
+        <h1>Supplier Sign In</h1>
+        <p class="form-subtitle">Access your supplier account to manage partnerships</p>
 
-        <form id="preferencesForm">
-          <div class="form-group">
-            <label for="allergen-input">Search or add allergies</label>
-            <div class="allergen-select">
-              <input
-                type="text"
-                id="allergen-input"
-                placeholder="e.g., peanuts, dairy, gluten..."
-                autocomplete="off"
-              />
-              <div id="suggestions" class="suggestions"></div>
-            </div>
+        <form id="supplierSigninForm">
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
           </div>
 
-          <div id="selected-allergens" class="selected-allergens"></div>
-
-          <div class="buttons">
-            <button type="button" id="skipBtn">Skip for Now</button>
-            <button type="button" id="saveBtn">Save Preferences</button>
+          <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
           </div>
+
+          <button type="submit">Sign In</button>
         </form>
 
         <div id="response"></div>
+
+        <div class="auth-link">
+          Don't have a supplier account? <a href="/supplier-signup">Create one here</a>
+        </div>
       </div>
     </div>
 
@@ -388,88 +322,32 @@
     </footer>
 
     <script>
-      const commonAllergens = [
-        "Peanuts", "Tree Nuts", "Shellfish", "Fish", "Eggs", "Milk",
-        "Soy", "Wheat", "Sesame", "Gluten", "Dairy", "Corn", "Mustard",
-        "Celery", "Sulfites", "Kiwi", "Latex"
-      ];
+      document.getElementById("supplierSigninForm").addEventListener("submit", (e) => {
+        e.preventDefault();
 
-      let selectedAllergens = [];
-      const userId = window.location.pathname.split('/').pop();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-      const input = document.getElementById("allergen-input");
-      const suggestionsDiv = document.getElementById("suggestions");
-
-      input.addEventListener("input", (e) => {
-        const val = e.target.value.toLowerCase();
-        if (!val) {
-          suggestionsDiv.classList.remove("show");
-          return;
-        }
-
-        const filtered = commonAllergens.filter(a =>
-          a.toLowerCase().includes(val) && !selectedAllergens.includes(a)
-        );
-
-        if (filtered.length > 0) {
-          suggestionsDiv.innerHTML = filtered.map(allergen => `
-            <div class="suggestion-item">${allergen}</div>
-          `).join('');
-          suggestionsDiv.classList.add("show");
-
-          document.querySelectorAll(".suggestion-item").forEach(item => {
-            item.addEventListener("click", () => {
-              addAllergen(item.textContent);
-            });
-          });
-        } else {
-          suggestionsDiv.classList.remove("show");
-        }
-      });
-
-      function addAllergen(allergen) {
-        if (!selectedAllergens.includes(allergen)) {
-          selectedAllergens.push(allergen);
-          renderAllergens();
-          input.value = "";
-          suggestionsDiv.classList.remove("show");
-        }
-      }
-
-      function removeAllergen(allergen) {
-        selectedAllergens = selectedAllergens.filter(a => a !== allergen);
-        renderAllergens();
-      }
-
-      function renderAllergens() {
-        const container = document.getElementById("selected-allergens");
-        container.innerHTML = selectedAllergens.map(allergen => `
-          <div class="allergen-tag">
-            ${allergen}
-            <button type="button" onclick="removeAllergen('${allergen}')">×</button>
-          </div>
-        `).join('');
-      }
-
-      document.getElementById("skipBtn").addEventListener("click", () => {
-        window.location.href = "/map";
-      });
-
-      document.getElementById("saveBtn").addEventListener("click", () => {
-        fetch(`/api/preferences/${userId}`, {
+        fetch("/api/supplier-signin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ allergies: selectedAllergens }),
+          body: JSON.stringify({ email, password }),
         })
           .then((res) => res.json())
           .then((data) => {
             const responseDiv = document.getElementById("response");
-            responseDiv.className = "success";
-            responseDiv.textContent = "Preferences saved! Redirecting to map...";
+            if (data.supplierId) {
+              localStorage.setItem("supplierId", data.supplierId);
+              responseDiv.className = "success";
+              responseDiv.textContent = "Sign in successful! Redirecting...";
+              setTimeout(() => {
+                window.location.href = `/supplier-dashboard`;
+              }, 1000);
+            } else {
+              responseDiv.className = "error";
+              responseDiv.textContent = data.message || "Sign in failed";
+            }
             responseDiv.style.display = "block";
-            setTimeout(() => {
-              window.location.href = "/map";
-            }, 1500);
           });
       });
     </script>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Store Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-brand">🏪 Store Dashboard</div>
+      <div class="navbar-links">
+        <a href="/map">View Map</a>
+        <button onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+    
+    <div class="container container-wide">
+      <h1 id="storeName"></h1>
+      <p class="store-subtitle">📍 <span id="storeEmail"></span></p>
+      
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Total Products</div>
+          <div class="stat-value" id="productCount">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Store Status</div>
+          <div class="stat-value" style="font-size: 24px; color: #4caf50;">✓ Active</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">
+          <span>Products</span>
+          <a href="#" class="add-btn" onclick="addProduct(); return false;">+ Add Product</a>
+        </div>
+        
+        <div id="loading" class="loading">Loading products...</div>
+        <div id="productsList" style="display: none;"></div>
+      </div>
+    </div>
+
+    <script>
+      const storeOwnerId = localStorage.getItem("storeOwnerId");
+      const userId = localStorage.getItem("userId");
+      
+      if (!storeOwnerId) {
+        if (userId) {
+          window.location.href = "/profile";
+        } else {
+          window.location.href = "/store-signin";
+        }
+      }
+      
+      let storeData = null;
+      
+      function addProduct() {
+        const storeId = storeData._id;
+        window.location.href = `/add-product?storeId=${storeId}`;
+      }
+      
+      function deleteProduct(productId) {
+        if (!confirm("Delete this product?")) return;
+        
+        fetch(`/api/products/${productId}`, { method: "DELETE" })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) loadProducts();
+          });
+      }
+      
+      function loadStore() {
+        fetch(`/api/store-owner/${storeOwnerId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              window.location.href = "/store-signin";
+              return;
+            }
+            
+            storeData = data.store;
+            document.getElementById("storeName").textContent = data.storeName;
+            document.getElementById("storeEmail").textContent = data.email;
+            
+            loadProducts();
+          });
+      }
+      
+      function loadProducts() {
+        fetch(`/api/store-owner/${storeOwnerId}/products`)
+          .then((res) => res.json())
+          .then((products) => {
+            document.getElementById("productCount").textContent = products.length;
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("productsList").style.display = "block";
+            
+            if (products.length === 0) {
+              document.getElementById("productsList").innerHTML = '<p style="text-align: center; color: #999;">No products yet. Click + Add Product to get started!</p>';
+              return;
+            }
+            
+            document.getElementById("productsList").innerHTML = products.map(p => `
+              <div class="product-item">
+                <div class="product-info">
+                  <h4>${p.name}</h4>
+                  ${p.price ? `<p>Price: $${p.price.toFixed(2)}</p>` : ''}
+                  ${p.allergens && p.allergens.length > 0 ? `
+                    <div class="allergens">
+                      ${p.allergens.map(a => `<span class="allergen-tag">${a}</span>`).join('')}
+                    </div>
+                  ` : ''}
+                </div>
+                <button class="delete-btn" onclick="deleteProduct('${p._id}')">Delete</button>
+              </div>
+            `).join('');
+          });
+      }
+      
+      function signOut() {
+        localStorage.removeItem("storeOwnerId");
+        window.location.href = "/";
+      }
+      
+      loadStore();
+    </script>
+  </body>
+</html>

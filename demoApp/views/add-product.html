@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Add Product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-brand">Healthy Food Access</div>
+      <div class="navbar-links">
+        <a href="/map">Map</a>
+        <a href="/profile">Profile</a>
+      </div>
+    </div>
+    
+    <div class="container">
+      <h1>Add Product</h1>
+      
+      <div class="info-box">
+        <strong>ℹ️ What are allergens?</strong>
+        Allergens are ingredients that the product CONTAINS that people need to avoid. For example, if you're adding "Peanut Butter", you would mark it as containing "Peanuts".
+      </div>
+      
+      <form id="addProductForm">
+        <div>
+          <label for="name">Product Name *</label>
+          <input type="text" id="name" name="name" placeholder="e.g., Organic Apples, Whole Milk" required />
+        </div>
+        
+        <div>
+          <label for="price">Price (Optional)</label>
+          <input type="number" id="price" name="price" step="0.01" placeholder="2.99" />
+        </div>
+        
+        <div>
+          <label>Allergens Contained in This Product</label>
+          <div class="allergen-input">
+            <input type="text" id="allergenInput" placeholder="e.g., Peanuts, Dairy, Gluten..." />
+            <button type="button" id="addAllergenBtn">Add</button>
+          </div>
+          <div class="allergen-tags" id="allergenTags"></div>
+        </div>
+        
+        <button type="submit">Add Product</button>
+      </form>
+      
+      <div id="response"></div>
+    </div>
+
+    <script>
+      const commonAllergens = [
+        "Peanuts", "Tree Nuts", "Shellfish", "Fish", "Eggs", "Milk", 
+        "Soy", "Wheat", "Sesame", "Gluten", "Dairy", "Corn"
+      ];
+      
+      let allergens = [];
+      const storeId = new URLSearchParams(window.location.search).get("storeId");
+      
+      document.getElementById("addAllergenBtn").addEventListener("click", () => {
+        const input = document.getElementById("allergenInput").value.trim();
+        if (!input) return;
+        
+        const allergen = commonAllergens.find(a => a.toLowerCase() === input.toLowerCase()) || input;
+        if (!allergens.includes(allergen)) {
+          allergens.push(allergen);
+          renderAllergens();
+          document.getElementById("allergenInput").value = "";
+        }
+      });
+      
+      function removeAllergen(allergen) {
+        allergens = allergens.filter(a => a !== allergen);
+        renderAllergens();
+      }
+      
+      function renderAllergens() {
+        document.getElementById("allergenTags").innerHTML = allergens.map(a => `
+          <div class="tag">
+            ${a}
+            <button type="button" onclick="removeAllergen('${a}')">×</button>
+          </div>
+        `).join('');
+      }
+      
+      document.getElementById("addProductForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        fetch("/api/products/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            storeId,
+            name: document.getElementById("name").value,
+            price: parseFloat(document.getElementById("price").value) || null,
+            allergens
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const responseDiv = document.getElementById("response");
+            if (data.productId) {
+              responseDiv.className = "success";
+              responseDiv.textContent = "✓ Product added! Redirecting...";
+              responseDiv.style.display = "block";
+              setTimeout(() => window.location.href = `/store-detail?id=${storeId}`, 1500);
+            } else {
+              responseDiv.className = "error";
+              responseDiv.textContent = data.message || "Failed to add product";
+              responseDiv.style.display = "block";
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
