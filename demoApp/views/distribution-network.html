@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>My Profile - Healthy Food Access</title>
+    <title>Distribution Network - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -135,117 +135,54 @@
         padding: 48px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 700px;
+        max-width: 900px;
         margin: 0 auto;
       }
 
       .content-container h1 {
         color: var(--dusk-blue);
         font-size: 32px;
-        margin-bottom: 32px;
+        margin-bottom: 12px;
         margin-top: 0;
       }
 
-      .profile-section {
-        margin-bottom: 40px;
-      }
-
-      .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: var(--turf-green);
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid var(--thistle);
-      }
-
-      .info-row {
-        display: flex;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--thistle);
-      }
-
-      .info-label {
-        font-weight: 600;
+      .content-container .subtitle {
         color: var(--dusk-blue);
-        width: 150px;
-      }
-
-      .info-value {
-        color: var(--dusk-blue);
-        flex: 1;
-      }
-
-      .allergies-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .allergen-tag {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-        padding: 6px 12px;
-        border-radius: 16px;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
-      .no-allergies {
-        font-style: italic;
-        color: #999;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 32px;
-      }
-
-      .buttons button {
-        flex: 1;
-        padding: 14px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .buttons button:first-child {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-      }
-
-      .buttons button:first-child:hover {
-        background: var(--thistle);
-      }
-
-      .buttons button:last-child {
-        background: var(--turf-green);
-        color: white;
-      }
-
-      .buttons button:last-child:hover {
-        background: var(--turf-green-dark);
-      }
-
-      #loading, #error {
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
         font-size: 16px;
+        margin-bottom: 32px;
+        opacity: 0.7;
       }
 
-      #loading {
+      .content-container h2 {
+        color: var(--turf-green);
+        font-size: 22px;
+        margin-top: 32px;
+        margin-bottom: 16px;
+      }
+
+      .content-container p {
         color: var(--dusk-blue);
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 16px;
       }
 
-      #error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+      .feature-list {
+        list-style: none;
+        margin-bottom: 24px;
+      }
+
+      .feature-list li {
+        padding: 12px;
+        margin-bottom: 12px;
+        background: var(--lime-cream);
+        border-radius: 8px;
+        color: var(--dusk-blue);
+        font-size: 15px;
+      }
+
+      .feature-list li strong {
+        color: var(--turf-green);
       }
     </style>
   </head>
@@ -302,40 +239,38 @@
     <!-- Page Content -->
     <div class="page-content">
       <div class="content-container">
-        <h1>My Profile</h1>
+        <h1>Distribution Network</h1>
+        <p class="subtitle">Understand how Healthy Food Access connects suppliers to corner stores</p>
 
-        <div id="loading">Loading profile...</div>
-        <div id="error" style="display: none;"></div>
-        <div id="profileContent" style="display: none;">
+        <h2>Our Network</h2>
+        <p>The Healthy Food Access distribution network includes 500+ corner stores across DC and a growing community of suppliers committed to food equity. Our network is designed to be efficient, fair, and mission-driven.</p>
 
-          <div class="profile-section">
-            <div class="section-title">Personal Information</div>
-            <div class="info-row">
-              <span class="info-label">Name:</span>
-              <span class="info-value" id="nameValue"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Email:</span>
-              <span class="info-value" id="emailValue"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Member Since:</span>
-              <span class="info-value" id="joinedValue"></span>
-            </div>
-          </div>
+        <h2>How the Network Works</h2>
+        <ul class="feature-list">
+          <li><strong>Store Inventory Visibility:</strong> See real-time product needs from participating corner stores</li>
+          <li><strong>Direct Relationships:</strong> Build direct partnerships without intermediaries</li>
+          <li><strong>Flexible Terms:</strong> Negotiate pricing and terms directly with retailers</li>
+          <li><strong>Order Management:</strong> Track orders and deliveries through our platform</li>
+          <li><strong>Payment Processing:</strong> Secure, transparent payment handling</li>
+        </ul>
 
-          <div class="profile-section">
-            <div class="section-title">Dietary Preferences</div>
-            <div id="allergiesContainer">
-              <div class="allergies-list" id="allergiesList"></div>
-            </div>
-          </div>
+        <h2>Participating Suppliers</h2>
+        <p>Our network includes:</p>
+        <ul class="feature-list">
+          <li>Local farms and produce companies</li>
+          <li>Manufacturers of healthy packaged goods</li>
+          <li>Specialty and organic product distributors</li>
+          <li>Socially-conscious wholesale suppliers</li>
+        </ul>
 
-          <div class="buttons">
-            <button id="editBtn">Edit Preferences</button>
-            <button id="signoutBtn">Sign Out</button>
-          </div>
-        </div>
+        <h2>Supporting DC Communities</h2>
+        <p>By participating in our network, suppliers help expand access to nutritious food in underserved neighborhoods. Your products reach customers who might otherwise have limited access to healthy options.</p>
+
+        <h2>Geographic Coverage</h2>
+        <p>Our network spans across DC wards, with particularly strong presence in communities that have historically had limited access to healthy food options. Join us in building a more equitable food system.</p>
+
+        <h2>Ready to Join?</h2>
+        <p><a href="/supplier-signup" style="color: var(--turf-green); font-weight: 600;">Create your supplier account</a> and explore distribution opportunities with our partner stores.</p>
       </div>
     </div>
 
@@ -344,53 +279,5 @@
       © 2026 Healthy Food Access · Built for DC communities
     </footer>
 
-    <script>
-      const userId = localStorage.getItem("userId");
-      const storeOwnerId = localStorage.getItem("storeOwnerId");
-
-      if (!userId) {
-        if (storeOwnerId) {
-          window.location.href = "/store-dashboard";
-        } else {
-          window.location.href = "/signin";
-        }
-      }
-
-      fetch(`/api/user/${userId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("error").style.display = "block";
-            document.getElementById("error").textContent = data.error;
-            return;
-          }
-
-          document.getElementById("nameValue").textContent = data.name;
-          document.getElementById("emailValue").textContent = data.email;
-          document.getElementById("joinedValue").textContent = new Date(data.createdAt).toLocaleDateString();
-
-          const allergiesList = document.getElementById("allergiesList");
-          if (data.allergies && data.allergies.length > 0) {
-            allergiesList.innerHTML = data.allergies.map(allergen => `
-              <div class="allergen-tag">${allergen}</div>
-            `).join('');
-          } else {
-            allergiesList.innerHTML = '<div class="no-allergies">No dietary preferences set</div>';
-          }
-
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("profileContent").style.display = "block";
-        });
-
-      document.getElementById("editBtn").addEventListener("click", () => {
-        window.location.href = `/preferences/${userId}`;
-      });
-
-      document.getElementById("signoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("userId");
-        window.location.href = "/";
-      });
-    </script>
   </body>
 </html>

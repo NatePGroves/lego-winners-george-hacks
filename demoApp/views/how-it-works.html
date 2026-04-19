@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>My Profile - Healthy Food Access</title>
+    <title>How It Works - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/styles.css" />
     <style>
@@ -135,117 +135,54 @@
         padding: 48px;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 700px;
+        max-width: 900px;
         margin: 0 auto;
       }
 
       .content-container h1 {
         color: var(--dusk-blue);
         font-size: 32px;
-        margin-bottom: 32px;
+        margin-bottom: 12px;
         margin-top: 0;
       }
 
-      .profile-section {
-        margin-bottom: 40px;
-      }
-
-      .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: var(--turf-green);
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid var(--thistle);
-      }
-
-      .info-row {
-        display: flex;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--thistle);
-      }
-
-      .info-label {
-        font-weight: 600;
+      .content-container .subtitle {
         color: var(--dusk-blue);
-        width: 150px;
-      }
-
-      .info-value {
-        color: var(--dusk-blue);
-        flex: 1;
-      }
-
-      .allergies-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .allergen-tag {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-        padding: 6px 12px;
-        border-radius: 16px;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
-      .no-allergies {
-        font-style: italic;
-        color: #999;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 32px;
-      }
-
-      .buttons button {
-        flex: 1;
-        padding: 14px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .buttons button:first-child {
-        background: var(--lime-cream);
-        color: var(--dusk-blue);
-      }
-
-      .buttons button:first-child:hover {
-        background: var(--thistle);
-      }
-
-      .buttons button:last-child {
-        background: var(--turf-green);
-        color: white;
-      }
-
-      .buttons button:last-child:hover {
-        background: var(--turf-green-dark);
-      }
-
-      #loading, #error {
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
         font-size: 16px;
+        margin-bottom: 32px;
+        opacity: 0.7;
       }
 
-      #loading {
+      .content-container h2 {
+        color: var(--turf-green);
+        font-size: 22px;
+        margin-top: 32px;
+        margin-bottom: 16px;
+      }
+
+      .content-container p {
         color: var(--dusk-blue);
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 16px;
       }
 
-      #error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+      .step-list {
+        list-style: none;
+        margin-bottom: 24px;
+      }
+
+      .step-list li {
+        padding: 12px;
+        margin-bottom: 12px;
+        background: var(--lime-cream);
+        border-radius: 8px;
+        color: var(--dusk-blue);
+        font-size: 15px;
+      }
+
+      .step-list li strong {
+        color: var(--turf-green);
       }
     </style>
   </head>
@@ -302,40 +239,44 @@
     <!-- Page Content -->
     <div class="page-content">
       <div class="content-container">
-        <h1>My Profile</h1>
+        <h1>How It Works</h1>
+        <p class="subtitle">Find healthy food options in your neighborhood with just a few clicks</p>
 
-        <div id="loading">Loading profile...</div>
-        <div id="error" style="display: none;"></div>
-        <div id="profileContent" style="display: none;">
+        <h2>For Customers</h2>
+        <p>Healthy Food Access makes it easy to discover corner stores and products that match your dietary needs:</p>
+        <ul class="step-list">
+          <li><strong>1. Create an account</strong> - Sign up with your email to save your preferences</li>
+          <li><strong>2. Set dietary preferences</strong> - Tell us about any allergies or dietary restrictions</li>
+          <li><strong>3. Browse the map</strong> - Explore corner stores near you with real-time filtering</li>
+          <li><strong>4. Filter by safety</strong> - See which stores have products safe for your dietary needs</li>
+          <li><strong>5. View store details</strong> - Check product lists, location, and support programs like SNAP/WIC</li>
+        </ul>
 
-          <div class="profile-section">
-            <div class="section-title">Personal Information</div>
-            <div class="info-row">
-              <span class="info-label">Name:</span>
-              <span class="info-value" id="nameValue"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Email:</span>
-              <span class="info-value" id="emailValue"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Member Since:</span>
-              <span class="info-value" id="joinedValue"></span>
-            </div>
-          </div>
+        <h2>For Corner Stores</h2>
+        <p>Get your store on the map and connect with health-conscious customers:</p>
+        <ul class="step-list">
+          <li><strong>1. Register your store</strong> - Create an account and pinpoint your location on the map</li>
+          <li><strong>2. Add your products</strong> - Build your catalog with items you carry</li>
+          <li><strong>3. Tag product details</strong> - Add allergen information and dietary labels</li>
+          <li><strong>4. Reach customers</strong> - Connect with shoppers actively looking for healthy options</li>
+          <li><strong>5. Manage SNAP/WIC</strong> - Highlight that you accept SNAP or are a WIC vendor</li>
+        </ul>
 
-          <div class="profile-section">
-            <div class="section-title">Dietary Preferences</div>
-            <div id="allergiesContainer">
-              <div class="allergies-list" id="allergiesList"></div>
-            </div>
-          </div>
+        <h2>For Suppliers</h2>
+        <p>Expand your distribution network and support food equity:</p>
+        <ul class="step-list">
+          <li><strong>1. Create a partnership account</strong> - Join the Healthy Food Access network</li>
+          <li><strong>2. Build your profile</strong> - Showcase your products and commitment to health</li>
+          <li><strong>3. Connect with stores</strong> - See which corner stores are actively seeking suppliers</li>
+          <li><strong>4. Manage relationships</strong> - Track distribution to partner stores</li>
+          <li><strong>5. Grow impact</strong> - Support underserved communities with better access to healthy food</li>
+        </ul>
 
-          <div class="buttons">
-            <button id="editBtn">Edit Preferences</button>
-            <button id="signoutBtn">Sign Out</button>
-          </div>
-        </div>
+        <h2>Our Mission</h2>
+        <p>
+          Healthy Food Access connects customers, corner stores, and suppliers to improve food equity in underserved communities.
+          By making it easier to find and stock healthy options, we're helping build neighborhoods where everyone has access to nutritious food.
+        </p>
       </div>
     </div>
 
@@ -344,53 +285,5 @@
       © 2026 Healthy Food Access · Built for DC communities
     </footer>
 
-    <script>
-      const userId = localStorage.getItem("userId");
-      const storeOwnerId = localStorage.getItem("storeOwnerId");
-
-      if (!userId) {
-        if (storeOwnerId) {
-          window.location.href = "/store-dashboard";
-        } else {
-          window.location.href = "/signin";
-        }
-      }
-
-      fetch(`/api/user/${userId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            document.getElementById("loading").style.display = "none";
-            document.getElementById("error").style.display = "block";
-            document.getElementById("error").textContent = data.error;
-            return;
-          }
-
-          document.getElementById("nameValue").textContent = data.name;
-          document.getElementById("emailValue").textContent = data.email;
-          document.getElementById("joinedValue").textContent = new Date(data.createdAt).toLocaleDateString();
-
-          const allergiesList = document.getElementById("allergiesList");
-          if (data.allergies && data.allergies.length > 0) {
-            allergiesList.innerHTML = data.allergies.map(allergen => `
-              <div class="allergen-tag">${allergen}</div>
-            `).join('');
-          } else {
-            allergiesList.innerHTML = '<div class="no-allergies">No dietary preferences set</div>';
-          }
-
-          document.getElementById("loading").style.display = "none";
-          document.getElementById("profileContent").style.display = "block";
-        });
-
-      document.getElementById("editBtn").addEventListener("click", () => {
-        window.location.href = `/preferences/${userId}`;
-      });
-
-      document.getElementById("signoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("userId");
-        window.location.href = "/";
-      });
-    </script>
   </body>
 </html>

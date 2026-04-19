@@ -4,127 +4,322 @@
     <meta charset="utf-8" />
     <title>Sign In - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles.css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: Arial, sans-serif; background: #f5f5f5; }
-      
-      .container {
-        max-width: 500px;
-        margin: 50px auto;
+      body {
+        background: #f8f8f8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
         background: white;
-        padding: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        height: 64px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .header-brand {
+        font-size: 20px;
+        font-weight: bold;
+        color: var(--turf-green);
+        text-decoration: none;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+        padding: 0 16px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.2s;
+      }
+
+      .nav-item:hover { color: var(--turf-green); }
+
+      .nav-item.browse {
+        background: var(--turf-green);
+        color: white;
+        border-radius: 6px;
+        height: 38px;
+        padding: 0 20px;
+        margin-left: 8px;
+      }
+
+      .nav-item.browse:hover { background: var(--turf-green-dark); color: white; }
+
+      .dropdown .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
         border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 200px;
+        padding: 8px 0;
+        border-top: 3px solid var(--turf-green);
       }
-      
-      h1 { color: #2c5f2d; margin-bottom: 20px; }
-      
-      form { display: flex; flex-direction: column; gap: 15px; }
-      
-      label { font-weight: bold; color: #333; }
-      
-      input {
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+
+      .dropdown:hover .dropdown-menu { display: block; }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: var(--dusk-blue);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.15s;
       }
-      
-      input:focus {
-        outline: none;
-        border-color: #2c5f2d;
-        box-shadow: 0 0 5px rgba(44, 95, 45, 0.3);
+
+      .dropdown-menu a:hover {
+        background: var(--lime-cream);
+        color: var(--turf-green);
       }
-      
-      button {
+
+      .dropdown-menu .menu-section {
+        padding: 6px 20px 4px;
+        font-size: 11px;
+        font-weight: bold;
+        color: var(--burnt-caramel);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .dropdown-menu hr {
+        border: none;
+        border-top: 1px solid var(--thistle);
+        margin: 6px 0;
+      }
+
+      .dropdown-caret { margin-left: 4px; font-size: 11px; }
+
+      .site-footer {
+        background: var(--dusk-blue);
+        color: white;
+        text-align: center;
+        padding: 24px;
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: auto;
+      }
+
+      .page-content {
+        flex: 1;
+        padding: 60px 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 48px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .form-container h1 {
+        color: var(--dusk-blue);
+        font-size: 28px;
+        margin-bottom: 8px;
+        margin-top: 0;
+      }
+
+      .form-container .form-subtitle {
+        color: var(--dusk-blue);
+        font-size: 15px;
+        margin-bottom: 32px;
+        opacity: 0.7;
+      }
+
+      .form-container form div {
+        margin-bottom: 20px;
+      }
+
+      .form-container label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--dusk-blue);
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .form-container input {
+        width: 100%;
         padding: 12px;
-        font-size: 16px;
-        background-color: #2c5f2d;
+        border: 2px solid var(--thistle);
+        border-radius: 8px;
+        font-size: 15px;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+      }
+
+      .form-container input:focus {
+        outline: none;
+        border-color: var(--turf-green);
+      }
+
+      .form-container button {
+        width: 100%;
+        padding: 14px;
+        background: var(--turf-green);
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 8px;
       }
-      
-      button:hover {
-        background-color: #1e4620;
+
+      .form-container button:hover {
+        background: var(--turf-green-dark);
       }
-      
+
       #response {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 4px;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 16px;
+        text-align: center;
+        font-size: 14px;
         display: none;
       }
-      
+
       #response.success {
-        background-color: #d4edda;
+        background: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
-        display: block;
       }
-      
+
       #response.error {
-        background-color: #f8d7da;
+        background: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
-        display: block;
       }
-      
-      .nav { margin-bottom: 20px; }
-      .nav a {
-        color: #2c5f2d;
-        text-decoration: none;
-        margin-right: 15px;
-      }
-      .nav a:hover { text-decoration: underline; }
-      
-      .signup-link {
+
+      .auth-link {
         text-align: center;
-        margin-top: 15px;
-        color: #666;
+        margin-top: 20px;
+        font-size: 14px;
+        color: var(--dusk-blue);
       }
-      
-      .signup-link a {
-        color: #2c5f2d;
+
+      .auth-link a {
+        color: var(--turf-green);
+        font-weight: 600;
         text-decoration: none;
-        font-weight: bold;
       }
-      
-      .signup-link a:hover {
+
+      .auth-link a:hover {
         text-decoration: underline;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="nav">
-        <a href="/">Home</a>
-        <a href="/map">Map</a>
-      </div>
-      
-      <h1>Customer Sign In</h1>
-      
-      <form id="signinForm">
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/" class="header-brand">🥗 Healthy Food Access</a>
+
+      <nav class="site-nav">
+        <div class="nav-item dropdown">
+          For Customers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/how-it-works">How It Works</a>
+            <a href="/dietary-filtering">Dietary Filtering</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/signup">Create Account</a>
+            <a href="/signin">Sign In</a>
+          </div>
         </div>
-        
-        <div>
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" required />
+
+        <div class="nav-item dropdown">
+          For Corner Stores <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/why-list-your-store">Why List Your Store?</a>
+            <a href="/managing-products">Managing Products</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/store-signup">Register Your Store</a>
+            <a href="/store-signin">Store Sign In</a>
+          </div>
         </div>
-        
-        <button type="submit">Sign In</button>
-      </form>
-      
-      <div id="response"></div>
-      
-      <div class="signup-link">
-        Don't have an account? <a href="/signup">Sign up here</a>
+
+        <div class="nav-item dropdown">
+          For Suppliers <span class="dropdown-caret">▾</span>
+          <div class="dropdown-menu">
+            <div class="menu-section">Learn</div>
+            <a href="/partnership-overview">Partnership Overview</a>
+            <a href="/distribution-network">Distribution Network</a>
+            <hr />
+            <div class="menu-section">Account</div>
+            <a href="/supplier-signup">Create Supplier Account</a>
+            <a href="/supplier-signin">Supplier Sign In</a>
+          </div>
+        </div>
+
+        <a href="/map" class="nav-item browse">Browse Map</a>
+      </nav>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <div class="form-container">
+        <h1>Customer Sign In</h1>
+        <p class="form-subtitle">Access your account to find stores and save preferences</p>
+
+        <form id="signinForm">
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <button type="submit">Sign In</button>
+        </form>
+
+        <div id="response"></div>
+
+        <div class="auth-link">
+          Don't have an account? <a href="/signup">Create one here</a>
+        </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      © 2026 Healthy Food Access · Built for DC communities
+    </footer>
 
     <script>
       document.getElementById("signinForm").addEventListener("submit", (e) => {
