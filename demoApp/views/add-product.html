@@ -30,6 +30,18 @@
       
       h1 { color: #2c5f2d; margin-bottom: 25px; }
       
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 25px;
+        font-size: 14px;
+        color: #1565c0;
+      }
+      
+      .info-box strong { display: block; margin-bottom: 8px; }
+      
       form { display: flex; flex-direction: column; gap: 15px; }
       label { font-weight: bold; color: #333; }
       
@@ -69,8 +81,8 @@
       }
       
       .tag {
-        background: #2c5f2d;
-        color: white;
+        background: #ffebee;
+        color: #c62828;
         padding: 6px 12px;
         border-radius: 16px;
         display: flex;
@@ -81,7 +93,7 @@
       .tag button {
         background: none;
         border: none;
-        color: white;
+        color: #c62828;
         cursor: pointer;
         font-size: 16px;
         padding: 0;
@@ -133,10 +145,15 @@
     <div class="container">
       <h1>Add Product</h1>
       
+      <div class="info-box">
+        <strong>ℹ️ What are allergens?</strong>
+        Allergens are ingredients that the product CONTAINS that people need to avoid. For example, if you're adding "Peanut Butter", you would mark it as containing "Peanuts".
+      </div>
+      
       <form id="addProductForm">
         <div>
-          <label for="name">Product Name</label>
-          <input type="text" id="name" name="name" placeholder="e.g., Organic Apples" required />
+          <label for="name">Product Name *</label>
+          <input type="text" id="name" name="name" placeholder="e.g., Organic Apples, Whole Milk" required />
         </div>
         
         <div>
@@ -145,9 +162,9 @@
         </div>
         
         <div>
-          <label>Allergens</label>
+          <label>Allergens Contained in This Product</label>
           <div class="allergen-input">
-            <input type="text" id="allergenInput" placeholder="Add allergens: peanuts, dairy..." />
+            <input type="text" id="allergenInput" placeholder="e.g., Peanuts, Dairy, Gluten..." />
             <button type="button" id="addAllergenBtn">Add</button>
           </div>
           <div class="allergen-tags" id="allergenTags"></div>
@@ -212,7 +229,7 @@
             const responseDiv = document.getElementById("response");
             if (data.productId) {
               responseDiv.className = "success";
-              responseDiv.textContent = "Product added! Redirecting...";
+              responseDiv.textContent = "✓ Product added! Redirecting...";
               responseDiv.style.display = "block";
               setTimeout(() => window.location.href = `/store-detail?id=${storeId}`, 1500);
             } else {

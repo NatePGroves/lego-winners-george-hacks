@@ -10,18 +10,21 @@
         font-family: Arial, sans-serif; 
         background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
         min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 20px;
       }
       
       .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      
+      .hero {
         background: white;
         padding: 60px 40px;
         border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         text-align: center;
-        max-width: 600px;
+        margin-bottom: 30px;
       }
       
       h1 {
@@ -36,16 +39,37 @@
         font-size: 18px;
       }
       
+      .sections {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+      
+      .card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      }
+      
+      .card h2 {
+        color: #2c5f2d;
+        margin-bottom: 25px;
+        font-size: 24px;
+        border-bottom: 2px solid #2c5f2d;
+        padding-bottom: 15px;
+      }
+      
       .buttons {
         display: flex;
-        gap: 20px;
         flex-direction: column;
+        gap: 12px;
       }
       
       a, button {
         display: block;
         padding: 15px 30px;
-        font-size: 18px;
+        font-size: 16px;
         border: none;
         border-radius: 6px;
         text-decoration: none;
@@ -85,17 +109,48 @@
       .btn-outline:hover {
         background-color: #f0f0f0;
       }
+      
+      .icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+      
+      @media (max-width: 768px) {
+        .sections {
+          grid-template-columns: 1fr;
+        }
+        
+        h1 {
+          font-size: 28px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>🥗 Healthy Food Access</h1>
-      <p class="subtitle">Find healthy corner stores and manage your dietary preferences</p>
+      <div class="hero">
+        <h1>🥗 Healthy Food Access</h1>
+        <p class="subtitle">Find healthy corner stores and manage your dietary preferences</p>
+      </div>
       
-      <div class="buttons">
-        <a href="/signup" class="btn-primary">Sign Up</a>
-        <a href="/signin" class="btn-secondary">Sign In</a>
-        <a href="/map" class="btn-outline">View Map (Guest)</a>
+      <div class="sections">
+        <div class="card">
+          <h2><div class="icon">👤</div>For Customers</h2>
+          <div class="buttons">
+            <a href="/signup" class="btn-primary">Sign Up</a>
+            <a href="/signin" class="btn-secondary">Sign In</a>
+            <a href="/map" class="btn-outline">Browse Map (Guest)</a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h2><div class="icon">🏪</div>For Stores</h2>
+          <div class="buttons">
+            <a href="/store-signup" class="btn-primary">Create Store Account</a>
+            <a href="/store-signin" class="btn-secondary">Store Sign In</a>
+            <a href="/map" class="btn-outline">View Map</a>
+          </div>
+        </div>
       </div>
     </div>
   </body>

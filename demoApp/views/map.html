@@ -19,14 +19,7 @@
       }
       
       .navbar-brand { color: #2c5f2d; font-weight: bold; font-size: 18px; }
-      
-      .navbar-links a {
-        color: #2c5f2d;
-        text-decoration: none;
-        margin-left: 20px;
-      }
-      
-      .navbar-links a:hover { text-decoration: underline; }
+      .navbar-links a { color: #2c5f2d; text-decoration: none; margin-left: 20px; }
       
       #sidebar {
         position: absolute;
@@ -37,15 +30,14 @@
         border-radius: 8px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         z-index: 1000;
-        max-width: 280px;
-        max-height: 500px;
+        max-width: 300px;
+        max-height: 600px;
         overflow-y: auto;
       }
       
       .sidebar-title { font-weight: bold; color: #2c5f2d; margin-bottom: 15px; }
-      
       .filter-group { margin-bottom: 15px; }
-      .filter-label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+      .filter-label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; font-size: 14px; }
       
       input[type="text"], select {
         width: 100%;
@@ -53,65 +45,33 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         margin-bottom: 5px;
-      }
-      
-      .action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      
-      .action-buttons a {
-        display: block;
-        padding: 8px;
-        background: #2c5f2d;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        text-align: center;
         font-size: 14px;
       }
       
+      .checkbox-group { margin: 8px 0; }
+      .checkbox-group label { display: flex; align-items: center; font-size: 14px; cursor: pointer; }
+      .checkbox-group input { width: auto; margin-right: 8px; }
+      
+      .action-buttons { display: flex; flex-direction: column; gap: 8px; }
+      .action-buttons a { display: block; padding: 8px; background: #2c5f2d; color: white; text-decoration: none; border-radius: 4px; text-align: center; font-size: 14px; }
       .action-buttons a:hover { background: #1e4620; }
       
       #map { height: calc(100vh - 60px); width: 100%; }
       
       .store-popup { font-family: Arial, sans-serif; }
-      .store-popup h3 { color: #2c5f2d; margin-bottom: 8px; }
+      .store-popup h3 { color: #2c5f2d; margin-bottom: 8px; font-size: 16px; }
       .store-popup p { font-size: 13px; margin: 4px 0; }
+      .popup-button { display: block; margin-top: 10px; padding: 8px; background: #2c5f2d; color: white; text-decoration: none; border-radius: 4px; text-align: center; font-size: 14px; }
       
-      .popup-button {
-        display: block;
-        margin-top: 10px;
-        padding: 8px;
-        background: #2c5f2d;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        text-align: center;
-        font-size: 14px;
-      }
+      .safe-products { background: #d4edda; padding: 8px; border-radius: 3px; margin-top: 8px; font-size: 12px; color: #155724; }
       
-      .popup-button:hover { background: #1e4620; }
+      .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold; margin-right: 5px; }
+      .snap-badge { background: #d4edda; color: #155724; }
+      .wic-badge { background: #cfe2ff; color: #084298; }
       
-      .badge {
-        display: inline-block;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-size: 11px;
-        font-weight: bold;
-        margin-right: 5px;
-      }
-      
-      .snap-badge {
-        background: #d4edda;
-        color: #155724;
-      }
-      
-      .wic-badge {
-        background: #cfe2ff;
-        color: #084298;
-      }
+      .legend { background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); position: absolute; bottom: 20px; left: 10px; z-index: 1000; font-size: 13px; }
+      .legend-item { margin: 8px 0; display: flex; align-items: center; }
+      .legend-color { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
     </style>
   </head>
   <body>
@@ -132,12 +92,20 @@
       </div>
       
       <div class="filter-group">
-        <label class="filter-label">
-          <input type="checkbox" id="filterSnap"> SNAP Match
-        </label>
-        <label class="filter-label">
-          <input type="checkbox" id="filterWic"> WIC Vendor
-        </label>
+        <label class="filter-label">Filter Options</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="filterSnap"> SNAP Match</label>
+        </div>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="filterWic"> WIC Vendor</label>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Your Allergies</label>
+        <div id="userAllergies" style="font-size: 13px; color: #666;">
+          <p style="font-style: italic;">Sign in to see personalized results</p>
+        </div>
       </div>
       
       <div class="action-buttons">
@@ -145,19 +113,91 @@
       </div>
     </div>
     
+    <div id="legend" class="legend" style="display: none;">
+      <div class="legend-item">
+        <div class="legend-color" style="background: #2c5f2d;"></div>
+        <span>Safe for you</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #ffc107;"></div>
+        <span>May have allergens</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #ff6b6b;"></div>
+        <span>User-added store</span>
+      </div>
+    </div>
+    
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      const map = L.map('map').setView([38.8951, -77.0369], 12);
+      const userId = localStorage.getItem("userId");
+      let userAllergies = [];
+      let allStores = [];
+      let allProducts = {};
+      let geoJsonLayer = null;
       
+      const map = L.map('map').setView([38.8951, -77.0369], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
       
-      let allStores = [];
-      let geoJsonLayer = null;
+      if (userId) {
+        fetch(`/api/user/${userId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            userAllergies = data.allergies || [];
+            if (userAllergies.length > 0) {
+              document.getElementById("legend").style.display = "block";
+              renderUserAllergies();
+            }
+            loadStores();
+          });
+      } else {
+        loadStores();
+      }
+      
+      function renderUserAllergies() {
+        const container = document.getElementById("userAllergies");
+        if (userAllergies.length === 0) {
+          container.innerHTML = '<p style="font-style: italic; color: #999;">No allergies set</p>';
+          return;
+        }
+        container.innerHTML = userAllergies.map(a => 
+          `<div style="display: inline-block; background: #ffebee; color: #c62828; padding: 4px 8px; border-radius: 12px; margin: 2px; font-size: 12px;">${a}</div>`
+        ).join('');
+      }
+      
+      function checkStoreSafety(storeId) {
+        const products = allProducts[storeId] || [];
+        if (products.length === 0 || userAllergies.length === 0) return null;
+        
+        const hasAllergens = products.some(p => {
+          if (!p.allergens || p.allergens.length === 0) return false;
+          return p.allergens.some(allergen => userAllergies.includes(allergen));
+        });
+        
+        return !hasAllergens;
+      }
+      
+      function loadStores() {
+        fetch('/api/stores')
+          .then((res) => res.json())
+          .then((data) => {
+            allStores = data.features;
+            
+            const storeIds = allStores.map(s => s.properties.storeId);
+            Promise.all(
+              storeIds.map(id => 
+                fetch(`/api/products?storeId=${id}`)
+                  .then(r => r.json())
+                  .then(products => { allProducts[id] = products; })
+              )
+            ).then(() => { updateMap(); });
+          });
+      }
       
       function updateMap() {
         const searchTerm = document.getElementById("searchInput").value.toLowerCase();
@@ -174,14 +214,19 @@
         
         if (geoJsonLayer) map.removeLayer(geoJsonLayer);
         
-        const geojson = {
-          type: "FeatureCollection",
-          features: filtered
-        };
+        const geojson = { type: "FeatureCollection", features: filtered };
         
         geoJsonLayer = L.geoJSON(geojson, {
           pointToLayer: (feature, latlng) => {
-            const color = feature.properties.userAdded ? '#ff6b6b' : '#2c5f2d';
+            let color = '#2c5f2d';
+            
+            if (feature.properties.userAdded) {
+              color = '#ff6b6b';
+            } else if (userAllergies.length > 0) {
+              const isSafe = checkStoreSafety(feature.properties.storeId);
+              if (isSafe === false) color = '#ffc107';
+            }
+            
             return L.circleMarker(latlng, {
               radius: 8,
               fillColor: color,
@@ -193,6 +238,13 @@
           },
           onEachFeature: (feature, layer) => {
             const props = feature.properties;
+            const products = allProducts[props.storeId] || [];
+            
+            const safeProducts = products.filter(p => {
+              if (!p.allergens || p.allergens.length === 0) return true;
+              return !p.allergens.some(a => userAllergies.includes(a));
+            });
+            
             const popup = `
               <div class="store-popup">
                 <h3>${props.name}</h3>
@@ -202,20 +254,14 @@
                   ${props.snapMatch ? '<span class="badge snap-badge">SNAP Match</span>' : ''}
                   ${props.wicVendor ? '<span class="badge wic-badge">WIC Vendor</span>' : ''}
                 </div>
-                <a href="/store-detail?id=${feature.properties.storeId}" class="popup-button">View Details</a>
+                ${userAllergies.length > 0 && products.length > 0 ? `<div class="safe-products">✓ ${safeProducts.length} product(s) safe for you</div>` : ''}
+                <a href="/store-detail?id=${props.storeId}" class="popup-button">View Details</a>
               </div>
             `;
             layer.bindPopup(popup);
           }
         }).addTo(map);
       }
-      
-      fetch('/api/stores')
-        .then((res) => res.json())
-        .then((data) => {
-          allStores = data.features;
-          updateMap();
-        });
       
       document.getElementById("searchInput").addEventListener("input", updateMap);
       document.getElementById("filterSnap").addEventListener("change", updateMap);

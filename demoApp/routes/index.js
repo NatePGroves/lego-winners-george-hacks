@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const bcrypt = require("bcrypt");
-const { User, Store, Product } = require("../database");
+const { User, Store, Product, StoreOwner } = require("../database");
 
 router.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/base.html"));
@@ -34,6 +34,18 @@ router.get("/add-product", (req, res) => {
 
 router.get("/store-detail", (req, res) => {
   res.sendFile(path.join(__dirname, "../views/store-detail.html"));
+});
+
+router.get("/store-dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/store-dashboard.html"));
+});
+
+router.get("/store-signin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/store-signin.html"));
+});
+
+router.get("/store-signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/store-signup.html"));
 });
 
 router.get("/map", (req, res) => {
@@ -195,6 +207,119 @@ router.get("/api/products", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ message: err.message });
+    });
+});
+
+router.delete("/api/products/:productId", (req, res) => {
+  Product.findByIdAndDelete(req.params.productId)
+    .then(() => {
+      res.json({ success: true });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.post("/api/store-signup", (req, res) => {
+  const { storeName, email, password, phone, latitude, longitude, claimStoreId } = req.body;
+  
+  bcrypt.hash(password, 10)
+    .then((hashedPassword) => {
+      let storePromise;
+      
+      if (claimStoreId) {
+        // Claim existing store
+        storePromise = Store.findByIdAndUpdate(
+          claimStoreId,
+          { claimed: true },
+          { new: true }
+        );
+      } else {
+        // Create new store
+        const newStore = new Store({
+          name: storeName,
+          address: "Address TBD",
+          latitude,
+          longitude,
+          userAdded: true,
+          claimed: true
+        });
+        storePromise = newStore.save();
+      }
+      
+      return storePromise.then(store => {
+        const storeOwner = new StoreOwner({
+          email,
+          password: hashedPassword,
+          storeName,
+          phone,
+          storeId: store._id
+        });
+        return storeOwner.save();
+      });
+    })
+    .then((savedOwner) => {
+      res.json({ storeOwnerId: savedOwner._id, message: "Store account created!" });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.post("/api/store-signin", (req, res) => {
+  const { email, password } = req.body;
+  
+  StoreOwner.findOne({ email })
+    .then((storeOwner) => {
+      if (!storeOwner) {
+        return res.status(404).json({ message: "Store not found" });
+      }
+      
+      return bcrypt.compare(password, storeOwner.password)
+        .then((isMatch) => {
+          if (!isMatch) {
+            return res.status(401).json({ message: "Invalid password" });
+          }
+          res.json({ storeOwnerId: storeOwner._id, message: "Sign in successful!" });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.get("/api/store-owner/:storeOwnerId", (req, res) => {
+  StoreOwner.findById(req.params.storeOwnerId)
+    .then((storeOwner) => {
+      if (!storeOwner) {
+        return res.status(404).json({ error: "Store not found" });
+      }
+      res.json({
+        storeName: storeOwner.storeName,
+        email: storeOwner.email,
+        phone: storeOwner.phone,
+        store: storeOwner
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
+router.get("/api/store-owner/:storeOwnerId/products", (req, res) => {
+  StoreOwner.findById(req.params.storeOwnerId)
+    .then((storeOwner) => {
+      if (!storeOwner) {
+        return res.status(404).json({ error: "Store not found" });
+      }
+      
+      return Product.find({ storeId: storeOwner.storeId });
+    })
+    .then((products) => {
+      res.json(products || []);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
     });
 });
 
