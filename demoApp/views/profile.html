@@ -187,9 +187,14 @@
 
     <script>
       const userId = localStorage.getItem("userId");
+      const storeOwnerId = localStorage.getItem("storeOwnerId");
       
       if (!userId) {
-        window.location.href = "/signin";
+        if (storeOwnerId) {
+          window.location.href = "/store-dashboard";
+        } else {
+          window.location.href = "/signin";
+        }
       }
       
       fetch(`/api/user/${userId}`)

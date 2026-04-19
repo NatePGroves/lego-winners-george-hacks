@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Sign In - Healthy Food Access</title>
+    <title>Store Sign In - Healthy Food Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -79,19 +79,19 @@
       }
       .nav a:hover { text-decoration: underline; }
       
-      .signup-link {
+      .links {
         text-align: center;
-        margin-top: 15px;
+        margin-top: 20px;
         color: #666;
       }
       
-      .signup-link a {
+      .links a {
         color: #2c5f2d;
         text-decoration: none;
         font-weight: bold;
       }
       
-      .signup-link a:hover {
+      .links a:hover {
         text-decoration: underline;
       }
     </style>
@@ -103,9 +103,9 @@
         <a href="/map">Map</a>
       </div>
       
-      <h1>Customer Sign In</h1>
+      <h1>Store Sign In</h1>
       
-      <form id="signinForm">
+      <form id="storeSigninForm">
         <div>
           <label for="email">Email</label>
           <input type="email" id="email" name="email" required />
@@ -121,19 +121,19 @@
       
       <div id="response"></div>
       
-      <div class="signup-link">
-        Don't have an account? <a href="/signup">Sign up here</a>
+      <div class="links">
+        Don't have a store account? <a href="/store-signup">Sign up here</a>
       </div>
     </div>
 
     <script>
-      document.getElementById("signinForm").addEventListener("submit", (e) => {
+      document.getElementById("storeSigninForm").addEventListener("submit", (e) => {
         e.preventDefault();
 
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        fetch("/api/signin", {
+        fetch("/api/store-signin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -141,13 +141,13 @@
           .then((res) => res.json())
           .then((data) => {
             const responseDiv = document.getElementById("response");
-            if (data.userId) {
-              localStorage.setItem("userId", data.userId);
-              localStorage.removeItem("storeOwnerId");
+            if (data.storeOwnerId) {
+              localStorage.setItem("storeOwnerId", data.storeOwnerId);
+              localStorage.removeItem("userId");
               responseDiv.className = "success";
               responseDiv.textContent = "Sign in successful! Redirecting...";
               setTimeout(() => {
-                window.location.href = `/profile`;
+                window.location.href = `/store-dashboard`;
               }, 1000);
             } else {
               responseDiv.className = "error";

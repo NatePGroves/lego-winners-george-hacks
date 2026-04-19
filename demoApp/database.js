@@ -23,11 +23,33 @@ const storeSchema = new Schema({
   latitude: { type: Number, required: true },
   longitude: { type: Number, required: true },
   userAdded: { type: Boolean, default: false },
+  claimed: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+});
+
+// Product Schema
+const productSchema = new Schema({
+  name: { type: String, required: true },
+  storeId: { type: Schema.Types.ObjectId, ref: "Store", required: true },
+  allergens: [String],
+  price: Number,
+  createdAt: { type: Date, default: Date.now },
+});
+
+// StoreOwner Schema
+const storeOwnerSchema = new Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  storeName: { type: String, required: true },
+  storeId: { type: Schema.Types.ObjectId, ref: "Store" },
+  phone: String,
   createdAt: { type: Date, default: Date.now },
 });
 
 const User = mongoose.model("User", userSchema);
 const Store = mongoose.model("Store", storeSchema);
+const Product = mongoose.model("Product", productSchema);
+const StoreOwner = mongoose.model("StoreOwner", storeOwnerSchema);
 
 const connectDB = async () => {
   try {
@@ -45,4 +67,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = { connectDB, User, Store };
+module.exports = { connectDB, User, Store, Product, StoreOwner };
